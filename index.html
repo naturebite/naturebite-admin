@@ -1,0 +1,2529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NatureBite Admin & Staff Management</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+  background:#f5f2e8;
+  color:#263238;
+}
+
+button,input,select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+#loginPage{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:#f5f2e8;
+}
+
+.login-box{
+  width:100%;
+  max-width:500px;
+  background:#fff;
+  border-radius:28px;
+  padding:42px 34px;
+  box-shadow:0 15px 50px rgba(0,0,0,.08);
+}
+
+.logo{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.logo-icon{
+  font-size:55px;
+}
+
+.logo h1{
+  color:#2e7d32;
+  font-size:42px;
+  margin-top:5px;
+}
+
+.logo p{
+  color:#7b8585;
+  font-size:20px;
+  margin-top:5px;
+}
+
+.form-group{
+  margin-bottom:20px;
+}
+
+.form-group label{
+  display:block;
+  margin-bottom:9px;
+  font-size:17px;
+  color:#566;
+}
+
+.form-group input{
+  width:100%;
+  padding:17px;
+  border:1px solid #ddd;
+  border-radius:15px;
+  outline:none;
+  font-size:17px;
+}
+
+.form-group input:focus{
+  border-color:#2e7d32;
+  box-shadow:0 0 0 3px rgba(46,125,50,.08);
+}
+
+.login-btn{
+  width:100%;
+  border:0;
+  background:#2e7d32;
+  color:#fff;
+  padding:18px;
+  border-radius:16px;
+  font-size:19px;
+  font-weight:bold;
+}
+
+.login-btn:disabled{
+  opacity:.6;
+}
+
+.error{
+  color:#c62828;
+  background:#ffebee;
+  border-radius:12px;
+  padding:12px;
+  margin-top:15px;
+  line-height:1.5;
+}
+
+.success{
+  color:#1b5e20;
+  background:#e8f5e9;
+  border-radius:12px;
+  padding:12px;
+  margin-top:15px;
+  line-height:1.5;
+}
+
+.warning{
+  color:#795548;
+  background:#fff8e1;
+  border-radius:12px;
+  padding:12px;
+  margin-top:15px;
+  line-height:1.5;
+}
+
+/* =========================
+   ADMIN APP
+========================= */
+
+#adminApp{
+  min-height:100vh;
+  display:flex;
+}
+
+.sidebar{
+  width:260px;
+  background:#2e7d32;
+  color:#fff;
+  min-height:100vh;
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  overflow-y:auto;
+  z-index:20;
+}
+
+.sidebar-header{
+  padding:28px 20px;
+  text-align:center;
+  border-bottom:1px solid rgba(255,255,255,.15);
+}
+
+.sidebar-header h2{
+  font-size:27px;
+}
+
+.sidebar-header small{
+  opacity:.8;
+}
+
+.nav{
+  padding:15px 10px 30px;
+}
+
+.nav button{
+  width:100%;
+  background:transparent;
+  color:#fff;
+  border:0;
+  text-align:left;
+  padding:13px 15px;
+  border-radius:12px;
+  margin-bottom:4px;
+  font-size:15px;
+}
+
+.nav button:hover,
+.nav button.active{
+  background:rgba(255,255,255,.16);
+}
+
+.main{
+  margin-left:260px;
+  width:calc(100% - 260px);
+  min-height:100vh;
+}
+
+.topbar{
+  height:75px;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 30px;
+  border-bottom:1px solid #eee;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.topbar h2{
+  color:#2e7d32;
+}
+
+.user-area{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.user-badge{
+  background:#e8f5e9;
+  color:#2e7d32;
+  padding:9px 14px;
+  border-radius:20px;
+  font-size:14px;
+}
+
+.logout{
+  background:#ef5350;
+  color:#fff;
+  border:0;
+  padding:9px 15px;
+  border-radius:10px;
+}
+
+.content{
+  padding:30px;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.page-title{
+  margin-bottom:22px;
+}
+
+.page-title h1{
+  font-size:28px;
+  color:#263238;
+}
+
+.page-title p{
+  color:#789;
+  margin-top:5px;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+  margin-bottom:25px;
+}
+
+.kpi{
+  background:#fff;
+  padding:22px;
+  border-radius:18px;
+  box-shadow:0 5px 20px rgba(0,0,0,.05);
+}
+
+.kpi-title{
+  color:#789;
+  font-size:14px;
+}
+
+.kpi-value{
+  font-size:29px;
+  font-weight:bold;
+  margin-top:8px;
+  color:#2e7d32;
+}
+
+.grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.card{
+  background:#fff;
+  border-radius:18px;
+  padding:22px;
+  box-shadow:0 5px 20px rgba(0,0,0,.05);
+  margin-bottom:20px;
+}
+
+.card h3{
+  margin-bottom:15px;
+}
+
+.table-wrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  text-align:left;
+  padding:13px;
+  border-bottom:1px solid #eee;
+  white-space:nowrap;
+}
+
+th{
+  color:#607d8b;
+  background:#fafafa;
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:12px;
+}
+
+.badge.green{
+  background:#e8f5e9;
+  color:#2e7d32;
+}
+
+.badge.red{
+  background:#ffebee;
+  color:#c62828;
+}
+
+.badge.orange{
+  background:#fff3e0;
+  color:#ef6c00;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn{
+  border:0;
+  padding:10px 15px;
+  border-radius:10px;
+  font-weight:bold;
+}
+
+.btn-primary{
+  background:#2e7d32;
+  color:#fff;
+}
+
+.btn-secondary{
+  background:#eceff1;
+  color:#37474f;
+}
+
+.btn-danger{
+  background:#e53935;
+  color:#fff;
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.search{
+  width:100%;
+  padding:14px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  margin-bottom:15px;
+  outline:none;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.5);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:100;
+}
+
+.modal-box{
+  width:100%;
+  max-width:600px;
+  max-height:90vh;
+  overflow-y:auto;
+  background:#fff;
+  border-radius:20px;
+  padding:25px;
+}
+
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:20px;
+}
+
+.close{
+  background:#eee;
+  border:0;
+  width:35px;
+  height:35px;
+  border-radius:50%;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.form-grid .full{
+  grid-column:1/-1;
+}
+
+.checkbox-row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.checkbox-row label{
+  background:#f5f5f5;
+  padding:9px 12px;
+  border-radius:9px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:900px){
+  .sidebar{
+    width:220px;
+  }
+
+  .main{
+    margin-left:220px;
+    width:calc(100% - 220px);
+  }
+
+  .kpi-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .grid-2{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:650px){
+  .sidebar{
+    position:relative;
+    width:100%;
+    min-height:auto;
+  }
+
+  #adminApp{
+    display:block;
+  }
+
+  .main{
+    margin-left:0;
+    width:100%;
+  }
+
+  .topbar{
+    padding:0 15px;
+    height:auto;
+    min-height:70px;
+  }
+
+  .content{
+    padding:15px;
+  }
+
+  .kpi-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .form-grid .full{
+    grid-column:auto;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ======================================================
+     LOGIN
+====================================================== -->
+
+<section id="loginPage">
+
+  <div class="login-box">
+
+    <div class="logo">
+      <div class="logo-icon">🌿</div>
+      <h1>NatureBite</h1>
+      <p>Admin & Staff Management</p>
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input
+        id="email"
+        type="email"
+        value="admin@naturebite.com"
+        autocomplete="username"
+      >
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input
+        id="password"
+        type="password"
+        autocomplete="current-password"
+      >
+    </div>
+
+    <button
+      id="loginBtn"
+      class="login-btn"
+      onclick="login()"
+    >
+      Login
+    </button>
+
+    <div id="loginMessage"></div>
+
+  </div>
+
+</section>
+
+
+<!-- ======================================================
+     ADMIN APP
+====================================================== -->
+
+<section id="adminApp" class="hidden">
+
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+      <h2>🌿 NatureBite</h2>
+      <small>Admin Panel</small>
+    </div>
+
+    <div class="nav">
+
+      <button onclick="showPage('dashboard')" class="active">
+        📊 Dashboard
+      </button>
+
+      <button onclick="showPage('orders')">
+        📦 Orders
+      </button>
+
+      <button onclick="showPage('products')">
+        🛍 Products
+      </button>
+
+      <button onclick="showPage('inventory')">
+        📋 Inventory
+      </button>
+
+      <button onclick="showPage('customers')">
+        👥 Customers
+      </button>
+
+      <button onclick="showPage('riders')">
+        🛵 Riders
+      </button>
+
+      <button onclick="showPage('payments')">
+        💳 Payments
+      </button>
+
+      <button onclick="showPage('refunds')">
+        💰 Refunds
+      </button>
+
+      <button onclick="showPage('offers')">
+        🎁 Offers & Coupons
+      </button>
+
+      <button onclick="showPage('reviews')">
+        ⭐ Reviews
+      </button>
+
+      <button onclick="showPage('support')">
+        🎧 Support
+      </button>
+
+      <button onclick="showPage('reports')">
+        📈 Reports
+      </button>
+
+      <button onclick="showPage('expenses')">
+        💸 Expenses
+      </button>
+
+      <button onclick="showPage('staff')">
+        👨‍💼 Staff & Permissions
+      </button>
+
+      <button onclick="showPage('notifications')">
+        🔔 Notifications
+      </button>
+
+      <button onclick="showPage('settings')">
+        ⚙️ Settings
+      </button>
+
+      <button onclick="showPage('audit')">
+        📝 Audit Logs
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <h2 id="pageHeading">
+        Dashboard
+      </h2>
+
+      <div class="user-area">
+
+        <span id="userRole" class="user-badge">
+          Loading...
+        </span>
+
+        <button
+          class="logout"
+          onclick="logout()"
+        >
+          Logout
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <div class="content">
+
+
+      <!-- DASHBOARD -->
+
+      <section id="page-dashboard" class="page active">
+
+        <div class="page-title">
+          <h1>Dashboard</h1>
+          <p>NatureBite business overview</p>
+        </div>
+
+        <div class="kpi-grid">
+
+          <div class="kpi">
+            <div class="kpi-title">Total Sales</div>
+            <div id="totalSales" class="kpi-value">৳0</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-title">Total Orders</div>
+            <div id="totalOrders" class="kpi-value">0</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-title">Delivered</div>
+            <div id="totalDelivered" class="kpi-value">0</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-title">Pending</div>
+            <div id="totalPending" class="kpi-value">0</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-title">Cancelled</div>
+            <div id="totalCancelled" class="kpi-value">0</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-title">Net Profit</div>
+            <div id="netProfit" class="kpi-value">৳0</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-title">Low Stock</div>
+            <div id="lowStock" class="kpi-value">0</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-title">Customers</div>
+            <div id="totalCustomers" class="kpi-value">0</div>
+          </div>
+
+        </div>
+
+
+        <div class="grid-2">
+
+          <div class="card">
+
+            <h3>Recent Orders</h3>
+
+            <div id="recentOrders">
+              Loading...
+            </div>
+
+          </div>
+
+
+          <div class="card">
+
+            <h3>Low Stock Alerts</h3>
+
+            <div id="stockAlerts">
+              Loading...
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="grid-2">
+
+          <div class="card">
+
+            <h3>Pending Payments</h3>
+
+            <div id="pendingPayments">
+              Loading...
+            </div>
+
+          </div>
+
+
+          <div class="card">
+
+            <h3>Rider / COD Alerts</h3>
+
+            <div id="riderAlerts">
+              Loading...
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ORDERS -->
+
+      <section id="page-orders" class="page">
+
+        <div class="page-title">
+          <h1>Orders</h1>
+          <p>Manage customer orders</p>
+        </div>
+
+        <div class="card">
+
+          <input
+            id="orderSearch"
+            class="search"
+            placeholder="Search Order ID / Customer..."
+            oninput="renderOrders()"
+          >
+
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Total</th>
+                  <th>Payment</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+
+              <tbody id="ordersTable">
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- PRODUCTS -->
+
+      <section id="page-products" class="page">
+
+        <div class="page-title">
+          <h1>Products</h1>
+          <p>Products and product variants</p>
+        </div>
+
+        <div class="card">
+
+          <button
+            class="btn btn-primary"
+            onclick="alert('Product management UI ready. Firebase CRUD will be connected next.')"
+          >
+            + Add Product
+          </button>
+
+          <div class="table-wrap" style="margin-top:20px">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Category</th>
+                  <th>Active</th>
+                  <th>Featured</th>
+                </tr>
+              </thead>
+
+              <tbody id="productsTable">
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- INVENTORY -->
+
+      <section id="page-inventory" class="page">
+
+        <div class="page-title">
+          <h1>Inventory</h1>
+          <p>Stock management</p>
+        </div>
+
+        <div class="card">
+
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Variant</th>
+                  <th>SKU</th>
+                  <th>Price</th>
+                  <th>Stock</th>
+                  <th>Alert</th>
+                </tr>
+              </thead>
+
+              <tbody id="inventoryTable">
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- CUSTOMERS -->
+
+      <section id="page-customers" class="page">
+
+        <div class="page-title">
+          <h1>Customers</h1>
+          <p>Customer accounts</p>
+        </div>
+
+        <div class="card">
+
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+
+              <tbody id="customersTable">
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- RIDERS -->
+
+      <section id="page-riders" class="page">
+
+        <div class="page-title">
+          <h1>Riders</h1>
+          <p>Rider management</p>
+        </div>
+
+        <div class="card">
+
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Rider ID</th>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                  <th>Zone</th>
+                  <th>Balance</th>
+                </tr>
+              </thead>
+
+              <tbody id="ridersTable">
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- PAYMENTS -->
+
+      <section id="page-payments" class="page">
+
+        <div class="page-title">
+          <h1>Payments</h1>
+          <p>Payment verification and records</p>
+        </div>
+
+        <div class="card">
+
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Payment ID</th>
+                  <th>Order</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+
+              <tbody id="paymentsTable">
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- REFUNDS -->
+
+      <section id="page-refunds" class="page">
+
+        <div class="page-title">
+          <h1>Refunds</h1>
+          <p>Refund requests</p>
+        </div>
+
+        <div class="card">
+          <div id="refundsData">Loading...</div>
+        </div>
+
+      </section>
+
+
+      <!-- OFFERS -->
+
+      <section id="page-offers" class="page">
+
+        <div class="page-title">
+          <h1>Offers & Coupons</h1>
+          <p>Manage promotional offers</p>
+        </div>
+
+        <div class="card">
+
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Coupon</th>
+                  <th>Type</th>
+                  <th>Value</th>
+                  <th>Active</th>
+                </tr>
+              </thead>
+
+              <tbody id="couponsTable">
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- REVIEWS -->
+
+      <section id="page-reviews" class="page">
+
+        <div class="page-title">
+          <h1>Reviews</h1>
+          <p>Customer product reviews</p>
+        </div>
+
+        <div class="card">
+
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Product</th>
+                  <th>Rating</th>
+                  <th>Review</th>
+                </tr>
+              </thead>
+
+              <tbody id="reviewsTable">
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- SUPPORT -->
+
+      <section id="page-support" class="page">
+
+        <div class="page-title">
+          <h1>Support</h1>
+          <p>Customer support tickets</p>
+        </div>
+
+        <div class="card">
+
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Ticket</th>
+                  <th>Customer</th>
+                  <th>Subject</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+
+              <tbody id="supportTable">
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- REPORTS -->
+
+      <section id="page-reports" class="page">
+
+        <div class="page-title">
+          <h1>Reports</h1>
+          <p>Business reports</p>
+        </div>
+
+        <div class="card">
+
+          <h3>Business Summary</h3>
+
+          <div id="reportData">
+            Loading...
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- EXPENSES -->
+
+      <section id="page-expenses" class="page">
+
+        <div class="page-title">
+          <h1>Expenses</h1>
+          <p>Business expenses</p>
+        </div>
+
+        <div class="card">
+
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Expense</th>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+
+              <tbody id="expensesTable">
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- STAFF -->
+
+      <section id="page-staff" class="page">
+
+        <div class="page-title">
+
+          <h1>Staff & Permissions</h1>
+
+          <p>
+            Admin and staff role management
+          </p>
+
+        </div>
+
+        <div class="card">
+
+          <button
+            class="btn btn-primary"
+            onclick="openStaffModal()"
+          >
+            + Add Staff
+          </button>
+
+          <div class="table-wrap" style="margin-top:20px">
+
+            <table>
+
+              <thead>
+
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                </tr>
+
+              </thead>
+
+              <tbody id="staffTable">
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- NOTIFICATIONS -->
+
+      <section id="page-notifications" class="page">
+
+        <div class="page-title">
+          <h1>Notifications</h1>
+          <p>Admin system notifications</p>
+        </div>
+
+        <div class="card">
+
+          <div id="notificationsData">
+            Loading...
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- SETTINGS -->
+
+      <section id="page-settings" class="page">
+
+        <div class="page-title">
+          <h1>Settings</h1>
+          <p>Business settings</p>
+        </div>
+
+        <div class="card">
+
+          <div class="form-group">
+
+            <label>Business Name</label>
+
+            <input
+              id="businessName"
+              class="search"
+              value="NatureBite"
+            >
+
+          </div>
+
+          <button
+            class="btn btn-primary"
+            onclick="saveSettings()"
+          >
+            Save Settings
+          </button>
+
+          <div id="settingsMessage"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- AUDIT -->
+
+      <section id="page-audit" class="page">
+
+        <div class="page-title">
+          <h1>Audit Logs</h1>
+          <p>System activity</p>
+        </div>
+
+        <div class="card">
+
+          <div id="auditData">
+            Loading...
+          </div>
+
+        </div>
+
+      </section>
+
+
+    </div>
+
+  </main>
+
+</section>
+
+
+<!-- STAFF MODAL -->
+
+<div id="staffModal" class="modal hidden">
+
+  <div class="modal-box">
+
+    <div class="modal-header">
+
+      <h2>Add Staff</h2>
+
+      <button
+        class="close"
+        onclick="closeStaffModal()"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <div class="form-grid">
+
+      <div>
+        <label>Name</label>
+        <input id="staffName" class="search">
+      </div>
+
+      <div>
+        <label>Email</label>
+        <input id="staffEmail" class="search" type="email">
+      </div>
+
+      <div>
+        <label>Password</label>
+        <input id="staffPassword" class="search" type="password">
+      </div>
+
+      <div>
+        <label>Role</label>
+
+        <select id="staffRole" class="search">
+
+          <option>Order Manager</option>
+          <option>Product Manager</option>
+          <option>Inventory Manager</option>
+          <option>Accountant / Finance</option>
+          <option>Customer Support</option>
+          <option>Delivery Manager</option>
+          <option>Marketing Manager</option>
+
+        </select>
+
+      </div>
+
+      <div class="full">
+
+        <label>Permissions</label>
+
+        <div class="checkbox-row">
+
+          <label><input type="checkbox" value="orders"> Orders</label>
+
+          <label><input type="checkbox" value="products"> Products</label>
+
+          <label><input type="checkbox" value="inventory"> Inventory</label>
+
+          <label><input type="checkbox" value="customers"> Customers</label>
+
+          <label><input type="checkbox" value="riders"> Riders</label>
+
+          <label><input type="checkbox" value="payments"> Payments</label>
+
+          <label><input type="checkbox" value="refunds"> Refunds</label>
+
+          <label><input type="checkbox" value="reports"> Reports</label>
+
+          <label><input type="checkbox" value="expenses"> Expenses</label>
+
+          <label><input type="checkbox" value="notifications"> Notifications</label>
+
+          <label><input type="checkbox" value="offers"> Offers</label>
+
+          <label><input type="checkbox" value="reviews"> Reviews</label>
+
+          <label><input type="checkbox" value="support"> Support</label>
+
+          <label><input type="checkbox" value="settings"> Settings</label>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <button
+      class="btn btn-primary"
+      style="margin-top:20px;width:100%"
+      onclick="createStaff()"
+    >
+      Create Staff
+    </button>
+
+    <div id="staffMessage"></div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* ======================================================
+   YOUR EXACT FIREBASE CONFIG
+   DO NOT CHANGE ANY CHARACTER
+====================================================== */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAlrkdWd2UMyGAp3yZkp0tlhxxXwSCjSvg",
+  authDomain: "naturebite-bcdad.firebaseapp.com",
+  projectId: "naturebite-bcdad",
+  storageBucket: "naturebite-bcdad.firebasestorage.app",
+  messagingSenderId: "860834516769",
+  appId: "1:860834516769:web:5c2fa96a1de26e337a3860"
+};
+
+
+/* ======================================================
+   GLOBAL DATA
+====================================================== */
+
+let currentUser = null;
+let staffProfile = null;
+
+let orders = [];
+let products = [];
+let variants = [];
+let customers = [];
+let riders = [];
+let payments = [];
+let refunds = [];
+let coupons = [];
+let reviews = [];
+let tickets = [];
+let staffList = [];
+let expenses = [];
+let notifications = [];
+let auditLogs = [];
+
+
+/* ======================================================
+   HELPER
+====================================================== */
+
+function $(id){
+  return document.getElementById(id);
+}
+
+function escapeHtml(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function money(value){
+  return Number(value || 0).toLocaleString("en-BD");
+}
+
+
+/* ======================================================
+   MESSAGE
+====================================================== */
+
+function showMessage(type,text){
+
+  const box = $("loginMessage");
+
+  box.className = type;
+
+  box.innerHTML = escapeHtml(text);
+
+}
+
+
+/* ======================================================
+   FIREBASE REST AUTH
+====================================================== */
+
+async function firebaseLogin(email,password){
+
+  const url =
+    "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key="
+    + encodeURIComponent(firebaseConfig.apiKey);
+
+  const response = await fetch(url,{
+    method:"POST",
+
+    headers:{
+      "Content-Type":"application/json"
+    },
+
+    body:JSON.stringify({
+      email:email,
+      password:password,
+      returnSecureToken:true
+    })
+  });
+
+  const data = await response.json();
+
+  if(!response.ok){
+
+    const message =
+      data?.error?.message ||
+      "Firebase authentication failed.";
+
+    throw new Error(message);
+  }
+
+  return data;
+}
+
+
+/* ======================================================
+   LOGIN
+====================================================== */
+
+async function login(){
+
+  const button = $("loginBtn");
+
+  const email = $("email").value.trim();
+
+  const password = $("password").value;
+
+  if(!email){
+
+    showMessage(
+      "error",
+      "Please enter your email."
+    );
+
+    return;
+  }
+
+  if(!password){
+
+    showMessage(
+      "error",
+      "Please enter your password."
+    );
+
+    return;
+  }
+
+  button.disabled = true;
+
+  button.textContent = "Checking...";
+
+  showMessage(
+    "warning",
+    "Connecting to Firebase..."
+  );
+
+
+  try{
+
+    const authData =
+      await firebaseLogin(
+        email,
+        password
+      );
+
+
+    /*
+      Firebase returned a valid authentication response.
+      Therefore the API key is valid.
+    */
+
+    currentUser = authData;
+
+    localStorage.setItem(
+      "naturebite_id_token",
+      authData.idToken
+    );
+
+    localStorage.setItem(
+      "naturebite_refresh_token",
+      authData.refreshToken
+    );
+
+    localStorage.setItem(
+      "naturebite_uid",
+      authData.localId
+    );
+
+    showMessage(
+      "success",
+      "Firebase Login successful. Loading Admin Panel..."
+    );
+
+
+    setTimeout(
+      ()=>{
+        openAdmin();
+      },
+      500
+    );
+
+
+  }catch(error){
+
+    console.error(error);
+
+    let message = error.message || "Login failed.";
+
+    /*
+      IMPORTANT DIAGNOSTIC MESSAGES
+    */
+
+    if(
+      message.includes("API key not valid") ||
+      message.includes("INVALID_API_KEY")
+    ){
+
+      message =
+        "FIREBASE API KEY INVALID.\n\n" +
+        "এই error আপনার HTML code থেকে হচ্ছে না। " +
+        "Firebase এই API key গ্রহণ করছে না। " +
+        "Firebase Console / Google Cloud Credentials থেকে Web API key যাচাই করুন।";
+
+    }else if(
+      message === "EMAIL_NOT_FOUND"
+    ){
+
+      message =
+        "এই email দিয়ে Firebase Authentication account পাওয়া যায়নি.";
+
+    }else if(
+      message === "INVALID_PASSWORD"
+    ){
+
+      message =
+        "Password ভুল.";
+
+    }else if(
+      message === "USER_DISABLED"
+    ){
+
+      message =
+        "এই Firebase account disabled.";
+
+    }else if(
+      message === "OPERATION_NOT_ALLOWED"
+    ){
+
+      message =
+        "Firebase Console-এ Email/Password Authentication enabled নেই.";
+
+    }
+
+    showMessage(
+      "error",
+      message
+    );
+
+  }finally{
+
+    button.disabled = false;
+
+    button.textContent = "Login";
+
+  }
+
+}
+
+
+/* ======================================================
+   OPEN ADMIN
+====================================================== */
+
+function openAdmin(){
+
+  $("loginPage").classList.add("hidden");
+
+  $("adminApp").classList.remove("hidden");
+
+  if(currentUser){
+
+    $("userRole").textContent =
+      currentUser.email || "Admin";
+
+  }
+
+  loadDemoData();
+
+}
+
+
+/* ======================================================
+   LOGOUT
+====================================================== */
+
+function logout(){
+
+  localStorage.removeItem(
+    "naturebite_id_token"
+  );
+
+  localStorage.removeItem(
+    "naturebite_refresh_token"
+  );
+
+  localStorage.removeItem(
+    "naturebite_uid"
+  );
+
+  currentUser = null;
+
+  staffProfile = null;
+
+  $("adminApp").classList.add("hidden");
+
+  $("loginPage").classList.remove("hidden");
+
+}
+
+
+/* ======================================================
+   PAGE NAVIGATION
+====================================================== */
+
+function showPage(page){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(
+      p=>p.classList.remove("active")
+    );
+
+
+  const target =
+    $("page-" + page);
+
+  if(target){
+
+    target.classList.add("active");
+
+  }
+
+
+  document
+    .querySelectorAll(".nav button")
+    .forEach(
+      b=>b.classList.remove("active")
+    );
+
+
+  const buttons =
+    document.querySelectorAll(".nav button");
+
+  const names = [
+
+    "dashboard",
+    "orders",
+    "products",
+    "inventory",
+    "customers",
+    "riders",
+    "payments",
+    "refunds",
+    "offers",
+    "reviews",
+    "support",
+    "reports",
+    "expenses",
+    "staff",
+    "notifications",
+    "settings",
+    "audit"
+
+  ];
+
+  const index =
+    names.indexOf(page);
+
+  if(index >= 0 && buttons[index]){
+
+    buttons[index].classList.add("active");
+
+  }
+
+
+  $("pageHeading").textContent =
+    page.charAt(0).toUpperCase() +
+    page.slice(1);
+
+}
+
+
+/* ======================================================
+   DEMO / EXISTING FIRESTORE DATA DISPLAY
+====================================================== */
+
+function loadDemoData(){
+
+  /*
+    This section is intentionally safe.
+
+    It does NOT pretend that Firestore data was loaded
+    when API/Auth is not yet confirmed.
+  */
+
+
+  orders = [
+    {
+      id:"order_test_001",
+      customer:"Test Customer",
+      total:0,
+      payment:"Pending",
+      status:"Order Placed",
+      date:"Test"
+    }
+  ];
+
+
+  products = [
+    {
+      name:"NutriBite Granola Bar",
+      category:"Healthy Snacks",
+      active:true,
+      featured:true
+    }
+  ];
+
+
+  variants = [
+    {
+      name:"30g",
+      sku:"NB-GB-30G",
+      price:50,
+      stock:100
+    },
+    {
+      name:"50g",
+      sku:"NB-GB-50G",
+      price:80,
+      stock:100
+    },
+    {
+      name:"100g",
+      sku:"NB-GB-100G",
+      price:140,
+      stock:100
+    }
+  ];
+
+
+  customers = [
+    {
+      id:"test_customer_001",
+      name:"Test Customer",
+      phone:"01700000000",
+      status:"Active"
+    }
+  ];
+
+
+  riders = [
+    {
+      id:"test_rider_001",
+      name:"Test Rider",
+      phone:"01700000000",
+      status:"Active",
+      zone:"",
+      balance:0
+    }
+  ];
+
+
+  payments = [
+    {
+      id:"payment_test_001",
+      order:"order_test_001",
+      amount:0,
+      status:"Pending"
+    }
+  ];
+
+
+  coupons = [
+    {
+      code:"WELCOME10",
+      type:"Percentage",
+      value:10,
+      active:true
+    }
+  ];
+
+
+  reviews = [
+    {
+      customer:"Test Customer",
+      product:"NutriBite Granola Bar",
+      rating:5,
+      review:"Test review"
+    }
+  ];
+
+
+  renderAll();
+
+}
+
+
+/* ======================================================
+   RENDER ALL
+====================================================== */
+
+function renderAll(){
+
+  renderDashboard();
+
+  renderOrders();
+
+  renderProducts();
+
+  renderInventory();
+
+  renderCustomers();
+
+  renderRiders();
+
+  renderPayments();
+
+  renderCoupons();
+
+  renderReviews();
+
+}
+
+
+/* ======================================================
+   DASHBOARD
+====================================================== */
+
+function renderDashboard(){
+
+  $("totalSales").textContent =
+    "৳" + money(0);
+
+  $("totalOrders").textContent =
+    orders.length;
+
+  $("totalDelivered").textContent =
+    orders.filter(
+      o=>o.status==="Delivered"
+    ).length;
+
+  $("totalPending").textContent =
+    orders.filter(
+      o=>o.status!=="Delivered"
+    ).length;
+
+  $("totalCancelled").textContent =
+    orders.filter(
+      o=>o.status==="Cancelled"
+    ).length;
+
+  $("netProfit").textContent =
+    "৳0";
+
+  $("lowStock").textContent =
+    variants.filter(
+      v=>Number(v.stock)<10
+    ).length;
+
+  $("totalCustomers").textContent =
+    customers.length;
+
+
+  $("recentOrders").innerHTML =
+    orders.length
+    ?
+    orders.map(
+      o=>`
+        <div style="padding:12px 0;border-bottom:1px solid #eee">
+          <b>${escapeHtml(o.id)}</b>
+          <br>
+          <small>${escapeHtml(o.customer)}</small>
+          <br>
+          <span class="badge green">
+            ${escapeHtml(o.status)}
+          </span>
+        </div>
+      `
+    ).join("")
+    :
+    "No orders";
+
+
+  const low =
+    variants.filter(
+      v=>Number(v.stock)<10
+    );
+
+
+  $("stockAlerts").innerHTML =
+    low.length
+    ?
+    low.map(
+      v=>`
+        <div style="padding:10px 0">
+          <b>${escapeHtml(v.name)}</b>
+          <br>
+          Stock: ${v.stock}
+        </div>
+      `
+    ).join("")
+    :
+    "No low stock alert.";
+
+
+  $("pendingPayments").innerHTML =
+    payments.length
+    ?
+    payments.map(
+      p=>`
+        <div style="padding:10px 0">
+          ${escapeHtml(p.id)}
+          —
+          <b>${escapeHtml(p.status)}</b>
+        </div>
+      `
+    ).join("")
+    :
+    "No pending payments";
+
+
+  $("riderAlerts").innerHTML =
+    "No critical rider/COD alerts.";
+
+}
+
+
+/* ======================================================
+   ORDERS
+====================================================== */
+
+function renderOrders(){
+
+  const search =
+    ($("orderSearch")?.value || "")
+      .toLowerCase();
+
+
+  const list =
+    orders.filter(
+      o=>
+        !search ||
+        String(o.id)
+          .toLowerCase()
+          .includes(search) ||
+        String(o.customer)
+          .toLowerCase()
+          .includes(search)
+    );
+
+
+  $("ordersTable").innerHTML =
+    list.map(
+      o=>`
+
+      <tr>
+
+        <td>
+          <b>${escapeHtml(o.id)}</b>
+        </td>
+
+        <td>
+          ${escapeHtml(o.customer)}
+        </td>
+
+        <td>
+          ৳${money(o.total)}
+        </td>
+
+        <td>
+          ${escapeHtml(o.payment)}
+        </td>
+
+        <td>
+          <span class="badge green">
+            ${escapeHtml(o.status)}
+          </span>
+        </td>
+
+        <td>
+          ${escapeHtml(o.date)}
+        </td>
+
+      </tr>
+
+      `
+    ).join("");
+
+}
+
+
+/* ======================================================
+   PRODUCTS
+====================================================== */
+
+function renderProducts(){
+
+  $("productsTable").innerHTML =
+    products.map(
+      p=>`
+
+      <tr>
+
+        <td>
+          <b>${escapeHtml(p.name)}</b>
+        </td>
+
+        <td>
+          ${escapeHtml(p.category)}
+        </td>
+
+        <td>
+          <span class="badge green">
+            ${p.active ? "Active" : "Inactive"}
+          </span>
+        </td>
+
+        <td>
+          ${p.featured ? "Yes" : "No"}
+        </td>
+
+      </tr>
+
+      `
+    ).join("");
+
+}
+
+
+/* ======================================================
+   INVENTORY
+====================================================== */
+
+function renderInventory(){
+
+  $("inventoryTable").innerHTML =
+    variants.map(
+      v=>`
+
+      <tr>
+
+        <td>
+          ${escapeHtml(v.name)}
+        </td>
+
+        <td>
+          ${escapeHtml(v.sku)}
+        </td>
+
+        <td>
+          ৳${money(v.price)}
+        </td>
+
+        <td>
+          ${v.stock}
+        </td>
+
+        <td>
+
+          ${
+            Number(v.stock)<10
+            ?
+            `<span class="badge red">LOW</span>`
+            :
+            `<span class="badge green">OK</span>`
+          }
+
+        </td>
+
+      </tr>
+
+      `
+    ).join("");
+
+}
+
+
+/* ======================================================
+   CUSTOMERS
+====================================================== */
+
+function renderCustomers(){
+
+  $("customersTable").innerHTML =
+    customers.map(
+      c=>`
+
+      <tr>
+
+        <td>${escapeHtml(c.id)}</td>
+
+        <td>${escapeHtml(c.name)}</td>
+
+        <td>${escapeHtml(c.phone)}</td>
+
+        <td>
+          <span class="badge green">
+            ${escapeHtml(c.status)}
+          </span>
+        </td>
+
+      </tr>
+
+      `
+    ).join("");
+
+}
+
+
+/* ======================================================
+   RIDERS
+====================================================== */
+
+function renderRiders(){
+
+  $("ridersTable").innerHTML =
+    riders.map(
+      r=>`
+
+      <tr>
+
+        <td>${escapeHtml(r.id)}</td>
+
+        <td>${escapeHtml(r.name)}</td>
+
+        <td>${escapeHtml(r.phone)}</td>
+
+        <td>
+          <span class="badge green">
+            ${escapeHtml(r.status)}
+          </span>
+        </td>
+
+        <td>${escapeHtml(r.zone)}</td>
+
+        <td>
+          ৳${money(r.balance)}
+        </td>
+
+      </tr>
+
+      `
+    ).join("");
+
+}
+
+
+/* ======================================================
+   PAYMENTS
+====================================================== */
+
+function renderPayments(){
+
+  $("paymentsTable").innerHTML =
+    payments.map(
+      p=>`
+
+      <tr>
+
+        <td>${escapeHtml(p.id)}</td>
+
+        <td>${escapeHtml(p.order)}</td>
+
+        <td>৳${money(p.amount)}</td>
+
+        <td>
+          <span class="badge orange">
+            ${escapeHtml(p.status)}
+          </span>
+        </td>
+
+      </tr>
+
+      `
+    ).join("");
+
+}
+
+
+/* ======================================================
+   COUPONS
+====================================================== */
+
+function renderCoupons(){
+
+  $("couponsTable").innerHTML =
+    coupons.map(
+      c=>`
+
+      <tr>
+
+        <td>
+          <b>${escapeHtml(c.code)}</b>
+        </td>
+
+        <td>
+          ${escapeHtml(c.type)}
+        </td>
+
+        <td>
+          ${escapeHtml(c.value)}
+        </td>
+
+        <td>
+          <span class="badge green">
+            ${c.active ? "Active" : "Inactive"}
+          </span>
+        </td>
+
+      </tr>
+
+      `
+    ).join("");
+
+}
+
+
+/* ======================================================
+   REVIEWS
+====================================================== */
+
+function renderReviews(){
+
+  $("reviewsTable").innerHTML =
+    reviews.map(
+      r=>`
+
+      <tr>
+
+        <td>${escapeHtml(r.customer)}</td>
+
+        <td>${escapeHtml(r.product)}</td>
+
+        <td>⭐ ${r.rating}</td>
+
+        <td>${escapeHtml(r.review)}</td>
+
+      </tr>
+
+      `
+    ).join("");
+
+}
+
+
+/* ======================================================
+   STAFF MODAL
+====================================================== */
+
+function openStaffModal(){
+
+  $("staffModal")
+    .classList.remove("hidden");
+
+}
+
+function closeStaffModal(){
+
+  $("staffModal")
+    .classList.add("hidden");
+
+}
+
+
+/* ======================================================
+   STAFF CREATE
+====================================================== */
+
+async function createStaff(){
+
+  /*
+    IMPORTANT:
+
+    Firebase Admin SDK cannot safely be placed
+    inside browser code.
+
+    Real staff creation must go through
+    Cloud Functions / secure backend.
+
+    Therefore this button does not fake-create
+    staff accounts.
+  */
+
+  $("staffMessage").className =
+    "warning";
+
+  $("staffMessage").textContent =
+    "Staff creation requires the secure Firebase Cloud Function. Browser code must never contain the Firebase Admin SDK.";
+
+}
+
+
+/* ======================================================
+   SETTINGS
+====================================================== */
+
+function saveSettings(){
+
+  $("settingsMessage").className =
+    "success";
+
+  $("settingsMessage").textContent =
+    "Settings UI is ready.";
+
+}
+
+
+/* ======================================================
+   INITIAL STATE
+====================================================== */
+
+(function(){
+
+  const savedUid =
+    localStorage.getItem(
+      "naturebite_uid"
+    );
+
+  const savedToken =
+    localStorage.getItem(
+      "naturebite_id_token"
+    );
+
+  /*
+    Do NOT automatically assume a previous
+    token is valid.
+
+    User can login again.
+  */
+
+  if(savedUid && savedToken){
+
+    /*
+      Keep login screen visible.
+      This prevents stale token problems.
+    */
+
+  }
+
+})();
+
+
+/* ======================================================
+   GLOBAL FUNCTIONS
+====================================================== */
+
+window.login = login;
+window.logout = logout;
+window.showPage = showPage;
+window.openStaffModal = openStaffModal;
+window.closeStaffModal = closeStaffModal;
+window.createStaff = createStaff;
+window.saveSettings = saveSettings;
+window.renderOrders = renderOrders;
+
+</script>
+
+</body>
+</html>
