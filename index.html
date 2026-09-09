@@ -1,0 +1,4714 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NatureBite Admin & Staff</title>
+
+<style>
+:root{
+  --g:#2E7D32;
+  --s:#A5C18E;
+  --c:#F5F2E8;
+  --b:#5D4037;
+  --t:#243126;
+  --m:#718076;
+  --l:#e5e9e2;
+  --r:#c62828;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,system-ui,sans-serif;
+  background:#f7f8f4;
+  color:var(--t)
+}
+
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+
+.hidden{display:none!important}
+
+/* LOGIN */
+
+.login{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:20px;
+  background:linear-gradient(135deg,#f5f2e8,#eef5eb)
+}
+
+.loginbox{
+  width:min(430px,100%);
+  background:#fff;
+  border:1px solid var(--l);
+  border-radius:18px;
+  padding:32px;
+  box-shadow:0 18px 50px #24312618
+}
+
+.logo{
+  font-size:30px;
+  font-weight:800;
+  color:var(--g);
+  margin-bottom:8px
+}
+
+.muted{color:var(--m)}
+
+.field{margin:12px 0}
+
+.field label{
+  display:block;
+  font-size:12px;
+  margin-bottom:6px;
+  color:var(--m)
+}
+
+.input,.select,.textarea{
+  width:100%;
+  padding:11px 12px;
+  border:1px solid var(--l);
+  border-radius:9px;
+  background:#fff;
+  outline:0
+}
+
+.input:focus,.select:focus,.textarea:focus{
+  border-color:var(--g)
+}
+
+.btn{
+  border:0;
+  border-radius:8px;
+  padding:10px 14px;
+  font-weight:700
+}
+
+.primary{
+  background:var(--g);
+  color:#fff
+}
+
+.secondary{
+  background:#fff;
+  color:var(--g);
+  border:1px solid var(--g)
+}
+
+.danger{
+  background:#fff;
+  color:var(--r);
+  border:1px solid #e6b8b8
+}
+
+.login .btn{
+  width:100%;
+  margin-top:10px
+}
+
+.err{
+  color:var(--r);
+  font-size:12px;
+  margin-top:10px
+}
+
+/* APP */
+
+.app{
+  min-height:100vh
+}
+
+.side{
+  position:fixed;
+  z-index:20;
+  left:0;
+  top:0;
+  width:245px;
+  height:100vh;
+  overflow:auto;
+  background:var(--g);
+  color:#fff;
+  padding:18px 12px
+}
+
+.brand{
+  font-size:21px;
+  font-weight:800;
+  padding:8px 10px 20px;
+  border-bottom:1px solid #ffffff22
+}
+
+.brand small{
+  display:block;
+  font-size:9px;
+  opacity:.65;
+  margin-top:5px
+}
+
+.nav h6{
+  font-size:9px;
+  opacity:.55;
+  margin:18px 10px 6px;
+  letter-spacing:1px
+}
+
+.nav button{
+  width:100%;
+  text-align:left;
+  border:0;
+  background:transparent;
+  color:#f5fff2;
+  border-radius:8px;
+  padding:10px;
+  font-size:12px;
+  margin:1px 0
+}
+
+.nav button:hover,
+.nav button.active{
+  background:#ffffff22
+}
+
+.main{
+  margin-left:245px
+}
+
+.top{
+  height:68px;
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:#fff;
+  border-bottom:1px solid var(--l);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 22px
+}
+
+.search{
+  width:min(420px,48vw);
+  border:0;
+  background:#f1f3ee;
+  border-radius:22px;
+  padding:11px 15px;
+  outline:0
+}
+
+.grow{flex:1}
+
+.wrap{
+  padding:24px
+}
+
+.page{display:none}
+.page.active{display:block}
+
+.title{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+  margin-bottom:16px
+}
+
+.title h1{
+  margin:0;
+  font-size:25px
+}
+
+/* DASHBOARD */
+
+.kpis{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:10px
+}
+
+.card{
+  background:#fff;
+  border:1px solid var(--l);
+  border-radius:12px;
+  box-shadow:0 6px 24px #2431260a
+}
+
+.kpi{
+  padding:15px;
+  min-height:105px
+}
+
+.label{
+  font-size:9px;
+  color:#8b958e;
+  text-transform:uppercase
+}
+
+.val{
+  font-size:21px;
+  font-weight:800;
+  margin-top:8px
+}
+
+.meta{
+  font-size:10px;
+  color:var(--g);
+  margin-top:6px
+}
+
+.cols{
+  display:grid;
+  grid-template-columns:1.7fr 1fr;
+  gap:16px;
+  margin-top:16px
+}
+
+.panel{
+  padding:16px;
+  margin-bottom:16px
+}
+
+.head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px
+}
+
+.head h2{
+  font-size:14px;
+  margin:0
+}
+
+/* TABLE */
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:11px
+}
+
+th{
+  text-align:left;
+  color:#8a948d;
+  font-size:9px;
+  padding:9px;
+  border-bottom:1px solid var(--l)
+}
+
+td{
+  padding:10px 9px;
+  border-bottom:1px solid #f0f2ee
+}
+
+.toolbar{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:13px
+}
+
+.toolbar .input{
+  width:220px
+}
+
+.badge{
+  display:inline-block;
+  padding:4px 7px;
+  border-radius:12px;
+  background:#edf5ea;
+  color:var(--g);
+  font-size:9px
+}
+
+.empty{
+  text-align:center;
+  padding:30px;
+  color:var(--m)
+}
+
+.grid3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px
+}
+
+.grid4{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px
+}
+
+/* MODAL */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:#0008;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  z-index:50
+}
+
+.modal.show{
+  display:flex
+}
+
+.modalbox{
+  width:min(720px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:14px;
+  padding:20px
+}
+
+.modalhead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px
+}
+
+.close{
+  border:0;
+  border-radius:50%;
+  width:32px;
+  height:32px
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  background:#243126;
+  color:#fff;
+  padding:12px 16px;
+  border-radius:8px;
+  display:none;
+  z-index:100;
+  font-size:12px
+}
+
+.toast.show{
+  display:block
+}
+
+.mobile{
+  display:none;
+  border:0;
+  background:#fff;
+  font-size:20px
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1200px){
+  .kpis{
+    grid-template-columns:repeat(4,1fr)
+  }
+}
+
+@media(max-width:850px){
+
+  .side{
+    transform:translateX(-100%);
+    transition:.2s
+  }
+
+  .side.open{
+    transform:translateX(0)
+  }
+
+  .main{
+    margin-left:0
+  }
+
+  .mobile{
+    display:block
+  }
+
+  .cols,
+  .grid3,
+  .grid4{
+    grid-template-columns:1fr
+  }
+
+  .kpis{
+    grid-template-columns:1fr 1fr
+  }
+
+  .wrap{
+    padding:14px
+  }
+
+  .top{
+    padding:0 12px
+  }
+
+  .search{
+    width:42vw
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<section id="loginView" class="login">
+
+  <div class="loginbox">
+
+    <div class="logo">🌿 NatureBite</div>
+
+    <div class="muted">
+      Admin & Staff Management
+    </div>
+
+    <div class="field">
+      <label>Email</label>
+
+      <input
+        id="loginEmail"
+        class="input"
+        type="email"
+        autocomplete="username"
+        placeholder="admin@example.com"
+      >
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+
+      <input
+        id="loginPassword"
+        class="input"
+        type="password"
+        autocomplete="current-password"
+        placeholder="Password"
+      >
+    </div>
+
+    <button
+      id="loginBtn"
+      class="btn primary"
+      onclick="login()"
+    >
+      Login
+    </button>
+
+    <div id="loginError" class="err"></div>
+
+  </div>
+
+</section>
+
+
+<!-- ADMIN APP -->
+
+<div id="appView" class="app hidden">
+
+  <!-- SIDEBAR -->
+
+  <aside id="sidebar" class="side">
+
+    <div class="brand">
+      🌿 NatureBite
+      <small>ADMIN & STAFF MANAGEMENT</small>
+    </div>
+
+    <nav id="nav" class="nav">
+
+      <h6>OVERVIEW</h6>
+
+      <button data-page="dashboard"
+        onclick="showPage('dashboard',this)">
+        ▦ Dashboard
+      </button>
+
+
+      <h6>COMMERCE</h6>
+
+      <button data-page="orders"
+        onclick="showPage('orders',this)">
+        ▤ Orders
+      </button>
+
+      <button data-page="products"
+        onclick="showPage('products',this)">
+        □ Products
+      </button>
+
+      <button data-page="inventory"
+        onclick="showPage('inventory',this)">
+        ▥ Inventory
+      </button>
+
+      <button data-page="customers"
+        onclick="showPage('customers',this)">
+        ♙ Customers
+      </button>
+
+
+      <h6>LOGISTICS</h6>
+
+      <button data-page="riders"
+        onclick="showPage('riders',this)">
+        ◇ Riders
+      </button>
+
+      <button data-page="partners"
+        onclick="showPage('partners',this)">
+        ⇄ Delivery Partners
+      </button>
+
+
+      <h6>FINANCE</h6>
+
+      <button data-page="payments"
+        onclick="showPage('payments',this)">
+        ৳ Payments
+      </button>
+
+      <button data-page="refunds"
+        onclick="showPage('refunds',this)">
+        ↩ Refunds
+      </button>
+
+      <button data-page="cancellations"
+        onclick="showPage('cancellations',this)">
+        × Cancellations
+      </button>
+
+      <button data-page="expenses"
+        onclick="showPage('expenses',this)">
+        ▣ Expenses
+      </button>
+
+      <button data-page="reports"
+        onclick="showPage('reports',this)">
+        ▤ Reports
+      </button>
+
+
+      <h6>ENGAGEMENT</h6>
+
+      <button data-page="offers"
+        onclick="showPage('offers',this)">
+        ☆ Offers & Coupons
+      </button>
+
+      <button data-page="wheel"
+        onclick="showPage('wheel',this)">
+        ◉ Lucky Wheel
+      </button>
+
+      <button data-page="draw"
+        onclick="showPage('draw',this)">
+        🎟 Lucky Draw
+      </button>
+
+      <button data-page="reviews"
+        onclick="showPage('reviews',this)">
+        ★ Reviews
+      </button>
+
+      <button data-page="support"
+        onclick="showPage('support',this)">
+        ◌ Support
+      </button>
+
+      <button data-page="notifications"
+        onclick="showPage('notifications',this)">
+        🔔 Notifications
+      </button>
+
+
+      <h6>MANAGEMENT</h6>
+
+      <button data-page="staff"
+        onclick="showPage('staff',this)">
+        ♙ Staff & Permissions
+      </button>
+
+      <button data-page="ai"
+        onclick="showPage('ai',this)">
+        ✦ AI Assistant
+      </button>
+
+      <button data-page="settings"
+        onclick="showPage('settings',this)">
+        ⚙ Settings
+      </button>
+
+      <button data-page="audit"
+        onclick="showPage('audit',this)">
+        ◫ Audit Logs
+      </button>
+
+    </nav>
+
+    <div
+      id="userBox"
+      style="
+        padding:15px 8px;
+        border-top:1px solid #ffffff22;
+        font-size:11px
+      "
+    ></div>
+
+  </aside>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <header class="top">
+
+      <button
+        class="mobile"
+        onclick="toggleSide()"
+      >
+        ☰
+      </button>
+
+      <input
+        id="globalSearch"
+        class="search"
+        placeholder="Search orders, products, customers, riders..."
+        oninput="globalSearch()"
+      >
+
+      <span class="grow"></span>
+
+      <button
+        class="btn secondary"
+        onclick="showPage('notifications')"
+      >
+        🔔
+      </button>
+
+      <button
+        class="btn primary"
+        onclick="openNewAction()"
+      >
+        ＋ New Action
+      </button>
+
+      <button
+        class="btn secondary"
+        onclick="logout()"
+      >
+        Logout
+      </button>
+
+    </header>
+
+
+    <div class="wrap">
+
+
+      <!-- DASHBOARD -->
+
+      <section id="dashboard" class="page active">
+
+        <div class="title">
+
+          <div>
+            <h1>Dashboard</h1>
+            <p class="muted">
+              NatureBite business overview
+            </p>
+          </div>
+
+        </div>
+
+
+        <div class="kpis">
+
+          <div class="card kpi">
+            <div class="label">Total Sales</div>
+            <div id="kSales" class="val">৳0</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="label">Total Orders</div>
+            <div id="kOrders" class="val">0</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="label">Delivered</div>
+            <div id="kDelivered" class="val">0</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="label">Pending</div>
+            <div id="kPending" class="val">0</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="label">Cancelled</div>
+            <div id="kCancelled" class="val">0</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="label">Net Profit</div>
+            <div id="kProfit" class="val">৳0</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="label">Low Stock</div>
+            <div id="kLow" class="val">0</div>
+          </div>
+
+        </div>
+
+
+        <div class="cols">
+
+          <div class="card panel">
+
+            <div class="head">
+              <h2>Recent Orders</h2>
+
+              <button
+                class="btn secondary"
+                onclick="showPage('orders')"
+              >
+                View all
+              </button>
+            </div>
+
+            <div id="recentOrders"></div>
+
+          </div>
+
+
+          <div>
+
+            <div class="card panel">
+
+              <div class="head">
+                <h2>Alerts</h2>
+              </div>
+
+              <div id="alerts"></div>
+
+            </div>
+
+
+            <div class="card panel">
+
+              <div class="head">
+                <h2>AI Recommendations</h2>
+              </div>
+
+              <div id="recs">
+
+                <p class="muted">
+                  Connect more sales data to generate recommendations.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ORDERS -->
+
+      <section id="orders" class="page">
+
+        <div class="title">
+
+          <h1>Orders</h1>
+
+          <button
+            class="btn primary"
+            onclick="exportOrders()"
+          >
+            Export CSV
+          </button>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="toolbar">
+
+            <input
+              id="orderSearch"
+              class="input"
+              placeholder="Search order/customer"
+              oninput="renderOrders()"
+            >
+
+            <select
+              id="orderStatus"
+              class="select"
+              onchange="renderOrders()"
+            >
+              <option value="">All status</option>
+              <option>Order Placed</option>
+              <option>Order Confirmed</option>
+              <option>Processing</option>
+              <option>Packed</option>
+              <option>Rider Assigned</option>
+              <option>Picked Up</option>
+              <option>Out for Delivery</option>
+              <option>Delivered</option>
+              <option>Cancelled</option>
+            </select>
+
+          </div>
+
+          <div id="ordersTable"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- PRODUCTS -->
+
+      <section id="products" class="page">
+
+        <div class="title">
+
+          <h1>Products</h1>
+
+          <button
+            class="btn primary"
+            onclick="openProductModal()"
+          >
+            ＋ Add Product
+          </button>
+
+        </div>
+
+        <div class="card panel">
+
+          <div id="productsTable"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- INVENTORY -->
+
+      <section id="inventory" class="page">
+
+        <div class="title">
+
+          <h1>Inventory</h1>
+
+          <button
+            class="btn primary"
+            onclick="openStockModal()"
+          >
+            ＋ Stock Update
+          </button>
+
+        </div>
+
+        <div class="card panel">
+
+          <div id="inventoryTable"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- CUSTOMERS -->
+
+      <section id="customers" class="page">
+
+        <div class="title">
+          <h1>Customers</h1>
+        </div>
+
+        <div class="card panel">
+          <div id="customersTable"></div>
+        </div>
+
+      </section>
+
+
+      <!-- RIDERS -->
+
+      <section id="riders" class="page">
+
+        <div class="title">
+
+          <h1>Riders</h1>
+
+          <button
+            class="btn primary"
+            onclick="openRiderModal()"
+          >
+            ＋ Add Rider
+          </button>
+
+        </div>
+
+        <div class="card panel">
+
+          <div id="ridersTable"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- PARTNERS -->
+
+      <section id="partners" class="page">
+
+        <div class="title">
+          <h1>Delivery Partners</h1>
+        </div>
+
+        <div class="card panel">
+
+          <div id="partnersTable"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- PAYMENTS -->
+
+      <section id="payments" class="page">
+
+        <div class="title">
+          <h1>Payments</h1>
+        </div>
+
+        <div class="card panel">
+          <div id="paymentsTable"></div>
+        </div>
+
+      </section>
+
+
+      <!-- REFUNDS -->
+
+      <section id="refunds" class="page">
+
+        <div class="title">
+          <h1>Refunds</h1>
+        </div>
+
+        <div class="card panel">
+          <div id="refundsTable"></div>
+        </div>
+
+      </section>
+
+
+      <!-- CANCELLATIONS -->
+
+      <section id="cancellations" class="page">
+
+        <div class="title">
+          <h1>Cancellations</h1>
+        </div>
+
+        <div class="card panel">
+          <div id="cancellationsTable"></div>
+        </div>
+
+      </section>
+
+
+      <!-- EXPENSES -->
+
+      <section id="expenses" class="page">
+
+        <div class="title">
+
+          <h1>Expenses</h1>
+
+          <button
+            class="btn primary"
+            onclick="openExpenseModal()"
+          >
+            ＋ Add Expense
+          </button>
+
+        </div>
+
+        <div class="card panel">
+          <div id="expensesTable"></div>
+        </div>
+
+      </section>
+
+
+      <!-- REPORTS -->
+
+      <section id="reports" class="page">
+
+        <div class="title">
+          <h1>Reports</h1>
+        </div>
+
+        <div class="grid3">
+
+          <div class="card kpi">
+            <div class="label">Sales</div>
+            <div id="rSales" class="val">৳0</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="label">Orders</div>
+            <div id="rOrders" class="val">0</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="label">Expenses</div>
+            <div id="rExpenses" class="val">৳0</div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- OFFERS -->
+
+      <section id="offers" class="page">
+
+        <div class="title">
+
+          <h1>Offers & Coupons</h1>
+
+          <button
+            class="btn primary"
+            onclick="openCouponModal()"
+          >
+            ＋ Add Coupon
+          </button>
+
+        </div>
+
+        <div class="card panel">
+          <div id="offersTable"></div>
+        </div>
+
+      </section>
+
+
+      <!-- WHEEL -->
+
+      <section id="wheel" class="page">
+
+        <div class="title">
+          <h1>Lucky Wheel</h1>
+        </div>
+
+        <div class="card panel">
+          <div id="wheelTable"></div>
+        </div>
+
+      </section>
+
+
+      <!-- DRAW -->
+
+      <section id="draw" class="page">
+
+        <div class="title">
+
+          <h1>Lucky Draw</h1>
+
+          <button
+            class="btn primary"
+            onclick="openDrawModal()"
+          >
+            ＋ Create Draw
+          </button>
+
+        </div>
+
+        <div class="card panel">
+          <div id="drawTable"></div>
+        </div>
+
+      </section>
+
+
+      <!-- REVIEWS -->
+
+      <section id="reviews" class="page">
+
+        <div class="title">
+          <h1>Reviews</h1>
+        </div>
+
+        <div class="card panel">
+          <div id="reviewsTable"></div>
+        </div>
+
+      </section>
+
+
+      <!-- SUPPORT -->
+
+      <section id="support" class="page">
+
+        <div class="title">
+          <h1>Support</h1>
+        </div>
+
+        <div class="card panel">
+          <div id="supportTable"></div>
+        </div>
+
+      </section>
+
+
+      <!-- NOTIFICATIONS -->
+
+      <section id="notifications" class="page">
+
+        <div class="title">
+
+          <h1>Notifications</h1>
+
+          <button
+            class="btn primary"
+            onclick="openNotificationModal()"
+          >
+            ＋ New Notification
+          </button>
+
+        </div>
+
+        <div class="card panel">
+          <div id="notificationsTable"></div>
+        </div>
+
+      </section>
+
+
+      <!-- STAFF -->
+
+      <section id="staff" class="page">
+
+        <div class="title">
+
+          <h1>Staff & Permissions</h1>
+
+          <button
+            class="btn primary"
+            onclick="openStaffModal()"
+          >
+            ＋ Add Staff
+          </button>
+
+        </div>
+
+        <div class="card panel">
+          <div id="staffTable"></div>
+        </div>
+
+      </section>
+
+
+      <!-- AI -->
+
+      <section id="ai" class="page">
+
+        <div class="title">
+          <h1>AI Assistant</h1>
+        </div>
+
+        <div class="card panel">
+
+          <p>
+            AI recommendations will use approved business data.
+          </p>
+
+          <button
+            class="btn primary"
+            onclick="toast('AI analysis queued')"
+          >
+            Run Analysis
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- SETTINGS -->
+
+      <section id="settings" class="page">
+
+        <div class="title">
+          <h1>Settings</h1>
+        </div>
+
+        <div class="card panel">
+
+          <div class="grid3">
+
+            <div class="field">
+              <label>Business Name</label>
+              <input id="setBusiness" class="input">
+            </div>
+
+            <div class="field">
+              <label>Free Delivery Above</label>
+              <input id="setFree" class="input" type="number">
+            </div>
+
+            <div class="field">
+              <label>Default Delivery Charge</label>
+              <input id="setDelivery" class="input" type="number">
+            </div>
+
+            <div class="field">
+              <label>Platform Charge</label>
+              <input id="setPlatform" class="input" type="number">
+            </div>
+
+            <div class="field">
+              <label>COD</label>
+
+              <select id="setCOD" class="select">
+                <option>Enabled</option>
+                <option>Disabled</option>
+              </select>
+
+            </div>
+
+            <div class="field">
+
+              <label>Delivery Prepayment</label>
+
+              <select id="setPrepay" class="select">
+                <option>Enabled</option>
+                <option>Disabled</option>
+              </select>
+
+            </div>
+
+          </div>
+
+          <button
+            class="btn primary"
+            onclick="saveSettings()"
+          >
+            Save Settings
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- AUDIT -->
+
+      <section id="audit" class="page">
+
+        <div class="title">
+          <h1>Audit Logs</h1>
+        </div>
+
+        <div class="card panel">
+          <div id="auditTable"></div>
+        </div>
+
+      </section>
+
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- MODAL -->
+
+<div
+  id="modal"
+  class="modal"
+  onclick="if(event.target===this)closeModal()"
+>
+
+  <div id="modalBox" class="modalbox"></div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div id="toast" class="toast"></div>
+
+
+<!-- FIREBASE -->
+
+<script type="module">
+
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  addDoc,
+  setDoc,
+  updateDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+
+/* FIREBASE CONFIG */
+
+const firebaseConfig = {
+
+  apiKey:
+    "AIzaSyAlrkdWd2UMyGAp3yZkp0tlhxxXWSCjSvg",
+
+  authDomain:
+    "naturebite-bcdad.firebaseapp.com",
+
+  projectId:
+    "naturebite-bcdad",
+
+  storageBucket:
+    "naturebite-bcdad.firebasestorage.app",
+
+  messagingSenderId:
+    "860834516769",
+
+  appId:
+    "1:860834516769:web:5c2fa96a1de26e337a3860"
+};
+
+
+/* INITIALIZE */
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+
+/* STATE */
+
+let user = null;
+
+let staff = null;
+
+let unsubs = [];
+
+const state = {};
+
+
+/* HELPERS */
+
+const $ = id =>
+  document.getElementById(id);
+
+
+const esc = value =>
+  String(value ?? "")
+    .replace(/[&<>"']/g, char => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[char]));
+
+
+const money = value =>
+  Number(value || 0).toLocaleString("en-BD");
+
+
+/* PERMISSIONS */
+
+const perms = {
+
+  orders:"orders",
+  products:"products",
+  inventory:"inventory",
+  customers:"customers",
+
+  riders:"riders",
+  partners:"deliveryPartners",
+
+  payments:"payments",
+  refunds:"refunds",
+  cancellations:"orders",
+
+  expenses:"expenses",
+  reports:"reports",
+
+  offers:"offers",
+  wheel:"luckyWheel",
+  draw:"luckyDraw",
+
+  reviews:"reviews",
+  support:"support",
+
+  notifications:"notifications",
+
+  staff:"staff",
+  settings:"settings",
+  audit:"auditLogs",
+
+  dashboard:null,
+  ai:null
+};
+
+
+function can(permission){
+
+  return (
+    staff?.role === "Super Admin" ||
+    staff?.permissions?.[permission] === true
+  );
+
+}
+
+
+/* TOAST */
+
+function toast(message){
+
+  const box = $("toast");
+
+  box.textContent = message;
+
+  box.classList.add("show");
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer =
+    setTimeout(
+      () => box.classList.remove("show"),
+      2600
+    );
+
+}
+
+window.toast = toast;
+
+
+/* LOGIN */
+
+window.login = async function(){
+
+  const button = $("loginBtn");
+
+  const error = $("loginError");
+
+  error.textContent = "";
+
+  button.disabled = true;
+
+  try{
+
+    const email =
+      $("loginEmail").value.trim();
+
+    const password =
+      $("loginPassword").value;
+
+    if(!email || !password){
+
+      throw new Error(
+        "Email and password are required."
+      );
+
+    }
+
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    error =
+      error?.message ||
+      "Login failed.";
+
+    $("loginError").textContent = error;
+
+  }finally{
+
+    button.disabled = false;
+
+  }
+
+};
+
+
+/* LOGOUT */
+
+window.logout = function(){
+
+  signOut(auth);
+
+};
+
+
+/* LOGIN SCREEN */
+
+function showLogin(){
+
+  $("loginView")
+    .classList
+    .remove("hidden");
+
+  $("appView")
+    .classList
+    .add("hidden");
+
+}
+
+
+/* APP SCREEN */
+
+function showApp(){
+
+  $("loginView")
+    .classList
+    .add("hidden");
+
+  $("appView")
+    .classList
+    .remove("hidden");
+
+}
+
+
+/* PAGE */
+
+window.showPage = function(
+  id,
+  button
+){
+
+  const permission =
+    perms[id];
+
+  if(
+    permission &&
+    !can(permission)
+  ){
+
+    toast(
+      "You do not have permission to open this module."
+    );
+
+    return;
+
+  }
+
+
+  document
+    .querySelectorAll(".page")
+    .forEach(
+      page =>
+        page.classList.remove("active")
+    );
+
+
+  const page = $(id);
+
+  if(page){
+
+    page.classList.add("active");
+
+  }
+
+
+  document
+    .querySelectorAll("#nav button")
+    .forEach(
+      item =>
+        item.classList.remove("active")
+    );
+
+
+  const activeButton =
+    button ||
+    document.querySelector(
+      `#nav button[data-page="${id}"]`
+    );
+
+
+  if(activeButton){
+
+    activeButton.classList.add("active");
+
+  }
+
+
+  if(innerWidth < 851){
+
+    $("sidebar")
+      .classList
+      .remove("open");
+
+  }
+
+
+  renderPage(id);
+
+};
+
+
+/* MOBILE SIDEBAR */
+
+window.toggleSide = function(){
+
+  $("sidebar")
+    .classList
+    .toggle("open");
+
+};
+
+
+/* MODAL */
+
+window.closeModal = function(){
+
+  $("modal")
+    .classList
+    .remove("show");
+
+  $("modalBox").innerHTML = "";
+
+};
+
+
+function openModal(
+  title,
+  html
+){
+
+  $("modalBox").innerHTML = `
+
+    <div class="modalhead">
+
+      <h2 style="margin:0;font-size:17px">
+        ${esc(title)}
+      </h2>
+
+      <button
+        class="close"
+        onclick="closeModal()"
+      >
+        ×
+      </button>
+
+    </div>
+
+    ${html}
+
+  `;
+
+  $("modal")
+    .classList
+    .add("show");
+
+}
+
+
+/* NEW ACTION */
+
+window.openNewAction = function(){
+
+  const actions = [
+    ["Orders","orders"],
+    ["Products","products"],
+    ["Inventory","inventory"],
+    ["Riders","riders"],
+    ["Coupons","offers"],
+    ["Expenses","expenses"],
+    ["Notifications","notifications"]
+  ];
+
+
+  openModal(
+    "New Action",
+
+    `<div class="grid3">
+
+      ${actions.map(
+        item => `
+
+          <button
+            class="btn primary"
+            onclick="
+              closeModal();
+              showPage('${item[1]}')
+            "
+          >
+            ${item[0]}
+          </button>
+
+        `
+      ).join("")}
+
+    </div>`
+  );
+
+};
+
+
+/* TABLE */
+
+function table(
+  id,
+  heads,
+  rows
+){
+
+  const element = $(id);
+
+  if(!element) return;
+
+
+  if(!rows.length){
+
+    element.innerHTML =
+      `<div class="empty">
+        No data found.
+      </div>`;
+
+    return;
+
+  }
+
+
+  element.innerHTML = `
+
+    <div style="overflow:auto">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            ${heads.map(
+              head =>
+                `<th>${esc(head)}</th>`
+            ).join("")}
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          ${rows.join("")}
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  `;
+
+}
+
+
+/* SNAPSHOT */
+
+function snapData(snapshot){
+
+  return snapshot.docs.map(
+    document => ({
+      id:document.id,
+      ...document.data()
+    })
+  );
+
+}
+
+
+/* LISTENER */
+
+function listen(
+  collectionName
+){
+
+  const unsubscribe =
+    onSnapshot(
+      collection(
+        db,
+        collectionName
+      ),
+
+      snapshot => {
+
+        state[collectionName] =
+          snapData(snapshot);
+
+        updateDashboard();
+
+        const active =
+          document.querySelector(
+            ".page.active"
+          );
+
+        if(active){
+
+          renderPage(active.id);
+
+        }
+
+      },
+
+      error => {
+
+        console.error(
+          collectionName,
+          error
+        );
+
+      }
+    );
+
+
+  unsubs.push(unsubscribe);
+
+}
+
+
+/* CLEAR LISTENERS */
+
+function clearListeners(){
+
+  unsubs.forEach(
+    unsubscribe => unsubscribe()
+  );
+
+  unsubs = [];
+
+}
+
+
+/* CHECK ADMIN/STAFF */
+
+async function checkRole(
+  currentUser
+){
+
+  const reference =
+    doc(
+      db,
+      "staff",
+      currentUser.uid
+    );
+
+
+  const snapshot =
+    await getDoc(reference);
+
+
+  if(!snapshot.exists()){
+
+    throw new Error(
+      "Staff profile not found for this account. Create staff/" +
+      currentUser.uid +
+      " in Firestore."
+    );
+
+  }
+
+
+  const data =
+    snapshot.data();
+
+
+  if(
+    data.status &&
+    data.status !== "Active"
+  ){
+
+    throw new Error(
+      "This staff account is inactive."
+    );
+
+  }
+
+
+  return data;
+
+}
+
+
+/* START ADMIN */
+
+async function startAdmin(){
+
+  clearListeners();
+
+  showApp();
+
+
+  $("userBox").innerHTML = `
+
+    👤 <b>
+      ${esc(
+        staff.name ||
+        user.email
+      )}
+    </b>
+
+    <br>
+
+    ${esc(
+      staff.role ||
+      "Staff"
+    )}
+
+  `;
+
+
+  /* PERMISSION BASED NAVIGATION */
+
+  document
+    .querySelectorAll(
+      "#nav button"
+    )
+    .forEach(button => {
+
+      const page =
+        button.dataset.page;
+
+      const permission =
+        perms[page];
+
+
+      if(
+        !permission ||
+        can(permission)
+      ){
+
+        button.style.display =
+          "block";
+
+      }else{
+
+        button.style.display =
+          "none";
+
+      }
+
+    });
+
+
+  const collections = [
+
+    "orders",
+
+    "products",
+
+    "product_variants",
+
+    "customers",
+
+    "riders",
+
+    "payments",
+
+    "refunds",
+
+    "expenses",
+
+    "coupons",
+
+    "offers",
+
+    "reviews",
+
+    "support_tickets",
+
+    "notifications",
+
+    "staff",
+
+    "audit_logs",
+
+    "business_settings",
+
+    "lucky_wheel",
+
+    "lucky_draw",
+
+    "inventory"
+
+  ];
+
+
+  collections.forEach(
+    listen
+  );
+
+
+  showPage("dashboard");
+
+}
+
+
+/* DASHBOARD */
+
+function updateDashboard(){
+
+  const orders =
+    state.orders || [];
+
+
+  const sales =
+    orders.reduce(
+      (
+        total,
+        order
+      ) =>
+        total +
+        Number(
+          order.total ??
+          order.finalPayable ??
+          order.value ??
+          0
+        ),
+
+      0
+    );
+
+
+  const delivered =
+    orders.filter(
+      order =>
+        order.status ===
+        "Delivered"
+    ).length;
+
+
+  const pending =
+    orders.filter(
+      order =>
+        ![
+          "Delivered",
+          "Cancelled"
+        ].includes(
+          order.status || ""
+        )
+    ).length;
+
+
+  const cancelled =
+    orders.filter(
+      order =>
+        order.status ===
+        "Cancelled"
+    ).length;
+
+
+  const lowStock =
+    (
+      state.product_variants ||
+      []
+    ).filter(
+      variant =>
+        Number(
+          variant.stock ?? 0
+        ) <=
+        Number(
+          variant.lowStockThreshold ??
+          10
+        )
+    ).length;
+
+
+  const expenses =
+    (
+      state.expenses ||
+      []
+    ).reduce(
+      (
+        total,
+        expense
+      ) =>
+        total +
+        Number(
+          expense.amount || 0
+        ),
+
+      0
+    );
+
+
+  $("kSales").textContent =
+    "৳" +
+    money(sales);
+
+
+  $("kOrders").textContent =
+    orders.length;
+
+
+  $("kDelivered").textContent =
+    delivered;
+
+
+  $("kPending").textContent =
+    pending;
+
+
+  $("kCancelled").textContent =
+    cancelled;
+
+
+  $("kProfit").textContent =
+    "৳" +
+    money(
+      sales - expenses
+    );
+
+
+  $("kLow").textContent =
+    lowStock;
+
+
+  $("rSales").textContent =
+    "৳" +
+    money(sales);
+
+
+  $("rOrders").textContent =
+    orders.length;
+
+
+  $("rExpenses").textContent =
+    "৳" +
+    money(expenses);
+
+
+  $("alerts").innerHTML =
+    lowStock
+      ? `<div class="badge">
+          ${lowStock}
+          low-stock item(s)
+        </div>`
+      : `<p class="muted">
+          No urgent alerts.
+        </p>`;
+
+
+  renderRecent();
+
+}
+
+
+/* RECENT ORDERS */
+
+function renderRecent(){
+
+  const orders =
+    (
+      state.orders ||
+      []
+    ).slice()
+    .reverse()
+    .slice(0,8);
+
+
+  const rows =
+    orders.map(
+      order => `
+
+        <tr>
+
+          <td>
+            <b>
+              ${esc(order.id)}
+            </b>
+          </td>
+
+          <td>
+            ${esc(
+              order.customerName ||
+              order.customer ||
+              order.customerId ||
+              ""
+            )}
+          </td>
+
+          <td>
+            ৳${money(
+              order.total ??
+              order.finalPayable ??
+              0
+            )}
+          </td>
+
+          <td>
+            <span class="badge">
+              ${esc(
+                order.status ||
+                "Pending"
+              )}
+            </span>
+          </td>
+
+          <td>
+
+            <button
+              class="btn secondary"
+              onclick="
+                viewOrder('${esc(order.id)}')
+              "
+            >
+              View
+            </button>
+
+          </td>
+
+        </tr>
+
+      `
+    );
+
+
+  table(
+    "recentOrders",
+    [
+      "ORDER",
+      "CUSTOMER",
+      "TOTAL",
+      "STATUS",
+      ""
+    ],
+    rows
+  );
+
+}
+
+
+/* ORDERS */
+
+window.renderOrders =
+function(){
+
+  const search =
+    (
+      $("orderSearch")?.value ||
+      ""
+    )
+    .toLowerCase();
+
+
+  const status =
+    $("orderStatus")?.value ||
+    "";
+
+
+  const rows =
+    (
+      state.orders ||
+      []
+    )
+    .filter(
+      order =>
+
+        (
+          !search ||
+          JSON.stringify(
+            order
+          )
+          .toLowerCase()
+          .includes(search)
+        )
+
+        &&
+
+        (
+          !status ||
+          order.status === status
+        )
+
+    )
+    .map(
+      order => `
+
+        <tr>
+
+          <td>
+            ${esc(order.id)}
+          </td>
+
+          <td>
+            ${esc(
+              order.customerName ||
+              order.customer ||
+              order.customerId ||
+              ""
+            )}
+          </td>
+
+          <td>
+            ${esc(
+              order.phone ||
+              order.customerPhone ||
+              ""
+            )}
+          </td>
+
+          <td>
+            ৳${money(
+              order.total ??
+              order.finalPayable ??
+              0
+            )}
+          </td>
+
+          <td>
+            <span class="badge">
+              ${esc(
+                order.status ||
+                ""
+              )}
+            </span>
+          </td>
+
+          <td>
+
+            <button
+              class="btn secondary"
+              onclick="
+                viewOrder('${esc(order.id)}')
+              "
+            >
+              Details
+            </button>
+
+          </td>
+
+        </tr>
+
+      `
+    );
+
+
+  table(
+    "ordersTable",
+    [
+      "ORDER",
+      "CUSTOMER",
+      "PHONE",
+      "TOTAL",
+      "STATUS",
+      ""
+    ],
+    rows
+  );
+
+};
+
+
+/* ORDER DETAIL */
+
+window.viewOrder =
+function(id){
+
+  const order =
+    (
+      state.orders ||
+      []
+    )
+    .find(
+      item =>
+        item.id === id
+    );
+
+
+  if(!order){
+
+    toast(
+      "Order not found."
+    );
+
+    return;
+
+  }
+
+
+  const fields =
+    Object.entries(order)
+    .filter(
+      ([key]) =>
+        ![
+          "createdAt",
+          "updatedAt"
+        ].includes(key)
+    )
+    .slice(0,30);
+
+
+  openModal(
+    "Order " + id,
+
+    `
+
+      <div class="grid3">
+
+        ${fields.map(
+          ([key,value]) => `
+
+            <div class="field">
+
+              <label>
+                ${esc(key)}
+              </label>
+
+              <div style="font-size:12px">
+
+                ${esc(
+                  value &&
+                  typeof value.toDate ===
+                  "function"
+
+                    ? value
+                        .toDate()
+                        .toLocaleString()
+
+                    : value
+                )}
+
+              </div>
+
+            </div>
+
+          `
+        ).join("")}
+
+      </div>
+
+
+      <div class="actions">
+
+        <button
+          class="btn primary"
+          onclick="
+            printOrder('${esc(id)}')
+          "
+        >
+          Print Delivery Sheet
+        </button>
+
+      </div>
+
+    `
+  );
+
+};
+
+
+/* PRINT */
+
+window.printOrder =
+function(id){
+
+  const order =
+    (
+      state.orders ||
+      []
+    )
+    .find(
+      item =>
+        item.id === id
+    );
+
+
+  if(!order) return;
+
+
+  const popup =
+    window.open(
+      "",
+      "_blank"
+    );
+
+
+  if(!popup){
+
+    toast(
+      "Please allow popups to print."
+    );
+
+    return;
+
+  }
+
+
+  popup.document.write(`
+
+    <!doctype html>
+
+    <html>
+
+    <head>
+
+      <title>
+        NatureBite Delivery Sheet
+      </title>
+
+    </head>
+
+    <body
+      style="
+        font-family:Arial;
+        padding:30px
+      "
+    >
+
+      <h2>
+        NatureBite Delivery Sheet
+      </h2>
+
+      <hr>
+
+      <p>
+        <b>Order ID:</b>
+        ${esc(order.id)}
+      </p>
+
+      <p>
+        <b>Customer:</b>
+        ${esc(
+          order.customerName ||
+          order.customer ||
+          ""
+        )}
+      </p>
+
+      <p>
+        <b>Phone:</b>
+        ${esc(
+          order.phone ||
+          order.customerPhone ||
+          ""
+        )}
+      </p>
+
+      <p>
+        <b>Address:</b>
+        ${esc(
+          order.deliveryAddress ||
+          order.address ||
+          ""
+        )}
+      </p>
+
+      <p>
+        <b>Status:</b>
+        ${esc(
+          order.status ||
+          ""
+        )}
+      </p>
+
+      <p>
+        <b>Total:</b>
+        ৳${money(
+          order.total ??
+          order.finalPayable ??
+          0
+        )}
+      </p>
+
+    </body>
+
+    </html>
+
+  `);
+
+
+  popup.document.close();
+
+  popup.focus();
+
+  popup.print();
+
+};
+
+
+/* GENERIC TABLE */
+
+function generic(
+  collectionName,
+  elementId,
+  headers,
+  mapper
+){
+
+  table(
+    elementId,
+    headers,
+    (
+      state[
+        collectionName
+      ] || []
+    )
+    .map(mapper)
+    .filter(Boolean)
+  );
+
+}
+
+
+/* PAGE RENDER */
+
+function renderPage(id){
+
+  if(id === "dashboard"){
+
+    updateDashboard();
+
+  }
+
+
+  if(id === "orders"){
+
+    renderOrders();
+
+  }
+
+
+  if(id === "products"){
+
+    generic(
+      "products",
+      "productsTable",
+
+      [
+        "ID",
+        "NAME",
+        "CATEGORY",
+        "ACTIVE"
+      ],
+
+      item => `
+
+        <tr>
+
+          <td>
+            ${esc(item.id)}
+          </td>
+
+          <td>
+            ${esc(item.name)}
+          </td>
+
+          <td>
+            ${esc(item.categoryId)}
+          </td>
+
+          <td>
+            ${esc(
+              String(
+                item.active ??
+                true
+              )
+            )}
+          </td>
+
+        </tr>
+
+      `
+    );
+
+  }
+
+
+  if(id === "inventory"){
+
+    generic(
+      "product_variants",
+      "inventoryTable",
+
+      [
+        "VARIANT",
+        "PRODUCT",
+        "WEIGHT",
+        "PRICE",
+        "STOCK"
+      ],
+
+      item => `
+
+        <tr>
+
+          <td>
+            ${esc(item.id)}
+          </td>
+
+          <td>
+            ${esc(item.productId)}
+          </td>
+
+          <td>
+            ${esc(
+              item.weight ||
+              item.name ||
+              ""
+            )}
+          </td>
+
+          <td>
+            ৳${money(item.price)}
+          </td>
+
+          <td>
+            ${esc(item.stock)}
+          </td>
+
+        </tr>
+
+      `
+    );
+
+  }
+
+
+  if(id === "customers"){
+
+    generic(
+      "customers",
+      "customersTable",
+
+      [
+        "ID",
+        "NAME",
+        "PHONE",
+        "STATUS"
+      ],
+
+      item => `
+
+        <tr>
+
+          <td>
+            ${esc(item.id)}
+          </td>
+
+          <td>
+            ${esc(item.name)}
+          </td>
+
+          <td>
+            ${esc(item.phone)}
+          </td>
+
+          <td>
+            ${esc(
+              item.accountStatus ||
+              item.status ||
+              "Active"
+            )}
+          </td>
+
+        </tr>
+
+      `
+    );
+
+  }
+
+
+  if(id === "riders"){
+
+    generic(
+      "riders",
+      "ridersTable",
+
+      [
+        "ID",
+        "NAME",
+        "PHONE",
+        "STATUS",
+        "ZONE"
+      ],
+
+      item => `
+
+        <tr>
+
+          <td>
+            ${esc(item.id)}
+          </td>
+
+          <td>
+            ${esc(item.name)}
+          </td>
+
+          <td>
+            ${esc(item.phone)}
+          </td>
+
+          <td>
+            ${esc(
+              item.riderStatus ||
+              item.status
+            )}
+          </td>
+
+          <td>
+            ${esc(
+              item.assignedZoneId ||
+              ""
+            )}
+          </td>
+
+        </tr>
+
+      `
+    );
+
+  }
+
+
+  if(id === "partners"){
+
+    $("partnersTable").innerHTML = `
+
+      <div class="grid4">
+
+        ${[
+          "NatureBite",
+          "Pathao",
+          "Steadfast",
+          "CarryBee"
+        ]
+        .map(
+          name => `
+
+            <div class="card panel">
+
+              <b>
+                ${name}
+              </b>
+
+              <p class="muted">
+                Delivery partner
+              </p>
+
+            </div>
+
+          `
+        ).join("")}
+
+      </div>
+
+    `;
+
+  }
+
+
+  if(id === "payments"){
+
+    generic(
+      "payments",
+      "paymentsTable",
+
+      [
+        "ID",
+        "ORDER",
+        "AMOUNT",
+        "STATUS"
+      ],
+
+      item => `
+
+        <tr>
+
+          <td>
+            ${esc(item.id)}
+          </td>
+
+          <td>
+            ${esc(item.orderId)}
+          </td>
+
+          <td>
+            ৳${money(item.amount)}
+          </td>
+
+          <td>
+            ${esc(item.status || "")}
+          </td>
+
+        </tr>
+
+      `
+    );
+
+  }
+
+
+  if(id === "refunds"){
+
+    generic(
+      "refunds",
+      "refundsTable",
+
+      [
+        "ID",
+        "ORDER",
+        "AMOUNT",
+        "STATUS"
+      ],
+
+      item => `
+
+        <tr>
+
+          <td>
+            ${esc(item.id)}
+          </td>
+
+          <td>
+            ${esc(item.orderId)}
+          </td>
+
+          <td>
+            ৳${money(item.amount)}
+          </td>
+
+          <td>
+            ${esc(item.status || "")}
+          </td>
+
+        </tr>
+
+      `
+    );
+
+  }
+
+
+  if(id === "cancellations"){
+
+    generic(
+      "orders",
+      "cancellationsTable",
+
+      [
+        "ORDER",
+        "REASON",
+        "STATUS"
+      ],
+
+      item =>
+        item.status === "Cancelled"
+
+          ? `
+
+            <tr>
+
+              <td>
+                ${esc(item.id)}
+              </td>
+
+              <td>
+                ${esc(
+                  item.cancellationReason ||
+                  ""
+                )}
+              </td>
+
+              <td>
+                ${esc(item.status)}
+              </td>
+
+            </tr>
+
+          `
+
+          : ""
+    );
+
+  }
+
+
+  if(id === "expenses"){
+
+    generic(
+      "expenses",
+      "expensesTable",
+
+      [
+        "ID",
+        "TITLE",
+        "AMOUNT",
+        "DATE"
+      ],
+
+      item => `
+
+        <tr>
+
+          <td>
+            ${esc(item.id)}
+          </td>
+
+          <td>
+            ${esc(
+              item.title ||
+              item.description ||
+              ""
+            )}
+          </td>
+
+          <td>
+            ৳${money(item.amount)}
+          </td>
+
+          <td>
+            ${esc(item.date || "")}
+          </td>
+
+        </tr>
+
+      `
+    );
+
+  }
+
+
+  if(id === "offers"){
+
+    generic(
+      "coupons",
+      "offersTable",
+
+      [
+        "ID",
+        "CODE",
+        "DISCOUNT",
+        "ACTIVE"
+      ],
+
+      item => `
+
+        <tr>
+
+          <td>
+            ${esc(item.id)}
+          </td>
+
+          <td>
+            ${esc(
+              item.code ||
+              item.id
+            )}
+          </td>
+
+          <td>
+            ${esc(
+              item.discount ??
+              item.discountValue ??
+              ""
+            )}
+          </td>
+
+          <td>
+            ${esc(
+              String(
+                item.active ??
+                true
+              )
+            )}
+          </td>
+
+        </tr>
+
+      `
+    );
+
+  }
+
+
+  if(id === "wheel"){
+
+    generic(
+      "lucky_wheel",
+      "wheelTable",
+
+      [
+        "ID",
+        "TYPE",
+        "STATUS"
+      ],
+
+      item => `
+
+        <tr>
+
+          <td>
+            ${esc(item.id)}
+          </td>
+
+          <td>
+            ${esc(
+              item.type ||
+              "Spin"
+            )}
+          </td>
+
+          <td>
+            ${esc(
+              item.status ||
+              ""
+            )}
+          </td>
+
+        </tr>
+
+      `
+    );
+
+  }
+
+
+  if(id === "draw"){
+
+    generic(
+      "lucky_draw",
+      "drawTable",
+
+      [
+        "ID",
+        "NAME",
+        "STATUS"
+      ],
+
+      item => `
+
+        <tr>
+
+          <td>
+            ${esc(item.id)}
+          </td>
+
+          <td>
+            ${esc(item.name || "")}
+          </td>
+
+          <td>
+            ${esc(item.status || "")}
+          </td>
+
+        </tr>
+
+      `
+    );
+
+  }
+
+
+  if(id === "reviews"){
+
+    generic(
+      "reviews",
+      "reviewsTable",
+
+      [
+        "ID",
+        "PRODUCT",
+        "RATING",
+        "STATUS"
+      ],
+
+      item => `
+
+        <tr>
+
+          <td>
+            ${esc(item.id)}
+          </td>
+
+          <td>
+            ${esc(item.productId)}
+          </td>
+
+          <td>
+            ${esc(item.rating)}
+          </td>
+
+          <td>
+            ${esc(item.status || "")}
+          </td>
+
+        </tr>
+
+      `
+    );
+
+  }
+
+
+  if(id === "support"){
+
+    generic(
+      "support_tickets",
+      "supportTable",
+
+      [
+        "ID",
+        "CUSTOMER",
+        "CATEGORY",
+        "STATUS"
+      ],
+
+      item => `
+
+        <tr>
+
+          <td>
+            ${esc(item.id)}
+          </td>
+
+          <td>
+            ${esc(item.customerId)}
+          </td>
+
+          <td>
+            ${esc(item.category)}
+          </td>
+
+          <td>
+            ${esc(item.status)}
+          </td>
+
+        </tr>
+
+      `
+    );
+
+  }
+
+
+  if(id === "notifications"){
+
+    generic(
+      "notifications",
+      "notificationsTable",
+
+      [
+        "ID",
+        "TITLE",
+        "TYPE",
+        "READ"
+      ],
+
+      item => `
+
+        <tr>
+
+          <td>
+            ${esc(item.id)}
+          </td>
+
+          <td>
+            ${esc(item.title)}
+          </td>
+
+          <td>
+            ${esc(item.type)}
+          </td>
+
+          <td>
+            ${esc(
+              String(
+                item.read ??
+                false
+              )
+            )}
+          </td>
+
+        </tr>
+
+      `
+    );
+
+  }
+
+
+  if(id === "staff"){
+
+    generic(
+      "staff",
+      "staffTable",
+
+      [
+        "ID",
+        "NAME",
+        "EMAIL",
+        "ROLE",
+        "STATUS"
+      ],
+
+      item => `
+
+        <tr>
+
+          <td>
+            ${esc(item.id)}
+          </td>
+
+          <td>
+            ${esc(item.name)}
+          </td>
+
+          <td>
+            ${esc(item.email)}
+          </td>
+
+          <td>
+            ${esc(item.role)}
+          </td>
+
+          <td>
+            ${esc(item.status)}
+          </td>
+
+        </tr>
+
+      `
+    );
+
+  }
+
+
+  if(id === "audit"){
+
+    generic(
+      "audit_logs",
+      "auditTable",
+
+      [
+        "ID",
+        "ACTION",
+        "USER"
+      ],
+
+      item => `
+
+        <tr>
+
+          <td>
+            ${esc(item.id)}
+          </td>
+
+          <td>
+            ${esc(item.action)}
+          </td>
+
+          <td>
+            ${esc(
+              item.user ||
+              item.actorEmail ||
+              item.actorUid ||
+              ""
+            )}
+          </td>
+
+        </tr>
+
+      `
+    );
+
+  }
+
+
+  if(id === "settings"){
+
+    const settings =
+      (
+        state.business_settings ||
+        []
+      )
+      .find(
+        item =>
+          item.id === "main"
+      ) || {};
+
+
+    $("setBusiness").value =
+      settings.business ||
+      "NatureBite";
+
+
+    $("setFree").value =
+      settings.free ??
+      0;
+
+
+    $("setDelivery").value =
+      settings.delivery ??
+      0;
+
+
+    $("setPlatform").value =
+      settings.platform ??
+      0;
+
+
+    $("setCOD").value =
+      settings.cod ||
+      "Enabled";
+
+
+    $("setPrepay").value =
+      settings.prepay ||
+      "Disabled";
+
+  }
+
+}
+
+
+/* SEARCH */
+
+window.globalSearch =
+function(){
+
+  const query =
+    $("globalSearch")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  if(!query) return;
+
+
+  const order =
+    (
+      state.orders ||
+      []
+    )
+    .find(
+      item =>
+        JSON.stringify(item)
+          .toLowerCase()
+          .includes(query)
+    );
+
+
+  if(order){
+
+    showPage("orders");
+
+    $("orderSearch").value =
+      query;
+
+    renderOrders();
+
+    return;
+
+  }
+
+
+  const product =
+    (
+      state.products ||
+      []
+    )
+    .find(
+      item =>
+        JSON.stringify(item)
+          .toLowerCase()
+          .includes(query)
+    );
+
+
+  if(product){
+
+    showPage("products");
+
+  }
+
+};
+
+
+/* EXPORT ORDERS */
+
+window.exportOrders =
+function(){
+
+  const rows = [
+
+    [
+      "Order ID",
+      "Customer",
+      "Phone",
+      "Status",
+      "Total"
+    ],
+
+    ...(state.orders || [])
+      .map(
+        order => [
+
+          order.id,
+
+          order.customerName ||
+          order.customer ||
+          "",
+
+          order.phone ||
+          order.customerPhone ||
+          "",
+
+          order.status ||
+          "",
+
+          order.total ??
+          order.finalPayable ??
+          0
+
+        ]
+      )
+
+  ];
+
+
+  const csv =
+    rows
+      .map(
+        row =>
+          row
+            .map(
+              value =>
+                '"' +
+                String(value)
+                  .replaceAll(
+                    '"',
+                    '""'
+                  ) +
+                '"'
+            )
+            .join(",")
+      )
+      .join("\n");
+
+
+  const url =
+    URL.createObjectURL(
+      new Blob(
+        [csv],
+        {
+          type:"text/csv"
+        }
+      )
+    );
+
+
+  const link =
+    document.createElement("a");
+
+
+  link.href = url;
+
+  link.download =
+    "naturebite-orders.csv";
+
+
+  link.click();
+
+
+  URL.revokeObjectURL(url);
+
+};
+
+
+/* SAVE SETTINGS */
+
+window.saveSettings =
+async function(){
+
+  try{
+
+    await setDoc(
+
+      doc(
+        db,
+        "business_settings",
+        "main"
+      ),
+
+      {
+
+        business:
+          $("setBusiness").value,
+
+        free:
+          Number(
+            $("setFree").value
+          ),
+
+        delivery:
+          Number(
+            $("setDelivery").value
+          ),
+
+        platform:
+          Number(
+            $("setPlatform").value
+          ),
+
+        cod:
+          $("setCOD").value,
+
+        prepay:
+          $("setPrepay").value,
+
+        updatedAt:
+          serverTimestamp()
+
+      },
+
+      {
+        merge:true
+      }
+
+    );
+
+
+    toast(
+      "Settings saved successfully."
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      error.message
+    );
+
+  }
+
+};
+
+
+/* PRODUCT */
+
+window.openProductModal =
+function(){
+
+  openModal(
+    "Add Product",
+
+    `
+
+      <div class="field">
+
+        <label>
+          Product Name
+        </label>
+
+        <input
+          id="mName"
+          class="input"
+          placeholder="Product name"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Category ID
+        </label>
+
+        <input
+          id="mCat"
+          class="input"
+          placeholder="healthy_snacks"
+        >
+
+      </div>
+
+
+      <button
+        class="btn primary"
+        onclick="createProduct()"
+      >
+        Save Product
+      </button>
+
+    `
+  );
+
+};
+
+
+window.createProduct =
+async function(){
+
+  try{
+
+    const name =
+      $("mName")
+        .value
+        .trim();
+
+
+    const categoryId =
+      $("mCat")
+        .value
+        .trim();
+
+
+    if(!name){
+
+      throw new Error(
+        "Product name is required."
+      );
+
+    }
+
+
+    const reference =
+      await addDoc(
+        collection(
+          db,
+          "products"
+        ),
+
+        {
+
+          name,
+
+          categoryId,
+
+          active:true,
+
+          featured:false,
+
+          ratingAverage:0,
+
+          reviewCount:0,
+
+          createdAt:
+            serverTimestamp(),
+
+          updatedAt:
+            serverTimestamp()
+
+        }
+      );
+
+
+    await addDoc(
+      collection(
+        db,
+        "audit_logs"
+      ),
+
+      {
+
+        action:
+          "Created product",
+
+        targetId:
+          reference.id,
+
+        actorUid:
+          user.uid,
+
+        createdAt:
+          serverTimestamp()
+
+      }
+    );
+
+
+    closeModal();
+
+    toast(
+      "Product created."
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      error.message
+    );
+
+  }
+
+};
+
+
+/* STOCK */
+
+window.openStockModal =
+function(){
+
+  openModal(
+    "Stock Update",
+
+    `
+
+      <div class="field">
+
+        <label>
+          Variant Document ID
+        </label>
+
+        <input
+          id="mVariant"
+          class="input"
+          placeholder="Variant ID"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          New Stock
+        </label>
+
+        <input
+          id="mStock"
+          class="input"
+          type="number"
+          min="0"
+        >
+
+      </div>
+
+
+      <button
+        class="btn primary"
+        onclick="saveStock()"
+      >
+        Update Stock
+      </button>
+
+    `
+  );
+
+};
+
+
+window.saveStock =
+async function(){
+
+  try{
+
+    const id =
+      $("mVariant")
+        .value
+        .trim();
+
+
+    const stock =
+      Number(
+        $("mStock").value
+      );
+
+
+    if(!id){
+
+      throw new Error(
+        "Variant ID is required."
+      );
+
+    }
+
+
+    await updateDoc(
+      doc(
+        db,
+        "product_variants",
+        id
+      ),
+
+      {
+
+        stock,
+
+        updatedAt:
+          serverTimestamp()
+
+      }
+    );
+
+
+    closeModal();
+
+    toast(
+      "Stock updated."
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      error.message
+    );
+
+  }
+
+};
+
+
+/* RIDER */
+
+window.openRiderModal =
+function(){
+
+  openModal(
+    "Add Rider",
+
+    `
+
+      <div class="field">
+
+        <label>
+          Rider Name
+        </label>
+
+        <input
+          id="rName"
+          class="input"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Phone
+        </label>
+
+        <input
+          id="rPhone"
+          class="input"
+        >
+
+      </div>
+
+
+      <button
+        class="btn primary"
+        onclick="createRider()"
+      >
+        Save Rider
+      </button>
+
+    `
+  );
+
+};
+
+
+window.createRider =
+async function(){
+
+  try{
+
+    const reference =
+      await addDoc(
+        collection(
+          db,
+          "riders"
+        ),
+
+        {
+
+          riderId:"",
+
+          name:
+            $("rName")
+              .value
+              .trim(),
+
+          phone:
+            $("rPhone")
+              .value
+              .trim(),
+
+          riderStatus:
+            "active",
+
+          onlineStatus:
+            false,
+
+          currentBalance:0,
+
+          codCollected:0,
+
+          pendingSettlement:0,
+
+          approvedSettlement:0,
+
+          paidSettlement:0,
+
+          createdAt:
+            serverTimestamp(),
+
+          updatedAt:
+            serverTimestamp()
+
+        }
+      );
+
+
+    await updateDoc(
+      doc(
+        db,
+        "riders",
+        reference.id
+      ),
+
+      {
+        riderId:
+          reference.id
+      }
+    );
+
+
+    closeModal();
+
+    toast(
+      "Rider created."
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      error.message
+    );
+
+  }
+
+};
+
+
+/* EXPENSE */
+
+window.openExpenseModal =
+function(){
+
+  openModal(
+    "Add Expense",
+
+    `
+
+      <div class="field">
+
+        <label>
+          Expense Title
+        </label>
+
+        <input
+          id="eTitle"
+          class="input"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Amount
+        </label>
+
+        <input
+          id="eAmount"
+          class="input"
+          type="number"
+          min="0"
+        >
+
+      </div>
+
+
+      <button
+        class="btn primary"
+        onclick="createExpense()"
+      >
+        Save Expense
+      </button>
+
+    `
+  );
+
+};
+
+
+window.createExpense =
+async function(){
+
+  try{
+
+    await addDoc(
+      collection(
+        db,
+        "expenses"
+      ),
+
+      {
+
+        title:
+          $("eTitle")
+            .value
+            .trim(),
+
+        amount:
+          Number(
+            $("eAmount").value
+          ),
+
+        createdAt:
+          serverTimestamp(),
+
+        createdBy:
+          user.uid
+
+      }
+    );
+
+
+    closeModal();
+
+    toast(
+      "Expense added."
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      error.message
+    );
+
+  }
+
+};
+
+
+/* COUPON */
+
+window.openCouponModal =
+function(){
+
+  openModal(
+    "Add Coupon",
+
+    `
+
+      <div class="field">
+
+        <label>
+          Coupon Code
+        </label>
+
+        <input
+          id="cCode"
+          class="input"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Discount
+        </label>
+
+        <input
+          id="cDiscount"
+          class="input"
+          type="number"
+        >
+
+      </div>
+
+
+      <button
+        class="btn primary"
+        onclick="createCoupon()"
+      >
+        Save Coupon
+      </button>
+
+    `
+  );
+
+};
+
+
+window.createCoupon =
+async function(){
+
+  try{
+
+    await addDoc(
+      collection(
+        db,
+        "coupons"
+      ),
+
+      {
+
+        code:
+          $("cCode")
+            .value
+            .trim()
+            .toUpperCase(),
+
+        discount:
+          Number(
+            $("cDiscount").value
+          ),
+
+        active:true,
+
+        createdAt:
+          serverTimestamp(),
+
+        updatedAt:
+          serverTimestamp()
+
+      }
+    );
+
+
+    closeModal();
+
+    toast(
+      "Coupon created."
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      error.message
+    );
+
+  }
+
+};
+
+
+/* LUCKY DRAW */
+
+window.openDrawModal =
+function(){
+
+  openModal(
+    "Create Lucky Draw",
+
+    `
+
+      <div class="field">
+
+        <label>
+          Draw Name
+        </label>
+
+        <input
+          id="dName"
+          class="input"
+        >
+
+      </div>
+
+
+      <button
+        class="btn primary"
+        onclick="createDraw()"
+      >
+        Create Draw
+      </button>
+
+    `
+  );
+
+};
+
+
+window.createDraw =
+async function(){
+
+  try{
+
+    await addDoc(
+      collection(
+        db,
+        "lucky_draw"
+      ),
+
+      {
+
+        name:
+          $("dName")
+            .value
+            .trim(),
+
+        status:
+          "Active",
+
+        createdAt:
+          serverTimestamp(),
+
+        updatedAt:
+          serverTimestamp()
+
+      }
+    );
+
+
+    closeModal();
+
+    toast(
+      "Lucky Draw created."
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      error.message
+    );
+
+  }
+
+};
+
+
+/* NOTIFICATION */
+
+window.openNotificationModal =
+function(){
+
+  openModal(
+    "New Notification",
+
+    `
+
+      <div class="field">
+
+        <label>
+          Title
+        </label>
+
+        <input
+          id="nTitle"
+          class="input"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Message
+        </label>
+
+        <textarea
+          id="nMsg"
+          class="textarea"
+        ></textarea>
+
+      </div>
+
+
+      <button
+        class="btn primary"
+        onclick="createNotification()"
+      >
+        Create Notification
+      </button>
+
+    `
+  );
+
+};
+
+
+window.createNotification =
+async function(){
+
+  try{
+
+    await addDoc(
+      collection(
+        db,
+        "notifications"
+      ),
+
+      {
+
+        title:
+          $("nTitle")
+            .value
+            .trim(),
+
+        message:
+          $("nMsg")
+            .value
+            .trim(),
+
+        type:
+          "system",
+
+        read:false,
+
+        createdAt:
+          serverTimestamp(),
+
+        createdBy:
+          user.uid
+
+      }
+    );
+
+
+    closeModal();
+
+    toast(
+      "Notification created."
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      error.message
+    );
+
+  }
+
+};
+
+
+/* STAFF */
+
+window.openStaffModal =
+function(){
+
+  openModal(
+    "Add Staff",
+
+    `
+
+      <p class="muted small">
+
+        Staff account creation must use the
+        secure Cloud Function.
+        Firebase Admin SDK must never be
+        placed inside this browser code.
+
+      </p>
+
+
+      <div class="field">
+
+        <label>
+          Name
+        </label>
+
+        <input
+          id="sName"
+          class="input"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Email
+        </label>
+
+        <input
+          id="sEmail"
+          class="input"
+          type="email"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Role
+        </label>
+
+        <select
+          id="sRole"
+          class="select"
+        >
+
+          <option>
+            Order Manager
+          </option>
+
+          <option>
+            Product Manager
+          </option>
+
+          <option>
+            Inventory Manager
+          </option>
+
+          <option>
+            Accountant / Finance
+          </option>
+
+          <option>
+            Customer Support
+          </option>
+
+          <option>
+            Delivery Manager
+          </option>
+
+          <option>
+            Marketing Manager
+          </option>
+
+        </select>
+
+      </div>
+
+    `
+  );
+
+};
+
+
+/* AUTH STATE */
+
+onAuthStateChanged(
+  auth,
+
+  async currentUser => {
+
+    if(!currentUser){
+
+      user = null;
+
+      staff = null;
+
+      clearListeners();
+
+      showLogin();
+
+      return;
+
+    }
+
+
+    try{
+
+      user =
+        currentUser;
+
+
+      staff =
+        await checkRole(
+          currentUser
+        );
+
+
+      await startAdmin();
+
+
+    }catch(error){
+
+      console.error(error);
+
+      clearListeners();
+
+      showLogin();
+
+      $("loginError")
+        .textContent =
+        error.message;
+
+    }
+
+  }
+
+);
+
+</script>
+
+</body>
+</html>
