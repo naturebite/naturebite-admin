@@ -264,7 +264,7 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from
 import { getFirestore, collection, doc, getDoc, getDocs, onSnapshot, addDoc, setDoc, updateDoc, deleteDoc, query, orderBy, limit, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-functions.js";
 
-const firebaseConfig={apiKey:"AIzaSyAlrkdWd2UMGAp3yZkp0tlhxxXWSCjSvg",authDomain:"naturebite-bcdad.firebaseapp.com",projectId:"naturebite-bcdad",storageBucket:"naturebite-bcdad.firebasestorage.app",messagingSenderId:"860834516769",appId:"1:860834516769:web:5c2fa96a1de26e337a3860"};
+const firebaseConfig={apiKey:"AIzaSyAlrkdWd2UMyGAp3yZkp0tlhxxXwSCjSvg",authDomain:"naturebite-bcdad.firebaseapp.com",projectId:"naturebite-bcdad",storageBucket:"naturebite-bcdad.firebasestorage.app",messagingSenderId:"860834516769",appId:"1:860834516769:web:5c2fa96a1de26e337a3860"};
 const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const functions=getFunctions(app,"asia-south1");
 let authReady=false;
 const $=id=>document.getElementById(id);
