@@ -38,7 +38,7 @@ table{width:100%;border-collapse:collapse}th{text-align:left;color:#999;font-siz
 .mobile-menu{display:none;border:0;background:#f4f4ed;border-radius:8px;padding:9px}
 .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}.mini-card{background:#fff;border:1px solid #e7e7de;border-radius:12px;padding:14px}.mini-card b{display:block;font-size:19px;margin-top:6px}.mini-card small{color:#888}
 @media(max-width:1100px){.stats{grid-template-columns:repeat(3,1fr)}.kpi-row{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:800px){.sidebar{width:70px;padding:15px 8px}.sidebar-brand strong,.section-title,.nav-item span{display:none}.sidebar-brand{justify-content:center}.main{margin-left:70px}.topbar{padding:0 12px}.search{width:200px}.dashboard-grid{grid-template-columns:1fr}.mobile-menu{display:block}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}}
+@media(max-width:800px){.sidebar{width:245px;padding:20px 13px;transform:translateX(-100%);transition:transform .2s ease;box-shadow:10px 0 30px rgba(0,0,0,.12)}.sidebar.open{transform:translateX(0)}.sidebar-brand strong,.section-title,.nav-item span{display:block}.sidebar-brand{justify-content:flex-start}.main{margin-left:0}.topbar{padding:0 12px}.search{width:200px}.dashboard-grid{grid-template-columns:1fr}.mobile-menu{display:block}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:45}.sidebar-overlay.show{display:block}}
 @media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}.content{padding:15px}.search{width:140px}.profile-info{display:none}.page-title{align-items:flex-start;flex-direction:column}.kpi-row{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -71,7 +71,7 @@ table{width:100%;border-collapse:collapse}th{text-align:left;color:#999;font-siz
 
 <main class="main">
 <header class="topbar">
-<div style="display:flex;align-items:center;gap:8px"><button class="mobile-menu" id="refreshBtn">↻</button><div class="search"><input id="globalSearch" type="search" placeholder="Search current module..."></div></div>
+<div style="display:flex;align-items:center;gap:8px"><button class="mobile-menu" id="mobileMenu">☰</button><div class="search"><input id="globalSearch" type="search" placeholder="Search current module..."></div></div>
 <div class="top-actions"><button class="notification" id="notificationBtn">🔔</button><div class="profile"><div class="avatar" id="avatar">A</div><div class="profile-info"><strong id="adminName">Admin</strong><span id="adminRole">Super Admin</span></div></div></div>
 </header>
 <section class="content" id="content"></section>
@@ -82,7 +82,7 @@ table{width:100%;border-collapse:collapse}th{text-align:left;color:#999;font-siz
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut,sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut,sendPasswordResetEmail,getIdTokenResult} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 import {getFirestore,collection,getDocs,getDoc,doc,setDoc,addDoc,updateDoc,deleteDoc,serverTimestamp,query,limit,where} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 const firebaseConfig={apiKey:"AIzaSyCBaUWZflbj0RVfdyl1vZCB3SYD42vkI_0",authDomain:"naturebite-c5d88.firebaseapp.com",projectId:"naturebite-c5d88",storageBucket:"naturebite-c5d88.firebasestorage.app",messagingSenderId:"467003957826",appId:"1:467003957826:web:483a261d12ac396dca43db"};
@@ -94,11 +94,11 @@ const moduleConfig={
 products:{title:"Products",collection:"products",perm:"products",fields:[["name","Product Name","text"],["category","Category","text"],["description","Description","textarea"],["status","Status","select:active|inactive"],["featured","Featured","checkbox"]]},
 inventory:{title:"Inventory / Variants",collection:"product_variants",perm:"inventory",fields:[["productId","Product ID","text"],["productName","Product Name","text"],["weight","Weight / Variant","text"],["price","Price","number"],["stock","Stock","number"],["status","Status","select:available|out_of_stock|inactive"]]},
 riders:{title:"Riders",collection:"riders",perm:"riders",fields:[["name","Name","text"],["mobile","Mobile","text"],["status","Status","select:active|inactive|offline"],["zone","Zone","text"]]},
-deliveryPartners:{title:"Delivery Partners",collection:"deliveryPartners",perm:"deliveryPartners",fields:[["name","Partner Name","text"],["status","Status","select:active|inactive"],["phone","Phone","text"]]},
+deliveryPartners:{title:"Delivery Partners",collection:"delivery_partners",perm:"deliveryPartners",fields:[["name","Partner Name","text"],["status","Status","select:active|inactive"],["phone","Phone","text"]]},
 expenses:{title:"Expenses",collection:"expenses",perm:"expenses",fields:[["title","Expense Title","text"],["amount","Amount","number"],["category","Category","text"],["note","Note","textarea"]]},
 offers:{title:"Offers & Coupons",collection:"coupons",perm:"offers",fields:[["code","Coupon Code","text"],["discount","Discount","number"],["type","Type","select:fixed|percent"],["status","Status","select:active|inactive"]]},
 luckyWheel:{title:"Lucky Wheel",collection:"wheelRewards",perm:"luckyWheel",fields:[["title","Reward","text"],["value","Value","number"],["status","Status","select:active|inactive"]]},
-luckyDraw:{title:"Lucky Draw",collection:"luckyDraws",perm:"luckyDraw",fields:[["title","Draw Name","text"],["prize","Prize","text"],["status","Status","select:active|inactive"]]},
+luckyDraw:{title:"Lucky Draw",collection:"lucky_draw",perm:"luckyDraw",fields:[["title","Draw Name","text"],["prize","Prize","text"],["status","Status","select:active|inactive"]]},
 banners:{title:"Banners",collection:"banners",perm:"banners",fields:[["title","Banner Title","text"],["imageUrl","Image URL","url"],["status","Status","select:active|inactive"]]},
 notifications:{title:"Notifications",collection:"notifications",perm:"notifications",fields:[["customerUid","Customer UID (blank=all)","text"],["title","Title","text"],["message","Message","textarea"],["status","Status","select:unread|read"]]}
 };
@@ -108,8 +108,8 @@ function msg(t,type="error"){$("loginMessage").textContent=t;$("loginMessage").c
 function safe(v){return v===undefined||v===null?"":String(v)}
 function money(v){return "৳"+(Number(v)||0).toLocaleString("en-BD",{maximumFractionDigits:2})}
 function fmt(v){if(!v)return"-";try{if(v.toDate)return v.toDate().toLocaleString("en-BD");return new Date(v).toLocaleString("en-BD")}catch{return"-"}}
-function roleLabel(r){return({super_admin:"Super Admin",order_manager:"Order Manager",product_manager:"Product Manager",inventory_manager:"Inventory Manager",finance:"Accountant / Finance",delivery_manager:"Delivery Manager",customer_support:"Customer Support",marketing_manager:"Marketing Manager"})[r]||"Staff"}
-function isSuper(){return window.currentAdmin?.role==="super_admin"}
+function roleLabel(r){const x=String(r||"").toLowerCase().replace(/\s+/g,"_");return({super_admin:"Super Admin",order_manager:"Order Manager",product_manager:"Product Manager",inventory_manager:"Inventory Manager",finance:"Accountant / Finance",accountant_finance:"Accountant / Finance",delivery_manager:"Delivery Manager",customer_support:"Customer Support",marketing_manager:"Marketing Manager"})[x]||r||"Staff"}
+function isSuper(){return window.currentAdmin?.isSuperAdmin===true || window.currentAdmin?.role==="super_admin"}
 function can(p){return isSuper()||window.currentAdmin?.permissions?.[p]===true}
 function statusClass(s){s=String(s||"").toLowerCase();if(s.includes("deliver"))return"delivered";if(s.includes("cancel")||s.includes("reject"))return"cancelled";if(s.includes("pending")||s.includes("out")||s.includes("processing"))return"pending";return"processing"}
 
@@ -117,23 +117,43 @@ $("togglePassword").onclick=()=>{$("password").type=$("password").type==="passwo
 $("loginForm").onsubmit=async e=>{e.preventDefault();$("loginBtn").disabled=true;$("loginBtn").textContent="Signing in...";try{await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value)}catch(x){msg(x.code==="auth/invalid-credential"?"Email অথবা password সঠিক নয়।":"Login করা যায়নি।")}finally{$("loginBtn").disabled=false;$("loginBtn").textContent="Sign In"}};
 $("forgotBtn").onclick=async()=>{let e=$("email").value.trim();if(!e)return msg("প্রথমে email লিখুন।");try{await sendPasswordResetEmail(auth,e);msg("Password reset email পাঠানো হয়েছে।","success")}catch(x){msg("Password reset email পাঠানো যায়নি।")}};
 $("logoutBtn").onclick=()=>signOut(auth);$("refreshBtn").onclick=()=>loadPage(currentPage);$("notificationBtn").onclick=()=>loadPage("notifications");
-document.querySelectorAll(".nav-item").forEach(b=>b.onclick=()=>loadPage(b.dataset.page));
+document.querySelectorAll(".nav-item").forEach(b=>b.onclick=()=>{loadPage(b.dataset.page);closeSidebar()});
+function closeSidebar(){$("sidebar")?.classList.remove("open");$("sidebarOverlay")?.classList.remove("show")}
+$("mobileMenu").onclick=()=>{$("sidebar")?.classList.toggle("open");$("sidebarOverlay")?.classList.toggle("show")};
+$("sidebarOverlay").onclick=closeSidebar;
 $("globalSearch").oninput=()=>renderRows(filterRows(currentRows,$("globalSearch").value));
 $("modalClose").onclick=hideModal;$("modalBackdrop").onclick=e=>{if(e.target===$("modalBackdrop"))hideModal()};
 
 onAuthStateChanged(auth,async user=>{
- if(!user){$("loginScreen").style.display="flex";$("adminApp").style.display="none";return}
- try{
-  const s=await getDoc(doc(db,"users",user.uid));
-  if(!s.exists()){await signOut(auth);return msg("এই account-এর Admin/Staff profile পাওয়া যায়নি।")}
-  const d=s.data(),roles=["super_admin","order_manager","product_manager","inventory_manager","finance","delivery_manager","customer_support","marketing_manager"];
-  if(d.status&&d.status!=="active"){await signOut(auth);return msg("এই account বর্তমানে disabled।")}
-  if(!roles.includes(d.role||"")){await signOut(auth);return msg("এই account-এর Admin Panel access নেই।")}
-  window.currentAdmin={uid:user.uid,email:user.email,role:d.role,permissions:d.permissions||{}};
-  $("loginScreen").style.display="none";$("adminApp").style.display="block";$("adminName").textContent=d.name||user.email||"Admin";$("adminRole").textContent=roleLabel(d.role);$("avatar").textContent=(d.name||"A").charAt(0).toUpperCase();applyPermissions();loadPage("dashboard");
- }catch(e){console.error(e);await signOut(auth);msg("Admin profile যাচাই করা যায়নি।")}
+  if(!user){$("loginScreen").style.display="flex";$("adminApp").style.display="none";return}
+  try{
+    const token=await getIdTokenResult(user,true);
+    const claims=token.claims||{};
+    let profile=null;
+    let superAdmin=claims.admin===true;
+    if(superAdmin){
+      profile={role:"super_admin",name:user.displayName||"Super Admin",status:"active",permissions:{}};
+    }else{
+      const s=await getDoc(doc(db,"staff",user.uid));
+      if(!s.exists()){
+        await signOut(auth);
+        return msg("এই account-এর staff profile পাওয়া যায়নি।");
+      }
+      profile=s.data()||{};
+      if(String(profile.status||"active").toLowerCase()!=="active"){
+        await signOut(auth);return msg("এই staff account বর্তমানে disabled।");
+      }
+    }
+    window.currentAdmin={uid:user.uid,email:user.email,isSuperAdmin:superAdmin,role:superAdmin?"super_admin":profile.role,permissions:profile.permissions||{},name:profile.name||user.displayName||user.email};
+    $("loginScreen").style.display="none";$("adminApp").style.display="block";
+    $("adminName").textContent=window.currentAdmin.name;
+    $("adminRole").textContent=roleLabel(window.currentAdmin.role);
+    $("avatar").textContent=(window.currentAdmin.name||"A").charAt(0).toUpperCase();
+    applyPermissions();loadPage("dashboard");
+  }catch(e){console.error(e);await signOut(auth);msg("Admin access যাচাই করা যায়নি: "+safe(e.message));}
 });
-function applyPermissions(){document.querySelectorAll(".nav-item").forEach(b=>{let p=b.dataset.page;if(p==="dashboard")return;b.style.display=(isSuper()||can(p))?"block":"none"})}
+
+function applyPermissions(){const map={deliveryPartners:"deliveryPartners",luckyWheel:"luckyWheel",luckyDraw:"luckyDraw",aiAssistant:"aiAssistant",auditLogs:"auditLogs"};document.querySelectorAll(".nav-item").forEach(b=>{let p=map[b.dataset.page]||b.dataset.page;if(p==="dashboard")return;b.style.display=can(p)?"block":"none"})}
 
 async function rows(col,n=300){let s=await getDocs(query(collection(db,col),limit(n)));return s.docs.map(x=>({id:x.id,...x.data()}))}
 function filterRows(a,t){if(!t.trim())return a;let q=t.toLowerCase();return a.filter(x=>JSON.stringify(x).toLowerCase().includes(q))}
@@ -190,14 +210,20 @@ async function save(c,row){
  try{if(row)await updateDoc(doc(db,c.collection,row.id),d);else await addDoc(collection(db,c.collection),d);await audit("save",c.collection,row?.id||"new",d);hideModal();toast("Saved successfully");loadPage(currentPage)}catch(e){toast("Save failed: "+e.message)}
 }
 async function remove(c,id){if(!confirm("এই record delete করতে চান?"))return;try{await deleteDoc(doc(db,c.collection,id));await audit("delete",c.collection,id,{});toast("Deleted");loadPage(currentPage)}catch(e){toast("Delete failed: "+e.message)}}
-async function audit(action,module,id,data){try{await addDoc(collection(db,"auditLogs"),{actorUid:window.currentAdmin?.uid,actorEmail:window.currentAdmin?.email,action,module,recordId:id,changes:data,createdAt:serverTimestamp()})}catch(e){console.warn("Audit:",e)}}
+async function audit(action,module,id,data){try{await addDoc(collection(db,"audit_logs"),{actorUid:window.currentAdmin?.uid,actorEmail:window.currentAdmin?.email,action,module,recordId:id,changes:data,createdAt:serverTimestamp()})}catch(e){console.warn("Audit:",e)}}
 function showModal(){$("modalBackdrop").style.display="flex"}function hideModal(){$("modalBackdrop").style.display="none"}
 
 async function dashboard(){
  $("content").innerHTML=pageHead("Operational Overview","Live NatureBite business activity.",'<button class="btn primary" id="dashRefresh">↻ Refresh</button>')+'<div class="stats" id="stats"></div><div class="dashboard-grid"><div class="panel"><div class="panel-header"><h3>Recent Orders</h3><button class="btn small" id="allOrders">View All →</button></div><div class="table-wrap" id="recent"></div></div><div class="panel"><div class="panel-header"><h3>Alerts</h3></div><div id="alerts"></div></div></div>';
  $("dashRefresh").onclick=dashboard;$("allOrders").onclick=()=>loadPage("orders");
  try{
-  let [o,v,e,p,c]=await Promise.all([rows("orders"),rows("product_variants"),rows("expenses"),rows("products"),rows("coupons")]);
+  let [o,v,e,p,c]=await Promise.all([
+    (can("orders")||isSuper())?rows("orders"):Promise.resolve([]),
+    (can("inventory")||isSuper())?rows("product_variants"):Promise.resolve([]),
+    (can("expenses")||isSuper())?rows("expenses"):Promise.resolve([]),
+    (can("products")||isSuper())?rows("products"):Promise.resolve([]),
+    (can("offers")||isSuper())?rows("coupons"):Promise.resolve([])
+   ]);
   let sales=o.reduce((s,x)=>s+(Number(x.total)||0),0),ex=e.reduce((s,x)=>s+(Number(x.amount)||0),0),del=o.filter(x=>String(x.status||"").toLowerCase().includes("deliver")).length,pen=o.filter(x=>["pending","processing","out for delivery"].includes(String(x.status||"").toLowerCase())).length,canx=o.filter(x=>String(x.status||"").toLowerCase().includes("cancel")).length,low=v.filter(x=>(Number(x.stock)||0)<=10).length;
   $("stats").innerHTML=`<div class="stat-card green"><small>Total Sales</small><h3>${money(sales)}</h3></div><div class="stat-card orange"><small>Total Orders</small><h3>${o.length}</h3></div><div class="stat-card green"><small>Delivered</small><h3>${del}</h3></div><div class="stat-card orange"><small>Pending</small><h3>${pen}</h3></div><div class="stat-card red"><small>Cancelled</small><h3>${canx}</h3></div><div class="stat-card green"><small>Sales-Expenses</small><h3>${money(sales-ex)}</h3></div><div class="stat-card red"><small>Low Stock</small><h3>${low}</h3></div>`;
   let recent=o.slice(-10).reverse();$("recent").innerHTML=recent.length?`<table><thead><tr><th>Order</th><th>Customer</th><th>Status</th><th>Total</th></tr></thead><tbody>${recent.map(x=>`<tr><td>${safe(x.orderId||x.id)}</td><td>${safe(x.customerName||x.customerUid)}</td><td><span class="status ${statusClass(x.status)}">${safe(x.status)||"-"}</span></td><td>${money(x.total)}</td></tr>`).join("")}</tbody></table>`:'<div class="empty">No orders yet.</div>';
@@ -237,11 +263,11 @@ async function reports(){
 }
 
 async function reviews(){return genericActionPage("Reviews","reviews","reviews")}
-async function support(){return genericActionPage("Support","supportTickets","support")}
-async function auditLogs(){return genericActionPage("Audit Logs","auditLogs","auditLogs")}
+async function support(){return genericActionPage("Support","support_tickets","support")}
+async function auditLogs(){return genericActionPage("Audit Logs","audit_logs","auditLogs")}
 
 async function staff(){
- if(!can("staff"))return noAccess();$("content").innerHTML=pageHead("Staff","Admin and staff profiles",'<button class="btn" id="stR">↻ Refresh</button>')+'<div class="panel"><div class="table-wrap" id="stT"><div class="loading">Loading...</div></div></div>';$("stR").onclick=staff;try{let a=await rows("users");a=a.filter(x=>x.role&&x.role!=="customer");$("stT").innerHTML=a.length?`<table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Permissions</th></tr></thead><tbody>${a.map(x=>`<tr><td>${safe(x.name)}</td><td>${safe(x.email)}</td><td>${roleLabel(x.role)}</td><td>${safe(x.status)||"active"}</td><td><button class="btn small" data-st="${x.id}">View</button></td></tr>`).join("")}</tbody></table>`:'<div class="empty">No staff profiles.</div>';$("stT").querySelectorAll("[data-st]").forEach(b=>b.onclick=()=>details(a.find(x=>x.id===b.dataset.st),"Staff Profile"))}catch(e){$("stT").innerHTML='<div class="empty">Staff load হয়নি।</div>'}}
+ if(!can("staff"))return noAccess();$("content").innerHTML=pageHead("Staff","Admin and staff profiles",'<button class="btn" id="stR">↻ Refresh</button>')+'<div class="panel"><div class="table-wrap" id="stT"><div class="loading">Loading...</div></div></div>';$("stR").onclick=staff;try{let a=await rows("staff");$("stT").innerHTML=a.length?`<table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Permissions</th></tr></thead><tbody>${a.map(x=>`<tr><td>${safe(x.name)}</td><td>${safe(x.email)}</td><td>${roleLabel(x.role)}</td><td>${safe(x.status)||"active"}</td><td><button class="btn small" data-st="${x.id}">View</button></td></tr>`).join("")}</tbody></table>`:'<div class="empty">No staff profiles.</div>';$("stT").querySelectorAll("[data-st]").forEach(b=>b.onclick=()=>details(a.find(x=>x.id===b.dataset.st),"Staff Profile"))}catch(e){$("stT").innerHTML='<div class="empty">Staff load হয়নি।</div>'}}
 async function permissionsPage(){if(!can("permissions"))return noAccess();return staff()}
 
 async function settings(){
