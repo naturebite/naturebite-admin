@@ -50,7 +50,7 @@ table{width:100%;border-collapse:collapse}th{text-align:left;color:#999;font-siz
 <form id="loginForm">
 <div class="form-group"><label>Email</label><input id="email" type="email" placeholder="Enter email" autocomplete="username" required></div>
 <div class="form-group"><label>Password</label><div class="input-wrap"><input id="password" type="password" placeholder="Enter password" autocomplete="current-password" required><button type="button" class="password-toggle" id="togglePassword">👁</button></div></div>
-<button class="login-btn" id="loginBtn" type="submit">Sign In</button><div id="loginMessage" class="login-message"></div>
+<button class="login-btn" id="loginBtn" type="submit">Sign In</button><div id="loginMessage" class="login-message"></div><div id="loginHelp" style="display:none;margin-top:12px;padding:12px;border-radius:10px;background:#f7f7ef;color:#555;font-size:12px;line-height:1.5"></div>
 </form><div class="forgot"><button id="forgotBtn">Forgot Password?</button></div>
 </div></div>
 
@@ -135,6 +135,8 @@ $("loginForm").onsubmit=async e=>{
      "auth/network-request-failed":"Internet connection সমস্যা হয়েছে।"
    };
    msg(map[x.code]||("Firebase Error: "+(x.code||x.message||"unknown")));
+   $("loginHelp").style.display="block";
+   $("loginHelp").textContent="Firebase error code: "+(x.code||"unknown");
  }finally{
    $("loginBtn").disabled=false;
    $("loginBtn").textContent="Sign In";
@@ -163,15 +165,28 @@ onAuthStateChanged(auth,async user=>{
       No client-side role can grant itself access because staff writes
       are restricted by Firestore Rules.
     */
-    const snap=await getDoc(doc(db,"staff",user.uid));
+    // Read the staff profile belonging to the authenticated UID.
+    // A user document is used only as a compatibility fallback for older NatureBite setups.
+    let snap = await getDoc(doc(db,"staff",user.uid));
+    let profile = {};
+    let profileSource = "staff";
 
-    if(!snap.exists()){
-      await signOut(auth);
-      msg("Login হয়েছে, কিন্তু staff profile পাওয়া যায়নি। Firebase → Firestore → staff → আপনার UID document তৈরি করুন।");
-      return;
+    if (snap.exists()) {
+      profile = snap.data() || {};
+    } else {
+      const legacy = await getDoc(doc(db,"users",user.uid));
+      if (legacy.exists()) {
+        profile = legacy.data() || {};
+        profileSource = "users";
+      } else {
+        const uid = user.uid;
+        await signOut(auth);
+        msg("Authentication Login সফল, কিন্তু Staff profile পাওয়া যায়নি।", "error");
+        $("loginHelp").style.display="block";
+        $("loginHelp").innerHTML = "<b>Firebase UID:</b><br><code style=\"word-break:break-all\">"+safe(uid)+"</code><br><br>Firestore → <b>staff</b> → Add document → Document ID হিসেবে এই UID দিন।<br><br><b>status:</b> Active<br><b>role:</b> super_admin";
+        return;
+      }
     }
-
-    const profile=snap.data()||{};
     const status=String(profile.status||"active").trim().toLowerCase();
     const role=String(profile.role||"").trim().toLowerCase().replace(/\s+/g,"_");
 
@@ -197,10 +212,12 @@ onAuthStateChanged(auth,async user=>{
       isSuperAdmin:superAdmin,
       role,
       permissions,
-      name:profile.name||user.displayName||user.email||"Admin"
+      name:profile.name||user.displayName||user.email||"Admin",
+      profileSource
     };
 
     $("loginMessage").className="login-message";
+    $("loginHelp").style.display="none";
     $("loginScreen").style.display="none";
     $("adminApp").style.display="block";
     $("adminName").textContent=window.currentAdmin.name;
@@ -212,8 +229,10 @@ onAuthStateChanged(auth,async user=>{
 
   }catch(e){
     console.error("ADMIN PROFILE ERROR:",e);
-    await signOut(auth);
-    msg("Login যাচাই করা যায়নি: "+safe(e.message||e));
+    try{ await signOut(auth); }catch(_){}
+    const code=e?.code||"unknown";
+    const detail=e?.message||String(e);
+    msg("Admin profile যাচাই করা যায়নি. Firebase Error: "+code+" — "+detail);
   }
 });
 
