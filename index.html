@@ -82,7 +82,7 @@ table{width:100%;border-collapse:collapse}th{text-align:left;color:#999;font-siz
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut,sendPasswordResetEmail,getIdTokenResult} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut,sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 import {getFirestore,collection,getDocs,getDoc,doc,setDoc,addDoc,updateDoc,deleteDoc,serverTimestamp,query,limit,where} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
 const firebaseConfig={apiKey:"AIzaSyCBaUWZflbj0RVfdyl1vZCB3SYD42vkI_0",authDomain:"naturebite-c5d88.firebaseapp.com",projectId:"naturebite-c5d88",storageBucket:"naturebite-c5d88.firebasestorage.app",messagingSenderId:"467003957826",appId:"1:467003957826:web:483a261d12ac396dca43db"};
@@ -109,12 +109,37 @@ function safe(v){return v===undefined||v===null?"":String(v)}
 function money(v){return "৳"+(Number(v)||0).toLocaleString("en-BD",{maximumFractionDigits:2})}
 function fmt(v){if(!v)return"-";try{if(v.toDate)return v.toDate().toLocaleString("en-BD");return new Date(v).toLocaleString("en-BD")}catch{return"-"}}
 function roleLabel(r){const x=String(r||"").toLowerCase().replace(/\s+/g,"_");return({super_admin:"Super Admin",order_manager:"Order Manager",product_manager:"Product Manager",inventory_manager:"Inventory Manager",finance:"Accountant / Finance",accountant_finance:"Accountant / Finance",delivery_manager:"Delivery Manager",customer_support:"Customer Support",marketing_manager:"Marketing Manager"})[x]||r||"Staff"}
-function isSuper(){return window.currentAdmin?.isSuperAdmin===true || window.currentAdmin?.role==="super_admin"}
+function isSuper(){return window.currentAdmin?.isSuperAdmin===true || String(window.currentAdmin?.role||"").toLowerCase().replace(/\s+/g,"_")==="super_admin"}
 function can(p){return isSuper()||window.currentAdmin?.permissions?.[p]===true}
+function permissionKey(p){return ({deliveryPartners:"deliveryPartners",luckyWheel:"luckyWheel",luckyDraw:"luckyDraw",aiAssistant:"aiAssistant",auditLogs:"auditLogs",supportTickets:"support",delivery:"delivery"})[p]||p}
 function statusClass(s){s=String(s||"").toLowerCase();if(s.includes("deliver"))return"delivered";if(s.includes("cancel")||s.includes("reject"))return"cancelled";if(s.includes("pending")||s.includes("out")||s.includes("processing"))return"pending";return"processing"}
 
 $("togglePassword").onclick=()=>{$("password").type=$("password").type==="password"?"text":"password"};
-$("loginForm").onsubmit=async e=>{e.preventDefault();$("loginBtn").disabled=true;$("loginBtn").textContent="Signing in...";try{await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value)}catch(x){msg(x.code==="auth/invalid-credential"?"Email অথবা password সঠিক নয়।":"Login করা যায়নি।")}finally{$("loginBtn").disabled=false;$("loginBtn").textContent="Sign In"}};
+$("loginForm").onsubmit=async e=>{
+ e.preventDefault();
+ const email=$("email").value.trim();
+ const password=$("password").value;
+ if(!email||!password)return msg("Email এবং Password দিন।");
+ $("loginBtn").disabled=true;
+ $("loginBtn").textContent="Signing in...";
+ try{
+   await signInWithEmailAndPassword(auth,email,password);
+ }catch(x){
+   console.error("LOGIN ERROR:",x);
+   const map={
+     "auth/invalid-credential":"Email অথবা Password সঠিক নয়।",
+     "auth/user-not-found":"এই Email দিয়ে কোনো account নেই।",
+     "auth/wrong-password":"Password সঠিক নয়।",
+     "auth/invalid-email":"Email address সঠিক নয়।",
+     "auth/too-many-requests":"অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।",
+     "auth/network-request-failed":"Internet connection সমস্যা হয়েছে।"
+   };
+   msg(map[x.code]||("Firebase Error: "+(x.code||x.message||"unknown")));
+ }finally{
+   $("loginBtn").disabled=false;
+   $("loginBtn").textContent="Sign In";
+ }
+};
 $("forgotBtn").onclick=async()=>{let e=$("email").value.trim();if(!e)return msg("প্রথমে email লিখুন।");try{await sendPasswordResetEmail(auth,e);msg("Password reset email পাঠানো হয়েছে।","success")}catch(x){msg("Password reset email পাঠানো যায়নি।")}};
 $("logoutBtn").onclick=()=>signOut(auth);$("refreshBtn").onclick=()=>loadPage(currentPage);$("notificationBtn").onclick=()=>loadPage("notifications");
 document.querySelectorAll(".nav-item").forEach(b=>b.onclick=()=>{loadPage(b.dataset.page);closeSidebar()});
@@ -125,35 +150,74 @@ $("globalSearch").oninput=()=>renderRows(filterRows(currentRows,$("globalSearch"
 $("modalClose").onclick=hideModal;$("modalBackdrop").onclick=e=>{if(e.target===$("modalBackdrop"))hideModal()};
 
 onAuthStateChanged(auth,async user=>{
-  if(!user){$("loginScreen").style.display="flex";$("adminApp").style.display="none";return}
+  if(!user){
+    window.currentAdmin=null;
+    $("loginScreen").style.display="flex";
+    $("adminApp").style.display="none";
+    return;
+  }
+
   try{
-    const token=await getIdTokenResult(user,true);
-    const claims=token.claims||{};
-    let profile=null;
-    let superAdmin=claims.admin===true;
-    if(superAdmin){
-      profile={role:"super_admin",name:user.displayName||"Super Admin",status:"active",permissions:{}};
-    }else{
-      const s=await getDoc(doc(db,"staff",user.uid));
-      if(!s.exists()){
-        await signOut(auth);
-        return msg("এই account-এর staff profile পাওয়া যায়নি।");
-      }
-      profile=s.data()||{};
-      if(String(profile.status||"active").toLowerCase()!=="active"){
-        await signOut(auth);return msg("এই staff account বর্তমানে disabled।");
-      }
+    /*
+      Admin/Staff profile is stored in staff/{Firebase Auth UID}.
+      No client-side role can grant itself access because staff writes
+      are restricted by Firestore Rules.
+    */
+    const snap=await getDoc(doc(db,"staff",user.uid));
+
+    if(!snap.exists()){
+      await signOut(auth);
+      msg("Login হয়েছে, কিন্তু staff profile পাওয়া যায়নি। Firebase → Firestore → staff → আপনার UID document তৈরি করুন।");
+      return;
     }
-    window.currentAdmin={uid:user.uid,email:user.email,isSuperAdmin:superAdmin,role:superAdmin?"super_admin":profile.role,permissions:profile.permissions||{},name:profile.name||user.displayName||user.email};
-    $("loginScreen").style.display="none";$("adminApp").style.display="block";
+
+    const profile=snap.data()||{};
+    const status=String(profile.status||"active").trim().toLowerCase();
+    const role=String(profile.role||"").trim().toLowerCase().replace(/\s+/g,"_");
+
+    if(status!=="active"){
+      await signOut(auth);
+      msg("এই staff account বর্তমানে Active নয়। staff/{UID} এর status = Active করুন।");
+      return;
+    }
+
+    if(!role){
+      await signOut(auth);
+      msg("Staff profile-এ role দেওয়া হয়নি।");
+      return;
+    }
+
+    const superAdmin=role==="super_admin";
+    const permissions=profile.permissions && typeof profile.permissions==="object"
+      ? profile.permissions : {};
+
+    window.currentAdmin={
+      uid:user.uid,
+      email:user.email||profile.email||"",
+      isSuperAdmin:superAdmin,
+      role,
+      permissions,
+      name:profile.name||user.displayName||user.email||"Admin"
+    };
+
+    $("loginMessage").className="login-message";
+    $("loginScreen").style.display="none";
+    $("adminApp").style.display="block";
     $("adminName").textContent=window.currentAdmin.name;
-    $("adminRole").textContent=roleLabel(window.currentAdmin.role);
+    $("adminRole").textContent=roleLabel(role);
     $("avatar").textContent=(window.currentAdmin.name||"A").charAt(0).toUpperCase();
-    applyPermissions();loadPage("dashboard");
-  }catch(e){console.error(e);await signOut(auth);msg("Admin access যাচাই করা যায়নি: "+safe(e.message));}
+
+    applyPermissions();
+    await loadPage("dashboard");
+
+  }catch(e){
+    console.error("ADMIN PROFILE ERROR:",e);
+    await signOut(auth);
+    msg("Login যাচাই করা যায়নি: "+safe(e.message||e));
+  }
 });
 
-function applyPermissions(){const map={deliveryPartners:"deliveryPartners",luckyWheel:"luckyWheel",luckyDraw:"luckyDraw",aiAssistant:"aiAssistant",auditLogs:"auditLogs"};document.querySelectorAll(".nav-item").forEach(b=>{let p=map[b.dataset.page]||b.dataset.page;if(p==="dashboard")return;b.style.display=can(p)?"block":"none"})}
+function applyPermissions(){document.querySelectorAll(".nav-item").forEach(b=>{const p=permissionKey(b.dataset.page);if(p==="dashboard")return;b.style.display=can(p)?"block":"none"})}
 
 async function rows(col,n=300){let s=await getDocs(query(collection(db,col),limit(n)));return s.docs.map(x=>({id:x.id,...x.data()}))}
 function filterRows(a,t){if(!t.trim())return a;let q=t.toLowerCase();return a.filter(x=>JSON.stringify(x).toLowerCase().includes(q))}
@@ -268,7 +332,15 @@ async function auditLogs(){return genericActionPage("Audit Logs","audit_logs","a
 
 async function staff(){
  if(!can("staff"))return noAccess();$("content").innerHTML=pageHead("Staff","Admin and staff profiles",'<button class="btn" id="stR">↻ Refresh</button>')+'<div class="panel"><div class="table-wrap" id="stT"><div class="loading">Loading...</div></div></div>';$("stR").onclick=staff;try{let a=await rows("staff");$("stT").innerHTML=a.length?`<table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Permissions</th></tr></thead><tbody>${a.map(x=>`<tr><td>${safe(x.name)}</td><td>${safe(x.email)}</td><td>${roleLabel(x.role)}</td><td>${safe(x.status)||"active"}</td><td><button class="btn small" data-st="${x.id}">View</button></td></tr>`).join("")}</tbody></table>`:'<div class="empty">No staff profiles.</div>';$("stT").querySelectorAll("[data-st]").forEach(b=>b.onclick=()=>details(a.find(x=>x.id===b.dataset.st),"Staff Profile"))}catch(e){$("stT").innerHTML='<div class="empty">Staff load হয়নি।</div>'}}
-async function permissionsPage(){if(!can("permissions"))return noAccess();return staff()}
+async function permissionsPage(){
+ if(!can("permissions"))return noAccess();
+ $("content").innerHTML=pageHead("Permissions","Staff permission overview",'<button class="btn" id="prR">↻ Refresh</button>')+'<div class="panel"><div class="table-wrap" id="prT"><div class="loading">Loading...</div></div></div>';
+ $("prR").onclick=permissionsPage;
+ try{
+   let a=await rows("staff");
+   $("prT").innerHTML=a.length?`<table><thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Permissions</th></tr></thead><tbody>${a.map(x=>{let ps=x.permissions||{};let active=Object.keys(ps).filter(k=>ps[k]===true);return `<tr><td>${safe(x.name)||"-"}</td><td>${roleLabel(x.role)}</td><td>${safe(x.status)||"active"}</td><td>${active.length?active.map(safe).join(", "):"None"}</td></tr>`}).join("")}</tbody></table>`:'<div class="empty">No staff profiles.</div>';
+ }catch(e){$("prT").innerHTML='<div class="empty">Permissions load হয়নি।<br><small>'+safe(e.message)+'</small></div>'}
+}
 
 async function settings(){
  if(!can("settings"))return noAccess();$("content").innerHTML=pageHead("Settings","Platform and delivery configuration","")+'<div class="panel"><div class="form-grid"><div class="form-group"><label>Platform Charge</label><input id="pc" type="number"></div><div class="form-group"><label>Charge Type</label><select id="pct"><option value="fixed">Fixed</option><option value="percent">Percentage</option></select></div><div class="form-group"><label>Standard Delivery</label><input id="sd" type="number"></div><div class="form-group"><label>Express Delivery</label><input id="ed" type="number"></div><div class="form-group"><label>Free Delivery</label><input id="fd" type="number"></div><div class="form-group checkbox"><input id="pre" type="checkbox"><label>Delivery charge prepaid required</label></div></div><div class="modal-actions"><button class="btn primary" id="saveSet">Save Settings</button></div></div>';try{let d=(await getDoc(doc(db,"settings","platform"))).data()||{};$("pc").value=d.platformCharge??5;$("pct").value=d.platformChargeType||"fixed";$("sd").value=d.standardDelivery??60;$("ed").value=d.expressDelivery??80;$("fd").value=d.freeDelivery??0;$("pre").checked=d.deliveryPrepaidRequired!==false}catch(e){}$("saveSet").onclick=async()=>{let d={platformCharge:Number($("pc").value)||0,platformChargeType:$("pct").value,standardDelivery:Number($("sd").value)||0,expressDelivery:Number($("ed").value)||0,freeDelivery:Number($("fd").value)||0,deliveryPrepaidRequired:$("pre").checked,updatedAt:serverTimestamp()};try{await setDoc(doc(db,"settings","platform"),d,{merge:true});await audit("update","settings","platform",d);toast("Settings saved")}catch(e){toast("Settings failed: "+e.message)}}}
