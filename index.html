@@ -1,371 +1,8050 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>NatureBite Admin Panel</title>
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,Helvetica,sans-serif;background:#f5f5ec;color:#24352a}
-button,input,select,textarea{font:inherit}button{cursor:pointer}
-#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#174f2b,#2f813d);padding:20px}
-.login-box{width:100%;max-width:420px;background:#fff;border-radius:22px;padding:38px;box-shadow:0 25px 70px rgba(0,0,0,.25)}
-.brand{text-align:center;margin-bottom:30px}.brand-logo{width:64px;height:64px;margin:auto;border-radius:18px;background:#2d7d3b;color:#fff;display:flex;align-items:center;justify-content:center;font-size:27px;font-weight:bold}
-.brand h1{margin-top:14px;color:#1d5b2c}.brand p{margin-top:5px;color:#777;font-size:14px}
-.form-group{margin-bottom:15px}.form-group label{display:block;margin-bottom:7px;font-size:13px;font-weight:bold}
-input,select,textarea{width:100%;border:1px solid #ddd;border-radius:10px;padding:11px 12px;outline:none;background:#fff}
-input:focus,select:focus,textarea:focus{border-color:#2d7d3b;box-shadow:0 0 0 3px rgba(45,125,59,.1)}
-.input-wrap{position:relative}.password-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:0;background:none}
-.login-btn,.primary{width:100%;padding:13px;border:0;border-radius:10px;background:#267337;color:#fff;font-weight:bold}.login-btn:disabled{opacity:.6}
-.login-message{margin-top:15px;padding:11px;border-radius:9px;font-size:13px;display:none}.login-message.error{display:block;background:#fff0f0;color:#a32626}.login-message.success{display:block;background:#edf9ef;color:#22702e}
-.forgot{text-align:center;margin-top:18px}.forgot button{border:0;background:none;color:#267337}
-#adminApp{display:none;min-height:100vh}
-.sidebar{position:fixed;left:0;top:0;bottom:0;width:245px;background:#237334;color:#fff;padding:20px 13px;overflow-y:auto;z-index:50}
-.sidebar-brand{display:flex;align-items:center;gap:10px;padding:8px 10px 22px}.sidebar-logo{width:38px;height:38px;border-radius:11px;background:#fff;color:#237334;display:flex;align-items:center;justify-content:center;font-weight:bold}.sidebar-brand strong{font-size:18px}
-.section-title{font-size:10px;opacity:.55;margin:17px 10px 7px;text-transform:uppercase}.nav-item{width:100%;border:0;background:transparent;color:#fff;padding:10px 11px;border-radius:8px;text-align:left;font-size:13px;margin-bottom:3px}.nav-item:hover,.nav-item.active{background:rgba(255,255,255,.14)}
-.logout-btn{margin-top:20px;width:100%;padding:10px;border:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.08);color:#fff;border-radius:8px}
-.main{margin-left:245px;min-height:100vh}.topbar{height:68px;background:#fff;border-bottom:1px solid #e8e8df;display:flex;align-items:center;justify-content:space-between;padding:0 25px;position:sticky;top:0;z-index:40}.search{width:330px}.search input{background:#f4f3eb;border:0;border-radius:20px}.top-actions{display:flex;align-items:center;gap:15px}.notification{width:38px;height:38px;border-radius:50%;border:0;background:#f5f5ed}.profile{display:flex;align-items:center;gap:9px}.avatar{width:38px;height:38px;border-radius:50%;background:#dcebdc;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#276f34}.profile-info{font-size:12px}.profile-info strong{display:block}.profile-info span{color:#777}
-.content{padding:28px}.page-title{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:20px}.page-title h2{font-size:25px;color:#287237}.page-title p{color:#888;font-size:12px;margin-top:4px}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid #ddd;background:#fff;padding:9px 13px;border-radius:9px;color:#31533a}.btn.primary{background:#267337;color:#fff;border-color:#267337}.btn.danger{background:#fff0f0;color:#b63232;border-color:#ffd0d0}.btn.small{padding:6px 9px;font-size:11px}
-.stats{display:grid;grid-template-columns:repeat(7,minmax(130px,1fr));gap:13px}.stat-card{background:#fff;border:1px solid #e7e7de;border-radius:13px;padding:17px;min-height:105px}.stat-card small{color:#888;font-size:10px;text-transform:uppercase}.stat-card h3{margin-top:11px;font-size:21px}.green h3{color:#267337}.red h3{color:#c33a3a}.orange h3{color:#c47b20}
-.dashboard-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(280px,1fr);gap:20px;margin-top:22px}.panel{background:#fff;border:1px solid #e5e5dd;border-radius:14px;padding:20px}.panel-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}.panel-header h3{font-size:16px}
-table{width:100%;border-collapse:collapse}th{text-align:left;color:#999;font-size:10px;text-transform:uppercase;padding:10px;border-bottom:1px solid #eee}td{padding:11px 10px;border-bottom:1px solid #f0f0eb;font-size:12px}.table-wrap{overflow:auto}
-.status{padding:5px 8px;border-radius:7px;font-size:10px;font-weight:bold;display:inline-block}.processing{background:#eef3ff;color:#315bb8}.delivered{background:#eaf8ed;color:#287536}.pending{background:#fff5dc;color:#a76b00}.cancelled{background:#ffeded;color:#b63232}
-.alert{padding:13px;border-radius:10px;background:#f7f7ef;margin-bottom:10px;font-size:12px}.alert strong{display:block;margin-bottom:4px}.alert.green{border-left:4px solid #348344}.alert.orange{border-left:4px solid #db962c}.alert.red{border-left:4px solid #d64545}
-.empty,.loading{padding:30px;text-align:center;color:#888}.muted{color:#888;font-size:12px}
-.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:100}.modal{background:#fff;width:100%;max-width:720px;max-height:90vh;overflow:auto;border-radius:16px;padding:20px}.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.modal-close{border:0;background:#f1f1eb;border-radius:50%;width:34px;height:34px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}.checkbox{display:flex;gap:8px;align-items:center}.checkbox input{width:auto}
-.toast{position:fixed;right:20px;bottom:20px;background:#24352a;color:#fff;padding:12px 16px;border-radius:10px;display:none;z-index:200;max-width:360px}
-.mobile-menu{display:none;border:0;background:#f4f4ed;border-radius:8px;padding:9px}
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}.mini-card{background:#fff;border:1px solid #e7e7de;border-radius:12px;padding:14px}.mini-card b{display:block;font-size:19px;margin-top:6px}.mini-card small{color:#888}
-@media(max-width:1100px){.stats{grid-template-columns:repeat(3,1fr)}.kpi-row{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:800px){.sidebar{width:245px;padding:20px 13px;transform:translateX(-100%);transition:transform .2s ease;box-shadow:10px 0 30px rgba(0,0,0,.12)}.sidebar.open{transform:translateX(0)}.sidebar-brand strong,.section-title,.nav-item span{display:block}.sidebar-brand{justify-content:flex-start}.main{margin-left:0}.topbar{padding:0 12px}.search{width:200px}.dashboard-grid{grid-template-columns:1fr}.mobile-menu{display:block}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:45}.sidebar-overlay.show{display:block}}
-@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr)}.content{padding:15px}.search{width:140px}.profile-info{display:none}.page-title{align-items:flex-start;flex-direction:column}.kpi-row{grid-template-columns:1fr 1fr}}
+:root{
+  --green:#174f36;
+  --green2:#246b49;
+  --light:#f5f7f2;
+  --cream:#fbfcf8;
+  --white:#fff;
+  --text:#1f2923;
+  --muted:#7b857e;
+  --border:#e5e9e3;
+  --danger:#c94040;
+  --warning:#d89220;
+  --blue:#3f73b8;
+  --shadow:0 4px 20px rgba(25,45,30,.06);
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--light);
+  color:var(--text);
+}
+
+button,
+input,
+select,
+textarea{
+  font-family:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* LOGIN */
+
+#loginScreen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:
+    radial-gradient(circle at top left,#dfeadd 0,#f5f7f2 40%,#eef2eb 100%);
+}
+
+.loginBox{
+  width:100%;
+  max-width:420px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  padding:34px;
+}
+
+.logo{
+  text-align:center;
+  color:var(--green);
+  font-size:28px;
+  font-weight:800;
+  margin-bottom:5px;
+}
+
+.logoSub{
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:28px;
+}
+
+.field{
+  margin-bottom:15px;
+}
+
+.field label{
+  display:block;
+  font-size:12px;
+  font-weight:700;
+  margin-bottom:7px;
+}
+
+.input,
+.select,
+.textarea{
+  width:100%;
+  border:1px solid var(--border);
+  background:white;
+  border-radius:9px;
+  padding:11px 12px;
+  outline:none;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus{
+  border-color:var(--green);
+}
+
+.textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+.primary{
+  border:0;
+  background:var(--green);
+  color:white;
+  border-radius:8px;
+  padding:11px 16px;
+  font-weight:700;
+}
+
+.primary:hover{
+  background:var(--green2);
+}
+
+.secondary{
+  border:1px solid var(--border);
+  background:white;
+  color:var(--text);
+  border-radius:8px;
+  padding:10px 14px;
+  font-weight:700;
+}
+
+.danger{
+  border:0;
+  background:var(--danger);
+  color:white;
+  border-radius:8px;
+  padding:9px 13px;
+}
+
+.warning{
+  border:0;
+  background:var(--warning);
+  color:white;
+  border-radius:8px;
+  padding:9px 13px;
+}
+
+.loginError{
+  color:var(--danger);
+  font-size:12px;
+  margin-top:12px;
+  min-height:18px;
+}
+
+/* APP */
+
+#app{
+  display:none;
+  min-height:100vh;
+}
+
+.sidebar{
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  width:245px;
+  background:var(--green);
+  color:white;
+  overflow-y:auto;
+  z-index:1000;
+}
+
+.sideLogo{
+  padding:24px 20px 20px;
+  font-size:24px;
+  font-weight:800;
+}
+
+.sideLogo small{
+  display:block;
+  color:#bcd3c4;
+  font-size:10px;
+  font-weight:normal;
+  margin-top:4px;
+}
+
+.navTitle{
+  color:#9fc1aa;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:1px;
+  padding:18px 20px 7px;
+}
+
+.navBtn{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#dbe9df;
+  padding:10px 20px;
+  text-align:left;
+  font-size:12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.navBtn:hover,
+.navBtn.active{
+  background:rgba(255,255,255,.10);
+  color:white;
+}
+
+.main{
+  margin-left:245px;
+  min-height:100vh;
+}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:500;
+  background:rgba(255,255,255,.95);
+  border-bottom:1px solid var(--border);
+  min-height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 25px;
+}
+
+.search{
+  width:310px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:10px 13px;
+}
+
+.topRight{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.adminBadge{
+  background:#edf4ee;
+  color:var(--green);
+  padding:8px 10px;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:700;
+}
+
+.content{
+  padding:25px;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.title{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.title h1{
+  font-size:24px;
+}
+
+.title p{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px;
+}
+
+/* CARDS */
+
+.grid{
+  display:grid;
+  gap:15px;
+}
+
+.grid2{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+
+.grid3{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+
+.grid4{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+}
+
+.grid7{
+  grid-template-columns:repeat(7,minmax(0,1fr));
+}
+
+.card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:12px;
+  box-shadow:var(--shadow);
+}
+
+.kpi{
+  padding:17px;
+  min-height:115px;
+}
+
+.kpiLabel{
+  font-size:10px;
+  color:var(--muted);
+  text-transform:uppercase;
+  font-weight:700;
+}
+
+.kpiValue{
+  font-size:22px;
+  font-weight:800;
+  margin-top:10px;
+}
+
+.kpiMeta{
+  font-size:10px;
+  color:var(--green2);
+  margin-top:7px;
+}
+
+.panel{
+  padding:18px;
+  margin-bottom:18px;
+}
+
+.panelHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:15px;
+}
+
+.panelHead h2{
+  font-size:15px;
+}
+
+.muted{
+  color:var(--muted);
+  font-size:11px;
+}
+
+/* TABLE */
+
+.tableWrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:11px;
+}
+
+th{
+  text-align:left;
+  color:#89918b;
+  font-size:9px;
+  padding:10px 8px;
+  border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+
+td{
+  padding:11px 8px;
+  border-bottom:1px solid #f0f2ee;
+  vertical-align:middle;
+}
+
+tr:hover td{
+  background:#fafbf9;
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:20px;
+  background:#edf5ef;
+  color:var(--green);
+  font-size:9px;
+  font-weight:800;
+}
+
+.badge.warning{
+  background:#fff3da;
+  color:#9a650d;
+}
+
+.badge.danger{
+  background:#fdeaea;
+  color:#b93434;
+}
+
+.badge.blue{
+  background:#eaf1fb;
+  color:#3d6da7;
+}
+
+.actionBtn{
+  border:1px solid var(--border);
+  background:white;
+  padding:6px 8px;
+  border-radius:6px;
+  font-size:10px;
+}
+
+.actionBtn:hover{
+  border-color:var(--green);
+}
+
+.empty{
+  padding:35px;
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* TOOLBAR */
+
+.toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-bottom:15px;
+}
+
+.toolbar .input{
+  width:auto;
+  min-width:190px;
+}
+
+.toolbar .select{
+  width:auto;
+}
+
+/* CHART */
+
+.chart{
+  height:260px;
+  display:flex;
+  align-items:flex-end;
+  gap:10px;
+  padding:20px 10px 10px;
+}
+
+.barItem{
+  flex:1;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  gap:5px;
+}
+
+.bar{
+  width:70%;
+  max-width:50px;
+  min-height:4px;
+  background:var(--green);
+  border-radius:6px 6px 0 0;
+}
+
+.barLabel{
+  font-size:9px;
+  color:var(--muted);
+}
+
+.barValue{
+  font-size:9px;
+  font-weight:700;
+}
+
+/* ALERT */
+
+.alert{
+  border:1px solid var(--border);
+  background:#fbfcf9;
+  padding:12px;
+  border-radius:9px;
+  margin-bottom:9px;
+}
+
+.alert strong{
+  font-size:11px;
+}
+
+.alert p{
+  color:var(--muted);
+  font-size:10px;
+  margin-top:4px;
+}
+
+/* MODAL */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(10,25,16,.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:3000;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modalBox{
+  width:100%;
+  max-width:760px;
+  max-height:90vh;
+  overflow-y:auto;
+  background:white;
+  border-radius:14px;
+  box-shadow:0 20px 70px rgba(0,0,0,.2);
+}
+
+.modalHead{
+  position:sticky;
+  top:0;
+  background:white;
+  border-bottom:1px solid var(--border);
+  padding:16px 18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:2;
+}
+
+.modalHead h2{
+  font-size:16px;
+}
+
+.close{
+  border:0;
+  background:transparent;
+  font-size:24px;
+}
+
+.modalBody{
+  padding:18px;
+}
+
+.formGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+
+.formFull{
+  grid-column:1/-1;
+}
+
+/* TOAST */
+
+#toast{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  background:#18231c;
+  color:white;
+  padding:12px 15px;
+  border-radius:8px;
+  font-size:11px;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(10px);
+  transition:.2s;
+  z-index:5000;
+}
+
+#toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* MOBILE */
+
+.mobileMenu{
+  display:none;
+  border:0;
+  background:var(--green);
+  color:white;
+  border-radius:7px;
+  padding:8px 10px;
+}
+
+@media(max-width:1100px){
+  .grid7{
+    grid-template-columns:repeat(4,1fr);
+  }
+}
+
+@media(max-width:800px){
+
+  .sidebar{
+    transform:translateX(-100%);
+    transition:.25s;
+  }
+
+  .sidebar.open{
+    transform:translateX(0);
+  }
+
+  .main{
+    margin-left:0;
+  }
+
+  .mobileMenu{
+    display:block;
+  }
+
+  .topbar{
+    padding:10px 14px;
+  }
+
+  .search{
+    width:170px;
+  }
+
+  .content{
+    padding:15px;
+  }
+
+  .grid2,
+  .grid3,
+  .grid4,
+  .grid7{
+    grid-template-columns:1fr;
+  }
+
+  .formGrid{
+    grid-template-columns:1fr;
+  }
+
+  .formFull{
+    grid-column:auto;
+  }
+
+  .title{
+    flex-direction:column;
+  }
+}
 </style>
 </head>
+
 <body>
 
+<!-- ================= LOGIN ================= -->
+
 <div id="loginScreen">
-<div class="login-box">
-<div class="brand"><div class="brand-logo">N</div><h1>NatureBite</h1><p>Admin & Staff Portal</p></div>
-<form id="loginForm">
-<div class="form-group"><label>Email</label><input id="email" type="email" placeholder="Enter email" autocomplete="username" required></div>
-<div class="form-group"><label>Password</label><div class="input-wrap"><input id="password" type="password" placeholder="Enter password" autocomplete="current-password" required><button type="button" class="password-toggle" id="togglePassword">👁</button></div></div>
-<button class="login-btn" id="loginBtn" type="submit">Sign In</button><div id="loginMessage" class="login-message"></div><div id="loginHelp" style="display:none;margin-top:12px;padding:12px;border-radius:10px;background:#f7f7ef;color:#555;font-size:12px;line-height:1.5"></div>
-</form><div class="forgot"><button id="forgotBtn">Forgot Password?</button></div>
-</div></div>
 
-<div id="adminApp">
-<aside class="sidebar">
-<div class="sidebar-brand"><div class="sidebar-logo">N</div><strong>NatureBite</strong></div>
-<div class="section-title">Dashboard</div><button class="nav-item active" data-page="dashboard">📊 <span>Dashboard</span></button>
-<div class="section-title">Operations</div>
-<button class="nav-item" data-page="orders">📦 <span>Orders</span></button><button class="nav-item" data-page="products">🛍️ <span>Products</span></button><button class="nav-item" data-page="inventory">📊 <span>Inventory</span></button><button class="nav-item" data-page="customers">👥 <span>Customers</span></button><button class="nav-item" data-page="riders">🛵 <span>Riders</span></button><button class="nav-item" data-page="deliveryPartners">🚚 <span>Delivery Partners</span></button>
-<div class="section-title">Finance</div><button class="nav-item" data-page="payments">💳 <span>Payments</span></button><button class="nav-item" data-page="refunds">↩️ <span>Refunds</span></button><button class="nav-item" data-page="cancellations">❌ <span>Cancellations</span></button><button class="nav-item" data-page="expenses">📑 <span>Expenses</span></button><button class="nav-item" data-page="reports">📈 <span>Reports</span></button>
-<div class="section-title">Marketing</div><button class="nav-item" data-page="offers">🎟️ <span>Offers & Coupons</span></button><button class="nav-item" data-page="luckyWheel">🎡 <span>Lucky Wheel</span></button><button class="nav-item" data-page="luckyDraw">🎁 <span>Lucky Draw</span></button><button class="nav-item" data-page="reviews">⭐ <span>Reviews</span></button><button class="nav-item" data-page="banners">🖼️ <span>Banners</span></button>
-<div class="section-title">Customer</div><button class="nav-item" data-page="support">💬 <span>Support</span></button><button class="nav-item" data-page="notifications">🔔 <span>Notifications</span></button>
-<div class="section-title">Management</div><button class="nav-item" data-page="staff">👨‍💼 <span>Staff</span></button><button class="nav-item" data-page="permissions">🔐 <span>Permissions</span></button>
-<div class="section-title">Intelligence</div><button class="nav-item" data-page="aiAssistant">🤖 <span>AI Assistant</span></button>
-<div class="section-title">System</div><button class="nav-item" data-page="settings">⚙️ <span>Settings</span></button><button class="nav-item" data-page="auditLogs">🛡️ <span>Audit Logs</span></button>
-<button class="logout-btn" id="logoutBtn">Logout</button>
-</aside>
+  <div class="loginBox">
 
-<main class="main">
-<header class="topbar">
-<div style="display:flex;align-items:center;gap:8px"><button class="mobile-menu" id="mobileMenu">☰</button><div class="search"><input id="globalSearch" type="search" placeholder="Search current module..."></div></div>
-<div class="top-actions"><button class="notification" id="notificationBtn">🔔</button><div class="profile"><div class="avatar" id="avatar">A</div><div class="profile-info"><strong id="adminName">Admin</strong><span id="adminRole">Super Admin</span></div></div></div>
-</header>
-<section class="content" id="content"></section>
-</main></div>
+    <div class="logo">NatureBite</div>
+    <div class="logoSub">Admin & Staff Management</div>
 
-<div class="modal-backdrop" id="modalBackdrop"><div class="modal"><div class="modal-header"><h3 id="modalTitle">Details</h3><button class="modal-close" id="modalClose">×</button></div><div id="modalBody"></div></div></div>
-<div class="toast" id="toast"></div>
+    <form id="loginForm">
+
+      <div class="field">
+        <label>Email</label>
+        <input
+          id="loginEmail"
+          class="input"
+          type="email"
+          placeholder="admin@example.com"
+          required>
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input
+          id="loginPassword"
+          class="input"
+          type="password"
+          placeholder="Password"
+          required>
+      </div>
+
+      <button
+        class="primary"
+        style="width:100%"
+        type="submit">
+        Login
+      </button>
+
+      <div
+        id="loginError"
+        class="loginError">
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- ================= APP ================= -->
+
+<div id="app">
+
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sideLogo">
+      NatureBite
+      <small>Admin Control Center</small>
+    </div>
+
+    <div class="navTitle">DASHBOARD</div>
+    <button class="navBtn" data-page="dashboard">▣ Dashboard</button>
+
+    <div class="navTitle">OPERATIONS</div>
+    <button class="navBtn" data-page="orders">▤ Orders</button>
+    <button class="navBtn" data-page="products">□ Products</button>
+    <button class="navBtn" data-page="inventory">◫ Inventory</button>
+    <button class="navBtn" data-page="customers">♙ Customers</button>
+    <button class="navBtn" data-page="riders">♧ Riders</button>
+    <button class="navBtn" data-page="deliveryPartners">◈ Delivery Partners</button>
+
+    <div class="navTitle">FINANCE</div>
+    <button class="navBtn" data-page="payments">৳ Payments</button>
+    <button class="navBtn" data-page="refunds">↩ Refunds</button>
+    <button class="navBtn" data-page="cancellations">× Cancellations</button>
+    <button class="navBtn" data-page="expenses">− Expenses</button>
+    <button class="navBtn" data-page="reports">▥ Reports</button>
+
+    <div class="navTitle">MARKETING</div>
+    <button class="navBtn" data-page="offers">◇ Offers & Coupons</button>
+    <button class="navBtn" data-page="wheel">◉ Lucky Wheel</button>
+    <button class="navBtn" data-page="draw">★ Lucky Draw</button>
+    <button class="navBtn" data-page="reviews">☆ Reviews</button>
+    <button class="navBtn" data-page="banners">▧ Banners</button>
+
+    <div class="navTitle">CUSTOMER</div>
+    <button class="navBtn" data-page="support">? Support</button>
+    <button class="navBtn" data-page="notifications">♢ Notifications</button>
+
+    <div class="navTitle">MANAGEMENT</div>
+    <button class="navBtn" data-page="staff">♙ Staff</button>
+    <button class="navBtn" data-page="permissions">⚿ Permissions</button>
+
+    <div class="navTitle">INTELLIGENCE</div>
+    <button class="navBtn" data-page="ai">✦ AI Assistant</button>
+
+    <div class="navTitle">SYSTEM</div>
+    <button class="navBtn" data-page="settings">⚙ Settings</button>
+    <button class="navBtn" data-page="audit">▤ Audit Logs</button>
+
+  </aside>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div style="display:flex;align-items:center;gap:10px">
+
+        <button
+          class="mobileMenu"
+          id="mobileMenu">
+          ☰
+        </button>
+
+        <input
+          id="globalSearch"
+          class="search"
+          placeholder="Search orders, customers, products...">
+
+      </div>
+
+      <div class="topRight">
+
+        <div
+          id="adminRole"
+          class="adminBadge">
+          Loading...
+        </div>
+
+        <button
+          class="secondary"
+          id="refreshBtn">
+          ↻
+        </button>
+
+        <button
+          class="secondary"
+          id="logoutBtn">
+          Logout
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <div class="content">
+
+
+      <!-- ================= DASHBOARD ================= -->
+
+      <section id="page-dashboard" class="page active">
+
+        <div class="title">
+          <div>
+            <h1>Dashboard</h1>
+            <p>NatureBite business overview</p>
+          </div>
+
+          <select id="dashboardPeriod" class="select">
+            <option value="today">Today</option>
+            <option value="week">Weekly</option>
+            <option value="month">Monthly</option>
+            <option value="all">All Time</option>
+          </select>
+        </div>
+
+
+        <div class="grid grid7">
+
+          <div class="card kpi">
+            <div class="kpiLabel">Total Sales</div>
+            <div id="statSales" class="kpiValue">৳0</div>
+            <div class="kpiMeta">Sales</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="kpiLabel">Total Orders</div>
+            <div id="statOrders" class="kpiValue">0</div>
+            <div class="kpiMeta">Orders</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="kpiLabel">Delivered</div>
+            <div id="statDelivered" class="kpiValue">0</div>
+            <div class="kpiMeta">Completed</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="kpiLabel">Pending</div>
+            <div id="statPending" class="kpiValue">0</div>
+            <div class="kpiMeta">Waiting</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="kpiLabel">Cancelled</div>
+            <div id="statCancelled" class="kpiValue">0</div>
+            <div class="kpiMeta">Cancelled</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="kpiLabel">Net Profit</div>
+            <div id="statProfit" class="kpiValue">৳0</div>
+            <div class="kpiMeta">Estimated</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="kpiLabel">Low Stock</div>
+            <div id="statLowStock" class="kpiValue">0</div>
+            <div class="kpiMeta">Alerts</div>
+          </div>
+
+        </div>
+
+
+        <div class="grid grid2" style="margin-top:18px">
+
+          <div class="card panel">
+
+            <div class="panelHead">
+              <h2>Sales Overview</h2>
+              <span class="muted">Recent data</span>
+            </div>
+
+            <div id="salesChart" class="chart"></div>
+
+          </div>
+
+
+          <div class="card panel">
+
+            <div class="panelHead">
+              <h2>AI Recommendations</h2>
+            </div>
+
+            <div id="aiRecommendations"></div>
+
+          </div>
+
+        </div>
+
+
+        <div class="grid grid2">
+
+          <div class="card panel">
+
+            <div class="panelHead">
+              <h2>Recent Orders</h2>
+              <button
+                class="secondary"
+                data-go="orders">
+                View All
+              </button>
+            </div>
+
+            <div id="recentOrders"></div>
+
+          </div>
+
+
+          <div class="card panel">
+
+            <div class="panelHead">
+              <h2>Pending Payments</h2>
+            </div>
+
+            <div id="pendingPayments"></div>
+
+          </div>
+
+        </div>
+
+
+        <div class="grid grid2">
+
+          <div class="card panel">
+
+            <div class="panelHead">
+              <h2>Low Stock Alerts</h2>
+            </div>
+
+            <div id="lowStockAlerts"></div>
+
+          </div>
+
+
+          <div class="card panel">
+
+            <div class="panelHead">
+              <h2>Cancellation / Refund Requests</h2>
+            </div>
+
+            <div id="cancelAlerts"></div>
+
+          </div>
+
+        </div>
+
+
+        <div class="card panel">
+
+          <div class="panelHead">
+            <h2>Business Income</h2>
+          </div>
+
+          <div class="grid grid4">
+
+            <div class="alert">
+              <strong>Product Sales</strong>
+              <p id="incomeSales">৳0</p>
+            </div>
+
+            <div class="alert">
+              <strong>Delivery Income</strong>
+              <p id="incomeDelivery">৳0</p>
+            </div>
+
+            <div class="alert">
+              <strong>Platform Income</strong>
+              <p id="incomePlatform">৳0</p>
+            </div>
+
+            <div class="alert">
+              <strong>Expenses</strong>
+              <p id="incomeExpenses">৳0</p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= ORDERS ================= -->
+
+      <section id="page-orders" class="page">
+
+        <div class="title">
+          <div>
+            <h1>Orders</h1>
+            <p>Manage customer orders</p>
+          </div>
+        </div>
+
+        <div class="toolbar">
+
+          <input
+            id="orderSearch"
+            class="input"
+            placeholder="Search Order ID / Customer">
+
+          <select
+            id="orderStatusFilter"
+            class="select">
+
+            <option value="">All Status</option>
+            <option>Pending</option>
+            <option>Confirmed</option>
+            <option>Processing</option>
+            <option>Out for Delivery</option>
+            <option>Delivered</option>
+            <option>Cancelled</option>
+
+          </select>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="tableWrap">
+            <table>
+
+              <thead>
+                <tr>
+                  <th>ORDER</th>
+                  <th>CUSTOMER</th>
+                  <th>PHONE</th>
+                  <th>TOTAL</th>
+                  <th>PAYMENT</th>
+                  <th>STATUS</th>
+                  <th>RIDER</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody id="ordersTable"></tbody>
+
+            </table>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= PRODUCTS ================= -->
+
+      <section id="page-products" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Products</h1>
+            <p>Products and variants</p>
+          </div>
+
+          <button
+            class="primary"
+            id="addProductBtn">
+            + Add Product
+          </button>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>PRODUCT</th>
+                  <th>CATEGORY</th>
+                  <th>STATUS</th>
+                  <th>FEATURED</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody id="productsTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= INVENTORY ================= -->
+
+      <section id="page-inventory" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Inventory</h1>
+            <p>Stock monitoring</p>
+          </div>
+
+        </div>
+
+        <div class="grid grid3">
+
+          <div class="card kpi">
+            <div class="kpiLabel">Total Variants</div>
+            <div id="inventoryVariants" class="kpiValue">0</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="kpiLabel">Total Stock</div>
+            <div id="inventoryStock" class="kpiValue">0</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="kpiLabel">Low Stock</div>
+            <div id="inventoryLow" class="kpiValue">0</div>
+          </div>
+
+        </div>
+
+        <div class="card panel" style="margin-top:18px">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>VARIANT</th>
+                  <th>PRODUCT</th>
+                  <th>WEIGHT</th>
+                  <th>PRICE</th>
+                  <th>STOCK</th>
+                  <th>STATUS</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody id="inventoryTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= CUSTOMERS ================= -->
+
+      <section id="page-customers" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Customers</h1>
+            <p>Customer accounts</p>
+          </div>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>UID</th>
+                  <th>NAME</th>
+                  <th>PHONE</th>
+                  <th>EMAIL</th>
+                  <th>STATUS</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody id="customersTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= RIDERS ================= -->
+
+      <section id="page-riders" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Riders</h1>
+            <p>NatureBite delivery riders</p>
+          </div>
+
+          <button
+            class="primary"
+            id="addRiderBtn">
+            + Add Rider
+          </button>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>NAME</th>
+                  <th>PHONE</th>
+                  <th>ZONE</th>
+                  <th>STATUS</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody id="ridersTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= DELIVERY PARTNERS ================= -->
+
+      <section id="page-deliveryPartners" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Delivery Partners</h1>
+            <p>Internal and external delivery services</p>
+          </div>
+
+          <button
+            class="primary"
+            id="addPartnerBtn">
+            + Add Partner
+          </button>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>NAME</th>
+                  <th>TYPE</th>
+                  <th>CONTACT</th>
+                  <th>STATUS</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody id="partnersTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= PAYMENTS ================= -->
+
+      <section id="page-payments" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Payments</h1>
+            <p>Payment verification and records</p>
+          </div>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>PAYMENT</th>
+                  <th>ORDER</th>
+                  <th>CUSTOMER</th>
+                  <th>METHOD</th>
+                  <th>TRANSACTION</th>
+                  <th>AMOUNT</th>
+                  <th>STATUS</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody id="paymentsTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= REFUNDS ================= -->
+
+      <section id="page-refunds" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Refunds</h1>
+            <p>Refund requests and processing</p>
+          </div>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>REFUND</th>
+                  <th>ORDER</th>
+                  <th>CUSTOMER</th>
+                  <th>AMOUNT</th>
+                  <th>REASON</th>
+                  <th>STATUS</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody id="refundsTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= CANCELLATIONS ================= -->
+
+      <section id="page-cancellations" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Cancellations</h1>
+            <p>Cancelled orders and food handover tracking</p>
+          </div>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>ORDER</th>
+                  <th>CUSTOMER</th>
+                  <th>VALUE</th>
+                  <th>RIDER</th>
+                  <th>HANDOVER</th>
+                  <th>PROOF</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody id="cancellationsTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= EXPENSES ================= -->
+
+      <section id="page-expenses" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Expenses</h1>
+            <p>Business expense management</p>
+          </div>
+
+          <button
+            class="primary"
+            id="addExpenseBtn">
+            + Add Expense
+          </button>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>TITLE</th>
+                  <th>CATEGORY</th>
+                  <th>AMOUNT</th>
+                  <th>DATE</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody id="expensesTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= REPORTS ================= -->
+
+      <section id="page-reports" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Reports</h1>
+            <p>Business financial and operational reports</p>
+          </div>
+
+          <button
+            class="secondary"
+            id="printReportBtn">
+            Print Report
+          </button>
+
+        </div>
+
+        <div class="grid grid4">
+
+          <div class="card kpi">
+            <div class="kpiLabel">Sales</div>
+            <div id="reportSales" class="kpiValue">৳0</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="kpiLabel">Delivery Income</div>
+            <div id="reportDelivery" class="kpiValue">৳0</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="kpiLabel">Expenses</div>
+            <div id="reportExpenses" class="kpiValue">৳0</div>
+          </div>
+
+          <div class="card kpi">
+            <div class="kpiLabel">Net Profit</div>
+            <div id="reportProfit" class="kpiValue">৳0</div>
+          </div>
+
+        </div>
+
+        <div class="card panel" style="margin-top:18px">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>METRIC</th>
+                  <th>VALUE</th>
+                </tr>
+              </thead>
+
+              <tbody id="reportsTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= OFFERS ================= -->
+
+      <section id="page-offers" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Offers & Coupons</h1>
+            <p>Marketing campaigns and discount codes</p>
+          </div>
+
+          <button
+            class="primary"
+            id="addCouponBtn">
+            + Add Coupon
+          </button>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>CODE</th>
+                  <th>TYPE</th>
+                  <th>VALUE</th>
+                  <th>MINIMUM</th>
+                  <th>STATUS</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody id="offersTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= WHEEL ================= -->
+
+      <section id="page-wheel" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Lucky Wheel</h1>
+            <p>Manage wheel rewards</p>
+          </div>
+
+          <button
+            class="primary"
+            id="addWheelBtn">
+            + Add Reward
+          </button>
+
+        </div>
+
+        <div class="card panel">
+
+          <div id="wheelTable"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= DRAW ================= -->
+
+      <section id="page-draw" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Lucky Draw</h1>
+            <p>Draw campaigns and winners</p>
+          </div>
+
+          <button
+            class="primary"
+            id="addDrawBtn">
+            + New Draw
+          </button>
+
+        </div>
+
+        <div class="card panel">
+
+          <div id="drawTable"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= REVIEWS ================= -->
+
+      <section id="page-reviews" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Reviews</h1>
+            <p>Customer product reviews</p>
+          </div>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>PRODUCT</th>
+                  <th>CUSTOMER</th>
+                  <th>RATING</th>
+                  <th>REVIEW</th>
+                  <th>STATUS</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody id="reviewsTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= BANNERS ================= -->
+
+      <section id="page-banners" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Banners</h1>
+            <p>Customer website banners</p>
+          </div>
+
+          <button
+            class="primary"
+            id="addBannerBtn">
+            + Add Banner
+          </button>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>TITLE</th>
+                  <th>LINK</th>
+                  <th>STATUS</th>
+                  <th>ORDER</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody id="bannersTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= SUPPORT ================= -->
+
+      <section id="page-support" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Support</h1>
+            <p>Customer support tickets</p>
+          </div>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>TICKET</th>
+                  <th>CUSTOMER</th>
+                  <th>CATEGORY</th>
+                  <th>MESSAGE</th>
+                  <th>STATUS</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody id="supportTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= NOTIFICATIONS ================= -->
+
+      <section id="page-notifications" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Notifications</h1>
+            <p>Admin and customer notification center</p>
+          </div>
+
+          <button
+            class="primary"
+            id="addNotificationBtn">
+            + Notification
+          </button>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>TITLE</th>
+                  <th>TYPE</th>
+                  <th>CUSTOMER</th>
+                  <th>STATUS</th>
+                  <th>DATE</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody id="notificationsTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= STAFF ================= -->
+
+      <section id="page-staff" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Staff</h1>
+            <p>Staff accounts and roles</p>
+          </div>
+
+          <button
+            class="primary"
+            id="addStaffBtn">
+            + Add Staff
+          </button>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>UID</th>
+                  <th>NAME</th>
+                  <th>EMAIL</th>
+                  <th>ROLE</th>
+                  <th>STATUS</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+
+              <tbody id="staffTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= PERMISSIONS ================= -->
+
+      <section id="page-permissions" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Permissions</h1>
+            <p>Module-level staff permission structure</p>
+          </div>
+
+        </div>
+
+        <div class="card panel">
+
+          <div id="permissionMatrix"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= AI ================= -->
+
+      <section id="page-ai" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>AI Assistant</h1>
+            <p>Business analysis and recommendation center</p>
+          </div>
+
+        </div>
+
+        <div class="grid grid3">
+
+          <div class="card panel">
+
+            <h2 style="font-size:15px">Inventory</h2>
+
+            <p class="muted" style="margin:8px 0 15px">
+              Identify low stock and fast-moving products.
+            </p>
+
+            <button
+              class="primary"
+              data-ai="inventory">
+              Analyze
+            </button>
+
+          </div>
+
+
+          <div class="card panel">
+
+            <h2 style="font-size:15px">Sales</h2>
+
+            <p class="muted" style="margin:8px 0 15px">
+              Analyze sales and product performance.
+            </p>
+
+            <button
+              class="primary"
+              data-ai="sales">
+              Analyze
+            </button>
+
+          </div>
+
+
+          <div class="card panel">
+
+            <h2 style="font-size:15px">Risk</h2>
+
+            <p class="muted" style="margin:8px 0 15px">
+              Review cancellation, payment and COD risks.
+            </p>
+
+            <button
+              class="primary"
+              data-ai="risk">
+              Analyze
+            </button>
+
+          </div>
+
+        </div>
+
+        <div
+          class="card panel"
+          style="margin-top:18px">
+
+          <h2 style="font-size:15px;margin-bottom:10px">
+            Analysis
+          </h2>
+
+          <div id="aiResult" class="muted">
+            Select an analysis above.
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= SETTINGS ================= -->
+
+      <section id="page-settings" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Settings</h1>
+            <p>NatureBite business and platform settings</p>
+          </div>
+
+          <button
+            class="primary"
+            id="saveSettingsBtn">
+            Save Settings
+          </button>
+
+        </div>
+
+
+        <div class="card panel">
+
+          <div class="formGrid">
+
+            <div class="field">
+              <label>Business Name</label>
+              <input
+                id="setBusiness"
+                class="input"
+                value="NatureBite">
+            </div>
+
+            <div class="field">
+              <label>Standard Delivery Charge</label>
+              <input
+                id="setStandardDelivery"
+                class="input"
+                type="number"
+                value="60">
+            </div>
+
+            <div class="field">
+              <label>Express Delivery Charge</label>
+              <input
+                id="setExpressDelivery"
+                class="input"
+                type="number"
+                value="80">
+            </div>
+
+            <div class="field">
+              <label>Free Delivery Charge</label>
+              <input
+                id="setFreeDelivery"
+                class="input"
+                type="number"
+                value="0">
+            </div>
+
+            <div class="field">
+              <label>Platform/App Charge</label>
+              <input
+                id="setPlatformCharge"
+                class="input"
+                type="number"
+                value="5">
+            </div>
+
+            <div class="field">
+              <label>Platform Charge Type</label>
+              <select
+                id="setPlatformType"
+                class="select">
+
+                <option value="fixed">Fixed</option>
+                <option value="percentage">Percentage</option>
+
+              </select>
+            </div>
+
+            <div class="field">
+              <label>COD Enabled</label>
+
+              <select
+                id="setCOD"
+                class="select">
+
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+
+              </select>
+
+            </div>
+
+            <div class="field">
+
+              <label>Delivery Charge Prepayment</label>
+
+              <select
+                id="setPrepay"
+                class="select">
+
+                <option value="true">Required</option>
+                <option value="false">Not Required</option>
+
+              </select>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="card panel">
+
+          <h2 style="font-size:15px;margin-bottom:10px">
+            Payment Rule
+          </h2>
+
+          <p class="muted">
+            Production rule: Delivery charge should be prepaid and
+            transaction ID verified before confirmation, unless
+            Admin explicitly enables Free Delivery.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= AUDIT ================= -->
+
+      <section id="page-audit" class="page">
+
+        <div class="title">
+
+          <div>
+            <h1>Audit Logs</h1>
+            <p>Track important admin and staff activities</p>
+          </div>
+
+        </div>
+
+        <div class="card panel">
+
+          <div class="tableWrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>DATE</th>
+                  <th>USER</th>
+                  <th>ACTION</th>
+                  <th>MODULE</th>
+                  <th>DETAIL</th>
+                </tr>
+              </thead>
+
+              <tbody id="auditTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+    </div>
+  </main>
+
+</div>
+
+
+<!-- MODAL -->
+
+<div
+  id="modal"
+  class="modal">
+
+  <div class="modalBox">
+
+    <div class="modalHead">
+
+      <h2 id="modalTitle">Action</h2>
+
+      <button
+        id="modalClose"
+        class="close">
+        ×
+      </button>
+
+    </div>
+
+    <div
+      id="modalBody"
+      class="modalBody">
+    </div>
+
+  </div>
+
+</div>
+
+
+<div id="toast"></div>
+
+
+<!-- ================= FIREBASE ================= -->
 
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut,sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-import {getFirestore,collection,getDocs,getDoc,doc,setDoc,addDoc,updateDoc,deleteDoc,serverTimestamp,query,limit,where} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-const firebaseConfig={apiKey:"AIzaSyCBaUWZflbj0RVfdyl1vZCB3SYD42vkI_0",authDomain:"naturebite-c5d88.firebaseapp.com",projectId:"naturebite-c5d88",storageBucket:"naturebite-c5d88.firebasestorage.app",messagingSenderId:"467003957826",appId:"1:467003957826:web:483a261d12ac396dca43db"};
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
-const $=id=>document.getElementById(id);
-let currentPage="dashboard",currentRows=[],currentCollection="",currentEditId=null;
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 
-const moduleConfig={
-products:{title:"Products",collection:"products",perm:"products",fields:[["name","Product Name","text"],["category","Category","text"],["description","Description","textarea"],["status","Status","select:active|inactive"],["featured","Featured","checkbox"]]},
-inventory:{title:"Inventory / Variants",collection:"product_variants",perm:"inventory",fields:[["productId","Product ID","text"],["productName","Product Name","text"],["weight","Weight / Variant","text"],["price","Price","number"],["stock","Stock","number"],["status","Status","select:available|out_of_stock|inactive"]]},
-riders:{title:"Riders",collection:"riders",perm:"riders",fields:[["name","Name","text"],["mobile","Mobile","text"],["status","Status","select:active|inactive|offline"],["zone","Zone","text"]]},
-deliveryPartners:{title:"Delivery Partners",collection:"delivery_partners",perm:"deliveryPartners",fields:[["name","Partner Name","text"],["status","Status","select:active|inactive"],["phone","Phone","text"]]},
-expenses:{title:"Expenses",collection:"expenses",perm:"expenses",fields:[["title","Expense Title","text"],["amount","Amount","number"],["category","Category","text"],["note","Note","textarea"]]},
-offers:{title:"Offers & Coupons",collection:"coupons",perm:"offers",fields:[["code","Coupon Code","text"],["discount","Discount","number"],["type","Type","select:fixed|percent"],["status","Status","select:active|inactive"]]},
-luckyWheel:{title:"Lucky Wheel",collection:"wheelRewards",perm:"luckyWheel",fields:[["title","Reward","text"],["value","Value","number"],["status","Status","select:active|inactive"]]},
-luckyDraw:{title:"Lucky Draw",collection:"lucky_draw",perm:"luckyDraw",fields:[["title","Draw Name","text"],["prize","Prize","text"],["status","Status","select:active|inactive"]]},
-banners:{title:"Banners",collection:"banners",perm:"banners",fields:[["title","Banner Title","text"],["imageUrl","Image URL","url"],["status","Status","select:active|inactive"]]},
-notifications:{title:"Notifications",collection:"notifications",perm:"notifications",fields:[["customerUid","Customer UID (blank=all)","text"],["title","Title","text"],["message","Message","textarea"],["status","Status","select:unread|read"]]}
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  addDoc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+  orderBy,
+  limit,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+
+/* ================= FIREBASE CONFIG ================= */
+
+const firebaseConfig = {
+
+  apiKey:
+  "AIzaSyCBaUWZflbj0RVfdyl1vZCB3SYD42vkI_0",
+
+  authDomain:
+  "naturebite-c5d88.firebaseapp.com",
+
+  projectId:
+  "naturebite-c5d88",
+
+  storageBucket:
+  "naturebite-c5d88.firebasestorage.app",
+
+  messagingSenderId:
+  "467003957826",
+
+  appId:
+  "1:467003957826:web:483a261d12ac396dca43db"
+
 };
 
-function toast(m){$("toast").textContent=m;$("toast").style.display="block";clearTimeout(window.__t);window.__t=setTimeout(()=>$("toast").style.display="none",3000)}
-function msg(t,type="error"){$("loginMessage").textContent=t;$("loginMessage").className="login-message "+type}
-function safe(v){return v===undefined||v===null?"":String(v)}
-function money(v){return "৳"+(Number(v)||0).toLocaleString("en-BD",{maximumFractionDigits:2})}
-function fmt(v){if(!v)return"-";try{if(v.toDate)return v.toDate().toLocaleString("en-BD");return new Date(v).toLocaleString("en-BD")}catch{return"-"}}
-function roleLabel(r){const x=String(r||"").toLowerCase().replace(/\s+/g,"_");return({super_admin:"Super Admin",order_manager:"Order Manager",product_manager:"Product Manager",inventory_manager:"Inventory Manager",finance:"Accountant / Finance",accountant_finance:"Accountant / Finance",delivery_manager:"Delivery Manager",customer_support:"Customer Support",marketing_manager:"Marketing Manager"})[x]||r||"Staff"}
-function isSuper(){return window.currentAdmin?.isSuperAdmin===true || String(window.currentAdmin?.role||"").toLowerCase().replace(/\s+/g,"_")==="super_admin"}
-function can(p){return isSuper()||window.currentAdmin?.permissions?.[p]===true}
-function permissionKey(p){return ({deliveryPartners:"deliveryPartners",luckyWheel:"luckyWheel",luckyDraw:"luckyDraw",aiAssistant:"aiAssistant",auditLogs:"auditLogs",supportTickets:"support",delivery:"delivery"})[p]||p}
-function statusClass(s){s=String(s||"").toLowerCase();if(s.includes("deliver"))return"delivered";if(s.includes("cancel")||s.includes("reject"))return"cancelled";if(s.includes("pending")||s.includes("out")||s.includes("processing"))return"pending";return"processing"}
 
-$("togglePassword").onclick=()=>{$("password").type=$("password").type==="password"?"text":"password"};
-$("loginForm").onsubmit=async e=>{
- e.preventDefault();
- const email=$("email").value.trim();
- const password=$("password").value;
- if(!email||!password)return msg("Email এবং Password দিন।");
- $("loginBtn").disabled=true;
- $("loginBtn").textContent="Signing in...";
- try{
-   await signInWithEmailAndPassword(auth,email,password);
- }catch(x){
-   console.error("LOGIN ERROR:",x);
-   const map={
-     "auth/invalid-credential":"Email অথবা Password সঠিক নয়।",
-     "auth/user-not-found":"এই Email দিয়ে কোনো account নেই।",
-     "auth/wrong-password":"Password সঠিক নয়।",
-     "auth/invalid-email":"Email address সঠিক নয়।",
-     "auth/too-many-requests":"অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।",
-     "auth/network-request-failed":"Internet connection সমস্যা হয়েছে।"
-   };
-   msg(map[x.code]||("Firebase Error: "+(x.code||x.message||"unknown")));
-   $("loginHelp").style.display="block";
-   $("loginHelp").textContent="Firebase error code: "+(x.code||"unknown");
- }finally{
-   $("loginBtn").disabled=false;
-   $("loginBtn").textContent="Sign In";
- }
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+
+/* ================= GLOBAL STATE ================= */
+
+let currentUser = null;
+
+let currentAdmin = null;
+
+let state = {
+
+  orders:[],
+  products:[],
+  variants:[],
+  customers:[],
+  riders:[],
+  partners:[],
+  payments:[],
+  refunds:[],
+  expenses:[],
+  coupons:[],
+  offers:[],
+  wheel:[],
+  draws:[],
+  reviews:[],
+  banners:[],
+  support:[],
+  notifications:[],
+  staff:[],
+  audit:[],
+  settings:{}
+
 };
-$("forgotBtn").onclick=async()=>{let e=$("email").value.trim();if(!e)return msg("প্রথমে email লিখুন।");try{await sendPasswordResetEmail(auth,e);msg("Password reset email পাঠানো হয়েছে।","success")}catch(x){msg("Password reset email পাঠানো যায়নি।")}};
-$("logoutBtn").onclick=()=>signOut(auth);$("refreshBtn").onclick=()=>loadPage(currentPage);$("notificationBtn").onclick=()=>loadPage("notifications");
-document.querySelectorAll(".nav-item").forEach(b=>b.onclick=()=>{loadPage(b.dataset.page);closeSidebar()});
-function closeSidebar(){$("sidebar")?.classList.remove("open");$("sidebarOverlay")?.classList.remove("show")}
-$("mobileMenu").onclick=()=>{$("sidebar")?.classList.toggle("open");$("sidebarOverlay")?.classList.toggle("show")};
-$("sidebarOverlay").onclick=closeSidebar;
-$("globalSearch").oninput=()=>renderRows(filterRows(currentRows,$("globalSearch").value));
-$("modalClose").onclick=hideModal;$("modalBackdrop").onclick=e=>{if(e.target===$("modalBackdrop"))hideModal()};
 
-onAuthStateChanged(auth,async user=>{
-  if(!user){
-    window.currentAdmin=null;
-    $("loginScreen").style.display="flex";
-    $("adminApp").style.display="none";
-    return;
+
+/* ================= HELPERS ================= */
+
+const $ = id => document.getElementById(id);
+
+function money(value){
+
+  return "৳" +
+    Math.round(Number(value) || 0)
+    .toLocaleString("en-BD");
+
+}
+
+
+function esc(value){
+
+  return String(value ?? "")
+    .replace(/[&<>"']/g, char => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#039;"
+    }[char]));
+
+}
+
+
+function toast(message){
+
+  const box = $("toast");
+
+  box.textContent = message;
+
+  box.classList.add("show");
+
+  setTimeout(()=>{
+    box.classList.remove("show");
+  },2500);
+
+}
+
+
+function showModal(title,html){
+
+  $("modalTitle").textContent = title;
+
+  $("modalBody").innerHTML = html;
+
+  $("modal").classList.add("show");
+
+}
+
+
+function closeModal(){
+
+  $("modal").classList.remove("show");
+
+}
+
+
+$("modalClose").addEventListener(
+  "click",
+  closeModal
+);
+
+$("modal").addEventListener(
+  "click",
+  e => {
+
+    if(e.target === $("modal")){
+      closeModal();
+    }
+
   }
+);
+
+
+/* ================= NAVIGATION ================= */
+
+function openPage(page){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(x => x.classList.remove("active"));
+
+  const target = $("page-" + page);
+
+  if(!target) return;
+
+  target.classList.add("active");
+
+  document
+    .querySelectorAll(".navBtn")
+    .forEach(btn => {
+
+      btn.classList.toggle(
+        "active",
+        btn.dataset.page === page
+      );
+
+    });
+
+  $("sidebar").classList.remove("open");
+
+  loadPageData(page);
+
+}
+
+
+document
+  .querySelectorAll(".navBtn")
+  .forEach(btn => {
+
+    btn.addEventListener(
+      "click",
+      ()=>openPage(btn.dataset.page)
+    );
+
+  });
+
+
+document
+  .querySelectorAll("[data-go]")
+  .forEach(btn => {
+
+    btn.addEventListener(
+      "click",
+      ()=>openPage(btn.dataset.go)
+    );
+
+  });
+
+
+$("mobileMenu").addEventListener(
+  "click",
+  ()=>{
+    $("sidebar").classList.toggle("open");
+  }
+);
+
+
+/* ================= AUTH ================= */
+
+$("loginForm").addEventListener(
+  "submit",
+  async e => {
+
+    e.preventDefault();
+
+    $("loginError").textContent = "";
+
+    const email =
+      $("loginEmail").value.trim();
+
+    const password =
+      $("loginPassword").value;
+
+    try{
+
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+    }catch(error){
+
+      console.error(error);
+
+      let message =
+        "Login failed.";
+
+      if(
+        error.code ===
+        "auth/invalid-credential"
+      ){
+        message =
+          "Email অথবা Password সঠিক নয়।";
+      }
+
+      if(
+        error.code ===
+        "auth/user-not-found"
+      ){
+        message =
+          "এই Email দিয়ে Firebase user পাওয়া যায়নি।";
+      }
+
+      if(
+        error.code ===
+        "auth/invalid-api-key"
+      ){
+        message =
+          "Firebase API configuration সমস্যা।";
+      }
+
+      $("loginError").textContent =
+        message;
+
+    }
+
+  }
+);
+
+
+onAuthStateChanged(
+  auth,
+  async user => {
+
+    if(!user){
+
+      currentUser = null;
+
+      $("loginScreen").style.display =
+        "flex";
+
+      $("app").style.display =
+        "none";
+
+      return;
+
+    }
+
+    currentUser = user;
+
+    try{
+
+      await loadAdminProfile(user);
+
+    }catch(error){
+
+      console.error(error);
+
+      await signOut(auth);
+
+      $("loginError").textContent =
+        "Admin/Staff profile পাওয়া যায়নি অথবা access অনুমোদিত নয়।";
+
+    }
+
+  }
+);
+
+
+/* ================= ADMIN PROFILE ================= */
+
+async function loadAdminProfile(user){
+
+  const profileRef =
+    doc(db,"users",user.uid);
+
+  const profileSnap =
+    await getDoc(profileRef);
+
+  if(!profileSnap.exists()){
+
+    throw new Error(
+      "Admin profile missing"
+    );
+
+  }
+
+  const profile =
+    profileSnap.data();
+
+  const role =
+    profile.role || "";
+
+  const status =
+    String(profile.status || "Active")
+    .toLowerCase();
+
+  const allowedRoles = [
+
+    "super_admin",
+    "Super Admin",
+
+    "order_manager",
+    "Order Manager",
+
+    "product_manager",
+    "Product Manager",
+
+    "inventory_manager",
+    "Inventory Manager",
+
+    "accountant",
+    "Accountant/Finance",
+
+    "delivery_manager",
+    "Delivery Manager",
+
+    "customer_support",
+    "Customer Support",
+
+    "marketing_manager",
+    "Marketing Manager"
+
+  ];
+
+  if(!allowedRoles.includes(role)){
+
+    throw new Error(
+      "Unauthorized role"
+    );
+
+  }
+
+  if(
+    status === "inactive" ||
+    status === "disabled" ||
+    status === "blocked"
+  ){
+
+    throw new Error(
+      "Account disabled"
+    );
+
+  }
+
+  currentAdmin = {
+
+    uid:user.uid,
+
+    email:user.email,
+
+    name:
+      profile.name ||
+      profile.displayName ||
+      user.email,
+
+    role,
+
+    permissions:
+      profile.permissions || {}
+
+  };
+
+  $("adminRole").textContent =
+    currentAdmin.role;
+
+  $("loginScreen").style.display =
+    "none";
+
+  $("app").style.display =
+    "block";
+
+  applyPermissions();
+
+  await loadAllData();
+
+  openPage("dashboard");
+
+}
+
+
+/* ================= PERMISSIONS ================= */
+
+const permissionMap = {
+
+  dashboard:"Dashboard",
+
+  orders:"Orders",
+
+  products:"Products",
+
+  inventory:"Inventory",
+
+  customers:"Customers",
+
+  riders:"Riders",
+
+  deliveryPartners:"Delivery Partners",
+
+  payments:"Payments",
+
+  refunds:"Refunds",
+
+  cancellations:"Cancellations",
+
+  expenses:"Expenses",
+
+  reports:"Reports",
+
+  offers:"Offers & Coupons",
+
+  wheel:"Lucky Wheel",
+
+  draw:"Lucky Draw",
+
+  reviews:"Reviews",
+
+  banners:"Banners",
+
+  support:"Support",
+
+  notifications:"Notifications",
+
+  staff:"Staff",
+
+  permissions:"Permissions",
+
+  ai:"AI Assistant",
+
+  settings:"Settings",
+
+  audit:"Audit Logs"
+
+};
+
+
+function isSuperAdmin(){
+
+  return [
+
+    "super_admin",
+    "Super Admin"
+
+  ].includes(
+    currentAdmin?.role
+  );
+
+}
+
+
+function hasPermission(page){
+
+  if(isSuperAdmin()){
+    return true;
+  }
+
+  const permissions =
+    currentAdmin?.permissions || {};
+
+  return permissions[page] === true;
+
+}
+
+
+function applyPermissions(){
+
+  document
+    .querySelectorAll(".navBtn")
+    .forEach(btn => {
+
+      const page =
+        btn.dataset.page;
+
+      btn.style.display =
+        hasPermission(page)
+        ? "flex"
+        : "none";
+
+    });
+
+}
+
+
+/* ================= FIRESTORE LOADING ================= */
+
+async function safeGet(collectionName){
 
   try{
-    /*
-      Admin/Staff profile is stored in staff/{Firebase Auth UID}.
-      No client-side role can grant itself access because staff writes
-      are restricted by Firestore Rules.
-    */
-    // Read the staff profile belonging to the authenticated UID.
-    // A user document is used only as a compatibility fallback for older NatureBite setups.
-    let snap = await getDoc(doc(db,"staff",user.uid));
-    let profile = {};
-    let profileSource = "staff";
 
-    if (snap.exists()) {
-      profile = snap.data() || {};
-    } else {
-      const legacy = await getDoc(doc(db,"users",user.uid));
-      if (legacy.exists()) {
-        profile = legacy.data() || {};
-        profileSource = "users";
-      } else {
-        const uid = user.uid;
-        await signOut(auth);
-        msg("Authentication Login সফল, কিন্তু Staff profile পাওয়া যায়নি।", "error");
-        $("loginHelp").style.display="block";
-        $("loginHelp").innerHTML = "<b>Firebase UID:</b><br><code style=\"word-break:break-all\">"+safe(uid)+"</code><br><br>Firestore → <b>staff</b> → Add document → Document ID হিসেবে এই UID দিন।<br><br><b>status:</b> Active<br><b>role:</b> super_admin";
-        return;
-      }
-    }
-    const status=String(profile.status||"active").trim().toLowerCase();
-    const role=String(profile.role||"").trim().toLowerCase().replace(/\s+/g,"_");
+    const snap =
+      await getDocs(
+        collection(db,collectionName)
+      );
 
-    if(status!=="active"){
-      await signOut(auth);
-      msg("এই staff account বর্তমানে Active নয়। staff/{UID} এর status = Active করুন।");
-      return;
-    }
+    return snap.docs.map(
+      d => ({
+        id:d.id,
+        ...d.data()
+      })
+    );
 
-    if(!role){
-      await signOut(auth);
-      msg("Staff profile-এ role দেওয়া হয়নি।");
-      return;
-    }
+  }catch(error){
 
-    const superAdmin=role==="super_admin";
-    const permissions=profile.permissions && typeof profile.permissions==="object"
-      ? profile.permissions : {};
+    console.warn(
+      collectionName,
+      error
+    );
 
-    window.currentAdmin={
-      uid:user.uid,
-      email:user.email||profile.email||"",
-      isSuperAdmin:superAdmin,
-      role,
-      permissions,
-      name:profile.name||user.displayName||user.email||"Admin",
-      profileSource
-    };
+    return [];
 
-    $("loginMessage").className="login-message";
-    $("loginHelp").style.display="none";
-    $("loginScreen").style.display="none";
-    $("adminApp").style.display="block";
-    $("adminName").textContent=window.currentAdmin.name;
-    $("adminRole").textContent=roleLabel(role);
-    $("avatar").textContent=(window.currentAdmin.name||"A").charAt(0).toUpperCase();
-
-    applyPermissions();
-    await loadPage("dashboard");
-
-  }catch(e){
-    console.error("ADMIN PROFILE ERROR:",e);
-    try{ await signOut(auth); }catch(_){}
-    const code=e?.code||"unknown";
-    const detail=e?.message||String(e);
-    msg("Admin profile যাচাই করা যায়নি. Firebase Error: "+code+" — "+detail);
   }
-});
 
-function applyPermissions(){document.querySelectorAll(".nav-item").forEach(b=>{const p=permissionKey(b.dataset.page);if(p==="dashboard")return;b.style.display=can(p)?"block":"none"})}
-
-async function rows(col,n=300){let s=await getDocs(query(collection(db,col),limit(n)));return s.docs.map(x=>({id:x.id,...x.data()}))}
-function filterRows(a,t){if(!t.trim())return a;let q=t.toLowerCase();return a.filter(x=>JSON.stringify(x).toLowerCase().includes(q))}
-function setActive(p){document.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.page===p))}
-function pageHead(title,sub,buttons=""){return`<div class="page-title"><div><h2>${title}</h2><p>${sub}</p></div><div class="toolbar">${buttons}</div></div>`}
-function noAccess(){return $("content").innerHTML='<div class="panel"><div class="empty">এই module-এর permission আপনার account-এ নেই।</div></div>'}
-
-async function loadPage(page){
- currentPage=page;setActive(page);$("globalSearch").value="";
- if(page==="dashboard")return dashboard();
- if(page==="settings")return settings();
- if(page==="aiAssistant")return ai();
- if(page==="orders")return orders();
- if(page==="customers")return customers();
- if(page==="payments")return genericActionPage("Payments","payments","payments");
- if(page==="refunds")return genericActionPage("Refunds","refunds","refunds");
- if(page==="cancellations")return genericActionPage("Cancellations","cancellations","cancellations");
- if(page==="reports")return reports();
- if(page==="reviews")return reviews();
- if(page==="support")return support();
- if(page==="staff")return staff();
- if(page==="permissions")return permissionsPage();
- if(page==="auditLogs")return auditLogs();
- const c=moduleConfig[page];if(!c)return;
- if(!can(c.perm))return noAccess();
- currentCollection=c.collection;
- $("content").innerHTML=pageHead(c.title,"Firestore data management",`${c.fields.length?'<button class="btn primary" id="addBtn">＋ Add New</button>':""}<button class="btn" id="reloadBtn">↻ Refresh</button>`)+`<div class="panel"><div class="panel-header"><h3>${c.title} List</h3><span class="muted" id="countLabel">Loading...</span></div><div class="table-wrap" id="tableArea"><div class="loading">Loading...</div></div></div>`;
- $("reloadBtn").onclick=()=>loadPage(page);if($("addBtn"))$("addBtn").onclick=()=>openForm(c);
- try{currentRows=await rows(c.collection);renderRows(currentRows)}catch(e){$("tableArea").innerHTML=`<div class="empty">Data load হয়নি।<br><small>${safe(e.message)}</small></div>`}
 }
 
-function renderRows(a){
- const c=moduleConfig[currentPage];$("countLabel").textContent=a.length+" records";if(!a.length)return $("tableArea").innerHTML='<div class="empty">কোনো data পাওয়া যায়নি।</div>';
- let cols=currentPage==="inventory"?["productName","weight","price","stock","status"]:currentPage==="products"?["name","category","status","featured"]:c.fields.map(x=>x[0]).slice(0,5);
- let h="<table><thead><tr>"+cols.map(x=>`<th>${x}</th>`).join("")+"<th>Action</th></tr></thead><tbody>";
- a.forEach(r=>{h+="<tr>"+cols.map(x=>`<td>${x==="price"||x==="amount"||x==="discount"?money(r[x]):x==="status"?`<span class="status ${statusClass(r[x])}">${safe(r[x])||"-"}</span>`:safe(r[x])||"-"}</td>`).join("")+`<td><button class="btn small" data-v="${r.id}">View</button> <button class="btn small" data-e="${r.id}">Edit</button> <button class="btn small danger" data-d="${r.id}">Delete</button></td></tr>`});
- h+="</tbody></table>";$("tableArea").innerHTML=h;
- $("tableArea").querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>details(a.find(x=>x.id===b.dataset.v)));
- $("tableArea").querySelectorAll("[data-e]").forEach(b=>b.onclick=()=>openForm(c,a.find(x=>x.id===b.dataset.e)));
- $("tableArea").querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>remove(c,b.dataset.d));
-}
-function details(r,title="Details"){
- $("modalTitle").textContent=title;let h="<div>";
- Object.entries(r||{}).forEach(([k,v])=>{if(k==="id")return;let x=typeof v==="object"?(v?.seconds?fmt(v):JSON.stringify(v)):safe(v);h+=`<div style="padding:9px 0;border-bottom:1px solid #eee"><b>${k}</b><div class="muted" style="margin-top:4px;word-break:break-word">${x||"-"}</div></div>`});
- $("modalBody").innerHTML=h+'</div><div class="modal-actions"><button class="btn" id="closeM">Close</button></div>';showModal();$("closeM").onclick=hideModal;
-}
-function openForm(c,row=null){
- currentEditId=row?.id||null;$("modalTitle").textContent=(row?"Edit ":"Add ")+c.title;let h='<div class="form-grid">';
- c.fields.forEach(([k,l,t])=>{let v=row?.[k]??"";if(t==="textarea")h+=`<div class="form-group full"><label>${l}</label><textarea id="f_${k}" rows="4">${safe(v)}</textarea></div>`;else if(t==="checkbox")h+=`<div class="form-group checkbox"><input id="f_${k}" type="checkbox" ${v?"checked":""}><label>${l}</label></div>`;else if(t.startsWith("select:")){let o=t.slice(7).split("|");h+=`<div class="form-group"><label>${l}</label><select id="f_${k}">${o.map(z=>`<option value="${z}" ${String(v)===z?"selected":""}>${z}</option>`).join("")}</select></div>`}else h+=`<div class="form-group"><label>${l}</label><input id="f_${k}" type="${t}" value="${safe(v).replace(/"/g,"&quot;")}"></div>`});
- h+='</div><div class="modal-actions"><button class="btn" id="cancelM">Cancel</button><button class="btn primary" id="saveM">Save</button></div>';$("modalBody").innerHTML=h;showModal();$("cancelM").onclick=hideModal;$("saveM").onclick=()=>save(c,row);
-}
-async function save(c,row){
- let d={};for(let [k,,t] of c.fields){let e=$("f_"+k);d[k]=t==="checkbox"?e.checked:t==="number"?(Number(e.value)||0):e.value.trim()}d.updatedAt=serverTimestamp();if(!row)d.createdAt=serverTimestamp();
- try{if(row)await updateDoc(doc(db,c.collection,row.id),d);else await addDoc(collection(db,c.collection),d);await audit("save",c.collection,row?.id||"new",d);hideModal();toast("Saved successfully");loadPage(currentPage)}catch(e){toast("Save failed: "+e.message)}
-}
-async function remove(c,id){if(!confirm("এই record delete করতে চান?"))return;try{await deleteDoc(doc(db,c.collection,id));await audit("delete",c.collection,id,{});toast("Deleted");loadPage(currentPage)}catch(e){toast("Delete failed: "+e.message)}}
-async function audit(action,module,id,data){try{await addDoc(collection(db,"audit_logs"),{actorUid:window.currentAdmin?.uid,actorEmail:window.currentAdmin?.email,action,module,recordId:id,changes:data,createdAt:serverTimestamp()})}catch(e){console.warn("Audit:",e)}}
-function showModal(){$("modalBackdrop").style.display="flex"}function hideModal(){$("modalBackdrop").style.display="none"}
 
-async function dashboard(){
- $("content").innerHTML=pageHead("Operational Overview","Live NatureBite business activity.",'<button class="btn primary" id="dashRefresh">↻ Refresh</button>')+'<div class="stats" id="stats"></div><div class="dashboard-grid"><div class="panel"><div class="panel-header"><h3>Recent Orders</h3><button class="btn small" id="allOrders">View All →</button></div><div class="table-wrap" id="recent"></div></div><div class="panel"><div class="panel-header"><h3>Alerts</h3></div><div id="alerts"></div></div></div>';
- $("dashRefresh").onclick=dashboard;$("allOrders").onclick=()=>loadPage("orders");
- try{
-  let [o,v,e,p,c]=await Promise.all([
-    (can("orders")||isSuper())?rows("orders"):Promise.resolve([]),
-    (can("inventory")||isSuper())?rows("product_variants"):Promise.resolve([]),
-    (can("expenses")||isSuper())?rows("expenses"):Promise.resolve([]),
-    (can("products")||isSuper())?rows("products"):Promise.resolve([]),
-    (can("offers")||isSuper())?rows("coupons"):Promise.resolve([])
-   ]);
-  let sales=o.reduce((s,x)=>s+(Number(x.total)||0),0),ex=e.reduce((s,x)=>s+(Number(x.amount)||0),0),del=o.filter(x=>String(x.status||"").toLowerCase().includes("deliver")).length,pen=o.filter(x=>["pending","processing","out for delivery"].includes(String(x.status||"").toLowerCase())).length,canx=o.filter(x=>String(x.status||"").toLowerCase().includes("cancel")).length,low=v.filter(x=>(Number(x.stock)||0)<=10).length;
-  $("stats").innerHTML=`<div class="stat-card green"><small>Total Sales</small><h3>${money(sales)}</h3></div><div class="stat-card orange"><small>Total Orders</small><h3>${o.length}</h3></div><div class="stat-card green"><small>Delivered</small><h3>${del}</h3></div><div class="stat-card orange"><small>Pending</small><h3>${pen}</h3></div><div class="stat-card red"><small>Cancelled</small><h3>${canx}</h3></div><div class="stat-card green"><small>Sales-Expenses</small><h3>${money(sales-ex)}</h3></div><div class="stat-card red"><small>Low Stock</small><h3>${low}</h3></div>`;
-  let recent=o.slice(-10).reverse();$("recent").innerHTML=recent.length?`<table><thead><tr><th>Order</th><th>Customer</th><th>Status</th><th>Total</th></tr></thead><tbody>${recent.map(x=>`<tr><td>${safe(x.orderId||x.id)}</td><td>${safe(x.customerName||x.customerUid)}</td><td><span class="status ${statusClass(x.status)}">${safe(x.status)||"-"}</span></td><td>${money(x.total)}</td></tr>`).join("")}</tbody></table>`:'<div class="empty">No orders yet.</div>';
-  $("alerts").innerHTML=`<div class="alert ${low?'red':'green'}"><strong>Inventory</strong>${low?low+" variant(s) low stock.":"No low-stock variant."}</div><div class="alert orange"><strong>Coupons</strong>${c.filter(x=>x.status==="active").length} active coupon(s).</div><div class="alert green"><strong>Finance</strong>Recorded expenses: ${money(ex)}</div>`;
- }catch(e){$("stats").innerHTML='<div class="panel"><div class="empty">Dashboard load failed. Firestore Rules check করুন।</div></div>'}
-}
+async function loadAllData(){
 
-async function orders(){
- if(!can("orders"))return noAccess();
- $("content").innerHTML=pageHead("Orders","Order management and delivery workflow",'<button class="btn" id="ordRefresh">↻ Refresh</button>')+'<div class="panel"><div class="panel-header"><h3>Orders</h3><span class="muted" id="orderCount"></span></div><div class="table-wrap" id="orderTable"><div class="loading">Loading...</div></div></div>';
- $("ordRefresh").onclick=orders;
- try{currentRows=await rows("orders");$("orderCount").textContent=currentRows.length+" orders";let h="<table><thead><tr><th>Order</th><th>Customer</th><th>Payment</th><th>Total</th><th>Status</th><th>Action</th></tr></thead><tbody>";
- currentRows.forEach(o=>{h+=`<tr><td>${safe(o.orderId||o.id)}</td><td>${safe(o.customerName||o.customerUid)}<br>${safe(o.mobile)}</td><td>${safe(o.paymentStatus||o.paymentMethod||"-")}</td><td>${money(o.total)}</td><td><span class="status ${statusClass(o.status)}">${safe(o.status)||"pending"}</span></td><td><button class="btn small" data-o="${o.id}">Details</button> <button class="btn small" data-s="${o.id}">Status</button> <button class="btn small" data-r="${o.id}">Rider</button> <button class="btn small" data-print="${o.id}">Print</button></td></tr>`});h+="</tbody></table>";$("orderTable").innerHTML=h;
- $("orderTable").querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>orderDetails(currentRows.find(x=>x.id===b.dataset.o)));
- $("orderTable").querySelectorAll("[data-s]").forEach(b=>statusForm(currentRows.find(x=>x.id===b.dataset.s)));
- $("orderTable").querySelectorAll("[data-r]").forEach(b=>riderForm(currentRows.find(x=>x.id===b.dataset.r)));
- $("orderTable").querySelectorAll("[data-print]").forEach(b=>printOrder(currentRows.find(x=>x.id===b.dataset.print)));
- }catch(e){$("orderTable").innerHTML=`<div class="empty">Orders load হয়নি।<br>${safe(e.message)}</div>`}
-}
-function orderDetails(o){let items=o.items||o.products||[];let h=`<div class="kpi-row"><div class="mini-card"><small>Order</small><b>${safe(o.orderId||o.id)}</b></div><div class="mini-card"><small>Total</small><b>${money(o.total)}</b></div><div class="mini-card"><small>Status</small><b>${safe(o.status)||"-"}</b></div><div class="mini-card"><small>Payment</small><b>${safe(o.paymentStatus||o.paymentMethod)||"-"}</b></div></div><div class="form-grid">`;
- [["Customer",o.customerName],["Mobile",o.mobile],["Address",o.deliveryAddress||o.address],["Delivery Charge",money(o.deliveryCharge)],["Platform Charge",money(o.platformCharge)],["Transaction ID",o.transactionId],["Assigned Rider",o.riderName||o.riderId],["Created",fmt(o.createdAt)]].forEach(x=>h+=`<div class="form-group"><label>${x[0]}</label><div style="padding:10px;background:#f7f7ef;border-radius:9px">${safe(x[1])||"-"}</div></div>`);
- h+=`</div><h4 style="margin:12px 0">Items</h4>${Array.isArray(items)&&items.length?'<table><thead><tr><th>Product</th><th>Variant</th><th>Qty</th><th>Price</th></tr></thead><tbody>'+items.map(i=>`<tr><td>${safe(i.productName||i.name)}</td><td>${safe(i.weight||i.variant)}</td><td>${safe(i.quantity||i.qty)}</td><td>${money(i.price)}</td></tr>`).join("")+'</tbody></table>':'<div class="empty">Items field পাওয়া যায়নি।</div>'}<div class="modal-actions"><button class="btn" id="closeOrder">Close</button><button class="btn primary" id="printOrderModal">Print</button></div>`;$("modalTitle").textContent="Order Details";$("modalBody").innerHTML=h;showModal();$("closeOrder").onclick=hideModal;$("printOrderModal").onclick=()=>{hideModal();printOrder(o)}}
-function statusForm(o){$("modalTitle").textContent="Update Order Status";$("modalBody").innerHTML=`<div class="form-group"><label>Status</label><select id="orderStatus"><option>pending</option><option>confirmed</option><option>processing</option><option>out for delivery</option><option>delivered</option><option>cancelled</option></select></div><div class="form-group"><label>Note</label><textarea id="statusNote" rows="3"></textarea></div><div class="modal-actions"><button class="btn" id="cs">Cancel</button><button class="btn primary" id="ss">Save</button></div>`;$("orderStatus").value=o.status||"pending";showModal();$("cs").onclick=hideModal;$("ss").onclick=async()=>{try{await updateDoc(doc(db,"orders",o.id),{status:$("orderStatus").value,adminNote:$("statusNote").value.trim(),updatedAt:serverTimestamp()});await audit("order_status","orders",o.id,{status:$("orderStatus").value});hideModal();toast("Order status updated");orders()}catch(e){toast(e.message)}}}
-async function riderForm(o){let rs=[];try{rs=await rows("riders",100)}catch(e){}$("modalTitle").textContent="Assign Rider";$("modalBody").innerHTML=`<div class="form-group"><label>Rider</label><select id="riderSelect"><option value="">Unassigned</option>${rs.map(r=>`<option value="${r.id}">${safe(r.name)} - ${safe(r.mobile)}</option>`).join("")}</select></div><div class="modal-actions"><button class="btn" id="cr">Cancel</button><button class="btn primary" id="ar">Assign</button></div>`;$("riderSelect").value=o.riderId||"";showModal();$("cr").onclick=hideModal;$("ar").onclick=async()=>{let id=$("riderSelect").value,r=rs.find(x=>x.id===id);try{await updateDoc(doc(db,"orders",o.id),{riderId:id||null,riderName:r?.name||null,updatedAt:serverTimestamp()});await audit("assign_rider","orders",o.id,{riderId:id});hideModal();toast("Rider assigned");orders()}catch(e){toast(e.message)}}}
-function printOrder(o){let w=window.open("","_blank","width=700,height=800");if(!w)return toast("Popup blocked");w.document.write(`<html><head><title>${safe(o.orderId||o.id)}</title><style>body{font-family:Arial;padding:30px}h2{color:#267337}table{width:100%;border-collapse:collapse}td,th{border-bottom:1px solid #ddd;padding:9px;text-align:left}</style></head><body><h2>NatureBite</h2><h3>Order ${safe(o.orderId||o.id)}</h3><p>Customer: ${safe(o.customerName)}<br>Mobile: ${safe(o.mobile)}<br>Address: ${safe(o.deliveryAddress||o.address)}<br>Status: ${safe(o.status)}<br>Rider: ${safe(o.riderName||o.riderId)}</p><hr><p>Delivery: ${money(o.deliveryCharge)} | Platform: ${money(o.platformCharge)}</p><h3>Total: ${money(o.total)}</h3><script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close()}
+  state.products =
+    await safeGet("products");
 
-async function customers(){
- if(!can("customers"))return noAccess();
- $("content").innerHTML=pageHead("Customers","Customer accounts and order access",'<button class="btn" id="cuR">↻ Refresh</button>')+'<div class="panel"><div class="panel-header"><h3>Customers</h3><span class="muted" id="cuCount"></span></div><div class="table-wrap" id="cuTable"><div class="loading">Loading...</div></div></div>';$("cuR").onclick=customers;
- try{currentRows=await rows("users");currentRows=currentRows.filter(x=>!x.role||x.role==="customer");$("cuCount").textContent=currentRows.length+" customers";$("cuTable").innerHTML=currentRows.length?`<table><thead><tr><th>Name</th><th>Mobile</th><th>Email</th><th>Status</th><th>Action</th></tr></thead><tbody>${currentRows.map(x=>`<tr><td>${safe(x.name)||"-"}</td><td>${safe(x.mobile||x.phone)||"-"}</td><td>${safe(x.email)||"-"}</td><td>${safe(x.status)||"active"}</td><td><button class="btn small" data-c="${x.id}">Details</button></td></tr>`).join("")}</tbody></table>`:'<div class="empty">No customers.</div>';$("cuTable").querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>details(currentRows.find(x=>x.id===b.dataset.c),"Customer Details"))}catch(e){$("cuTable").innerHTML='<div class="empty">Customers load হয়নি।</div>'}
-}
+  state.variants =
+    await safeGet("product_variants");
 
-async function genericActionPage(title,col,perm){if(!can(perm))return noAccess();let c={title,collection:col,perm,fields:[]};$("content").innerHTML=pageHead(title,"Firestore records",'<button class="btn" id="gr">↻ Refresh</button>')+'<div class="panel"><div class="panel-header"><h3>Records</h3></div><div class="table-wrap" id="ga"><div class="loading">Loading...</div></div></div>';$("gr").onclick=()=>genericActionPage(title,col,perm);try{currentRows=await rows(col);let cols=["id","orderId","customerName","amount","status","createdAt"];$("ga").innerHTML=currentRows.length?`<table><thead><tr>${cols.map(x=>`<th>${x}</th>`).join("")}<th>Action</th></tr></thead><tbody>${currentRows.map(r=>`<tr>${cols.map(x=>`<td>${x==="amount"?money(r[x]):x==="createdAt"?fmt(r[x]):safe(r[x])||"-"}</td>`).join("")}<td><button class="btn small" data-g="${r.id}">View</button></td></tr>`).join("")}</tbody></table>`:'<div class="empty">No records.</div>';$("ga").querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>details(currentRows.find(x=>x.id===b.dataset.g)))}catch(e){$("ga").innerHTML='<div class="empty">Data load হয়নি।</div>'}}
+  state.orders =
+    await safeGet("orders");
 
-async function reports(){
- if(!can("reports"))return noAccess();$("content").innerHTML=pageHead("Reports","Sales, expenses and order summary",'<button class="btn primary" id="rr">Generate</button>')+'<div class="panel" id="reportArea"><div class="empty">Generate চাপুন।</div></div>';$("rr").onclick=async()=>{try{let[o,e,v]=await Promise.all([rows("orders"),rows("expenses"),rows("product_variants")]);let sales=o.reduce((s,x)=>s+(Number(x.total)||0),0),ex=e.reduce((s,x)=>s+(Number(x.amount)||0),0);$("reportArea").innerHTML=`<div class="kpi-row"><div class="mini-card"><small>Orders</small><b>${o.length}</b></div><div class="mini-card"><small>Sales</small><b>${money(sales)}</b></div><div class="mini-card"><small>Expenses</small><b>${money(ex)}</b></div><div class="mini-card"><small>Sales - Expenses</small><b>${money(sales-ex)}</b></div></div><div class="alert orange">Low stock variants: ${v.filter(x=>(Number(x.stock)||0)<=10).length}</div><p class="muted">এই রিপোর্টে product cost/COGS আলাদা করে সংরক্ষিত না থাকলে net profit শুধু sales minus recorded expenses হিসেবে দেখানো হচ্ছে।</p>`}catch(e){$("reportArea").innerHTML='<div class="empty">Report failed.</div>'}}
-}
+  state.customers =
+    await safeGet("users");
 
-async function reviews(){return genericActionPage("Reviews","reviews","reviews")}
-async function support(){return genericActionPage("Support","support_tickets","support")}
-async function auditLogs(){return genericActionPage("Audit Logs","audit_logs","auditLogs")}
+  state.riders =
+    await safeGet("riders");
 
-async function staff(){
- if(!can("staff"))return noAccess();$("content").innerHTML=pageHead("Staff","Admin and staff profiles",'<button class="btn" id="stR">↻ Refresh</button>')+'<div class="panel"><div class="table-wrap" id="stT"><div class="loading">Loading...</div></div></div>';$("stR").onclick=staff;try{let a=await rows("staff");$("stT").innerHTML=a.length?`<table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Permissions</th></tr></thead><tbody>${a.map(x=>`<tr><td>${safe(x.name)}</td><td>${safe(x.email)}</td><td>${roleLabel(x.role)}</td><td>${safe(x.status)||"active"}</td><td><button class="btn small" data-st="${x.id}">View</button></td></tr>`).join("")}</tbody></table>`:'<div class="empty">No staff profiles.</div>';$("stT").querySelectorAll("[data-st]").forEach(b=>b.onclick=()=>details(a.find(x=>x.id===b.dataset.st),"Staff Profile"))}catch(e){$("stT").innerHTML='<div class="empty">Staff load হয়নি।</div>'}}
-async function permissionsPage(){
- if(!can("permissions"))return noAccess();
- $("content").innerHTML=pageHead("Permissions","Staff permission overview",'<button class="btn" id="prR">↻ Refresh</button>')+'<div class="panel"><div class="table-wrap" id="prT"><div class="loading">Loading...</div></div></div>';
- $("prR").onclick=permissionsPage;
- try{
-   let a=await rows("staff");
-   $("prT").innerHTML=a.length?`<table><thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Permissions</th></tr></thead><tbody>${a.map(x=>{let ps=x.permissions||{};let active=Object.keys(ps).filter(k=>ps[k]===true);return `<tr><td>${safe(x.name)||"-"}</td><td>${roleLabel(x.role)}</td><td>${safe(x.status)||"active"}</td><td>${active.length?active.map(safe).join(", "):"None"}</td></tr>`}).join("")}</tbody></table>`:'<div class="empty">No staff profiles.</div>';
- }catch(e){$("prT").innerHTML='<div class="empty">Permissions load হয়নি।<br><small>'+safe(e.message)+'</small></div>'}
+  state.partners =
+    await safeGet("delivery_partners");
+
+  state.payments =
+    await safeGet("payments");
+
+  state.refunds =
+    await safeGet("refunds");
+
+  state.expenses =
+    await safeGet("expenses");
+
+  state.coupons =
+    await safeGet("coupons");
+
+  state.offers =
+    await safeGet("offers");
+
+  state.wheel =
+    await safeGet("wheelRewards");
+
+  state.draws =
+    await safeGet("lucky_draw");
+
+  state.reviews =
+    await safeGet("reviews");
+
+  state.banners =
+    await safeGet("banners");
+
+  state.support =
+    await safeGet("supportTickets");
+
+  state.notifications =
+    await safeGet("notifications");
+
+  state.staff =
+    await safeGet("staff");
+
+  state.audit =
+    await safeGet("audit_logs");
+
+  try{
+
+    const settingsSnap =
+      await getDoc(
+        doc(db,"settings","platform")
+      );
+
+    if(settingsSnap.exists()){
+
+      state.settings =
+        settingsSnap.data();
+
+    }
+
+  }catch(error){
+
+    console.warn(
+      "Settings:",
+      error
+    );
+
+  }
+
+  renderDashboard();
+
 }
 
-async function settings(){
- if(!can("settings"))return noAccess();$("content").innerHTML=pageHead("Settings","Platform and delivery configuration","")+'<div class="panel"><div class="form-grid"><div class="form-group"><label>Platform Charge</label><input id="pc" type="number"></div><div class="form-group"><label>Charge Type</label><select id="pct"><option value="fixed">Fixed</option><option value="percent">Percentage</option></select></div><div class="form-group"><label>Standard Delivery</label><input id="sd" type="number"></div><div class="form-group"><label>Express Delivery</label><input id="ed" type="number"></div><div class="form-group"><label>Free Delivery</label><input id="fd" type="number"></div><div class="form-group checkbox"><input id="pre" type="checkbox"><label>Delivery charge prepaid required</label></div></div><div class="modal-actions"><button class="btn primary" id="saveSet">Save Settings</button></div></div>';try{let d=(await getDoc(doc(db,"settings","platform"))).data()||{};$("pc").value=d.platformCharge??5;$("pct").value=d.platformChargeType||"fixed";$("sd").value=d.standardDelivery??60;$("ed").value=d.expressDelivery??80;$("fd").value=d.freeDelivery??0;$("pre").checked=d.deliveryPrepaidRequired!==false}catch(e){}$("saveSet").onclick=async()=>{let d={platformCharge:Number($("pc").value)||0,platformChargeType:$("pct").value,standardDelivery:Number($("sd").value)||0,expressDelivery:Number($("ed").value)||0,freeDelivery:Number($("fd").value)||0,deliveryPrepaidRequired:$("pre").checked,updatedAt:serverTimestamp()};try{await setDoc(doc(db,"settings","platform"),d,{merge:true});await audit("update","settings","platform",d);toast("Settings saved")}catch(e){toast("Settings failed: "+e.message)}}}
 
-async function ai(){
- if(!can("aiAssistant"))return noAccess();$("content").innerHTML=pageHead("🤖 AI Assistant","Business analysis foundation",'<button class="btn primary" id="runAI">Run Analysis</button>')+'<div class="panel" id="aiArea"><div class="empty">Run Analysis চাপুন।</div></div>';$("runAI").onclick=async()=>{let[o,v,e]=await Promise.all([rows("orders"),rows("product_variants"),rows("expenses")]);let sales=o.reduce((s,x)=>s+(Number(x.total)||0),0),ex=e.reduce((s,x)=>s+(Number(x.amount)||0),0),low=v.filter(x=>(Number(x.stock)||0)<=10);$("aiArea").innerHTML=`<div class="alert green"><strong>Sales</strong>${o.length} orders এবং ${money(sales)} recorded sales.</div><div class="alert orange"><strong>Inventory</strong>${low.length?low.map(x=>`${safe(x.productName)} ${safe(x.weight)} — ${safe(x.stock)} units`).join("<br>"):"No low-stock variants."}</div><div class="alert red"><strong>Finance</strong>Recorded expenses ${money(ex)}; sales minus expenses ${money(sales-ex)}.</div>`}}
+/* ================= PAGE LOADER ================= */
+
+async function loadPageData(page){
+
+  switch(page){
+
+    case "dashboard":
+      renderDashboard();
+      break;
+
+    case "orders":
+      renderOrders();
+      break;
+
+    case "products":
+      renderProducts();
+      break;
+
+    case "inventory":
+      renderInventory();
+      break;
+
+    case "customers":
+      renderCustomers();
+      break;
+
+    case "riders":
+      renderRiders();
+      break;
+
+    case "deliveryPartners":
+      renderPartners();
+      break;
+
+    case "payments":
+      renderPayments();
+      break;
+
+    case "refunds":
+      renderRefunds();
+      break;
+
+    case "cancellations":
+      renderCancellations();
+      break;
+
+    case "expenses":
+      renderExpenses();
+      break;
+
+    case "reports":
+      renderReports();
+      break;
+
+    case "offers":
+      renderOffers();
+      break;
+
+    case "wheel":
+      renderWheel();
+      break;
+
+    case "draw":
+      renderDraw();
+      break;
+
+    case "reviews":
+      renderReviews();
+      break;
+
+    case "banners":
+      renderBanners();
+      break;
+
+    case "support":
+      renderSupport();
+      break;
+
+    case "notifications":
+      renderNotifications();
+      break;
+
+    case "staff":
+      renderStaff();
+      break;
+
+    case "permissions":
+      renderPermissions();
+      break;
+
+    case "settings":
+      renderSettings();
+      break;
+
+    case "audit":
+      renderAudit();
+      break;
+
+  }
+
+}
+
+
+/* ================= STATUS ================= */
+
+function statusBadge(value){
+
+  const v =
+    String(value || "Pending");
+
+  const low =
+    v.toLowerCase();
+
+  let cls = "";
+
+  if(
+    low.includes("cancel") ||
+    low.includes("reject") ||
+    low.includes("failed")
+  ){
+    cls = "danger";
+  }
+
+  else if(
+    low.includes("pending") ||
+    low.includes("processing")
+  ){
+    cls = "warning";
+  }
+
+  else if(
+    low.includes("out")
+  ){
+    cls = "blue";
+  }
+
+  return `
+    <span class="badge ${cls}">
+      ${esc(v)}
+    </span>
+  `;
+
+}
+
+
+/* ================= DASHBOARD ================= */
+
+function renderDashboard(){
+
+  const orders =
+    state.orders || [];
+
+  const expenses =
+    state.expenses || [];
+
+  const sales =
+    orders.reduce(
+      (sum,o)=>
+        sum +
+        Number(
+          o.total ??
+          o.finalPayable ??
+          o.value ??
+          0
+        ),
+      0
+    );
+
+  const delivered =
+    orders.filter(
+      o =>
+        String(o.status)
+        .toLowerCase()
+        === "delivered"
+    ).length;
+
+  const cancelled =
+    orders.filter(
+      o =>
+        String(o.status)
+        .toLowerCase()
+        === "cancelled"
+    ).length;
+
+  const pending =
+    orders.filter(
+      o => {
+
+        const s =
+          String(o.status)
+          .toLowerCase();
+
+        return [
+          "pending",
+          "confirmed",
+          "processing",
+          "out for delivery"
+        ].includes(s);
+
+      }
+    ).length;
+
+  const expenseTotal =
+    expenses.reduce(
+      (sum,e)=>
+        sum + Number(e.amount || 0),
+      0
+    );
+
+  const platformIncome =
+    orders.reduce(
+      (sum,o)=>
+        sum +
+        Number(
+          o.platformCharge || 0
+        ),
+      0
+    );
+
+  const deliveryIncome =
+    orders.reduce(
+      (sum,o)=>
+        sum +
+        Number(
+          o.deliveryCharge || 0
+        ),
+      0
+    );
+
+  const profit =
+    sales -
+    expenseTotal;
+
+  const lowStock =
+    state.variants.filter(
+      v =>
+        Number(v.stock || 0) <= 10
+    ).length;
+
+  $("statSales").textContent =
+    money(sales);
+
+  $("statOrders").textContent =
+    orders.length;
+
+  $("statDelivered").textContent =
+    delivered;
+
+  $("statPending").textContent =
+    pending;
+
+  $("statCancelled").textContent =
+    cancelled;
+
+  $("statProfit").textContent =
+    money(profit);
+
+  $("statLowStock").textContent =
+    lowStock;
+
+  $("incomeSales").textContent =
+    money(sales);
+
+  $("incomeDelivery").textContent =
+    money(deliveryIncome);
+
+  $("incomePlatform").textContent =
+    money(platformIncome);
+
+  $("incomeExpenses").textContent =
+    money(expenseTotal);
+
+
+  $("recentOrders").innerHTML =
+    makeRecentOrders();
+
+  $("pendingPayments").innerHTML =
+    makePendingPayments();
+
+  $("lowStockAlerts").innerHTML =
+    makeLowStockAlerts();
+
+  $("cancelAlerts").innerHTML =
+    makeCancelAlerts();
+
+  renderSalesChart();
+
+  renderAIRecommendations();
+
+}
+
+
+function makeRecentOrders(){
+
+  const rows =
+    [...state.orders]
+    .slice(-8)
+    .reverse();
+
+  if(!rows.length){
+
+    return `
+      <div class="empty">
+        No orders found.
+      </div>
+    `;
+
+  }
+
+  return rows.map(o=>`
+
+    <div class="alert">
+
+      <strong>
+        ${esc(o.id)}
+      </strong>
+
+      <p>
+        ${esc(
+          o.customerName ||
+          o.customer ||
+          o.customerUid ||
+          "Customer"
+        )}
+
+        ·
+
+        ${money(
+          o.total ||
+          o.finalPayable ||
+          0
+        )}
+
+        ·
+
+        ${o.statusBadge ||
+          o.status ||
+          "Pending"}
+
+      </p>
+
+    </div>
+
+  `).join("");
+
+}
+
+
+function makePendingPayments(){
+
+  const rows =
+    state.payments.filter(
+      p =>
+        String(p.status || "")
+        .toLowerCase()
+        === "pending"
+    ).slice(0,6);
+
+  if(!rows.length){
+
+    return `
+      <div class="empty">
+        No pending payments.
+      </div>
+    `;
+
+  }
+
+  return rows.map(p=>`
+
+    <div class="alert">
+
+      <strong>
+        ${esc(p.id)}
+      </strong>
+
+      <p>
+        Order:
+        ${esc(p.orderId || p.order || "")}
+
+        ·
+
+        ${money(p.amount)}
+
+      </p>
+
+    </div>
+
+  `).join("");
+
+}
+
+
+function makeLowStockAlerts(){
+
+  const rows =
+    state.variants.filter(
+      v =>
+        Number(v.stock || 0) <= 10
+    ).slice(0,6);
+
+  if(!rows.length){
+
+    return `
+      <div class="empty">
+        Stock level looks normal.
+      </div>
+    `;
+
+  }
+
+  return rows.map(v=>`
+
+    <div class="alert">
+
+      <strong>
+        ${esc(
+          v.productName ||
+          v.productId ||
+          v.id
+        )}
+      </strong>
+
+      <p>
+        ${esc(v.weight || "")}
+        · Stock:
+        ${Number(v.stock || 0)}
+      </p>
+
+    </div>
+
+  `).join("");
+
+}
+
+
+function makeCancelAlerts(){
+
+  const rows =
+    state.orders.filter(
+      o =>
+        String(o.status)
+        .toLowerCase()
+        === "cancelled"
+    ).slice(0,6);
+
+  if(!rows.length){
+
+    return `
+      <div class="empty">
+        No cancellation requests.
+      </div>
+    `;
+
+  }
+
+  return rows.map(o=>`
+
+    <div class="alert">
+
+      <strong>
+        Order ${esc(o.id)}
+      </strong>
+
+      <p>
+        Rider:
+        ${esc(
+          o.riderId ||
+          o.rider ||
+          "Not Assigned"
+        )}
+
+        ·
+
+        Handover proof required
+      </p>
+
+    </div>
+
+  `).join("");
+
+}
+
+
+function renderSalesChart(){
+
+  const chart =
+    $("salesChart");
+
+  const values = [
+    state.orders.filter(
+      o => o.status === "Delivered"
+    ).length,
+
+    state.orders.filter(
+      o => o.status === "Processing"
+    ).length,
+
+    state.orders.filter(
+      o => o.status === "Pending"
+    ).length,
+
+    state.orders.filter(
+      o => o.status === "Cancelled"
+    ).length,
+
+    state.orders.length
+  ];
+
+  const max =
+    Math.max(...values,1);
+
+  chart.innerHTML =
+    values.map(
+      (v,i)=>`
+
+      <div class="barItem">
+
+        <div class="barValue">
+          ${v}
+        </div>
+
+        <div
+          class="bar"
+          style="height:${Math.max(
+            4,
+            (v/max)*180
+          )}px">
+        </div>
+
+        <div class="barLabel">
+          ${
+            [
+              "Delivered",
+              "Processing",
+              "Pending",
+              "Cancelled",
+              "Total"
+            ][i]
+          }
+        </div>
+
+      </div>
+
+    `
+    ).join("");
+
+}
+
+
+function renderAIRecommendations(){
+
+  const low =
+    state.variants.filter(
+      v => Number(v.stock || 0) <= 10
+    ).length;
+
+  const cancelled =
+    state.orders.filter(
+      o => o.status === "Cancelled"
+    ).length;
+
+  const recommendations = [
+
+    {
+      title:"Inventory",
+      text:
+        low
+        ? `${low} variant(s) need stock attention.`
+        : "No critical stock shortage detected."
+    },
+
+    {
+      title:"Orders",
+      text:
+        `${state.orders.length} order(s) currently recorded.`
+    },
+
+    {
+      title:"Operations",
+      text:
+        cancelled
+        ? `${cancelled} cancelled order(s) need review.`
+        : "No cancellation alert currently."
+    }
+
+  ];
+
+  $("aiRecommendations").innerHTML =
+    recommendations.map(x=>`
+
+      <div class="alert">
+
+        <strong>
+          ${x.title}
+        </strong>
+
+        <p>
+          ${x.text}
+        </p>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* ================= ORDERS ================= */
+
+function renderOrders(){
+
+  const search =
+    ($("orderSearch")?.value || "")
+    .toLowerCase();
+
+  const filter =
+    $("orderStatusFilter")?.value || "";
+
+  const rows =
+    state.orders.filter(o=>{
+
+      const text =
+        JSON.stringify(o)
+        .toLowerCase();
+
+      const matchesSearch =
+        !search ||
+        text.includes(search);
+
+      const matchesStatus =
+        !filter ||
+        o.status === filter;
+
+      return (
+        matchesSearch &&
+        matchesStatus
+      );
+
+    });
+
+  $("ordersTable").innerHTML =
+    rows.length
+    ? rows.map(o=>`
+
+      <tr>
+
+        <td>
+          <b>${esc(o.id)}</b>
+        </td>
+
+        <td>
+          ${esc(
+            o.customerName ||
+            o.customer ||
+            o.customerUid ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            o.phone ||
+            o.customerPhone ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${money(
+            o.total ||
+            o.finalPayable ||
+            0
+          )}
+        </td>
+
+        <td>
+          ${statusBadge(
+            o.paymentStatus ||
+            o.paymentMethod ||
+            "Pending"
+          )}
+        </td>
+
+        <td>
+          ${statusBadge(
+            o.status ||
+            "Pending"
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            o.riderName ||
+            o.riderId ||
+            "Unassigned"
+          )}
+        </td>
+
+        <td>
+
+          <button
+            class="actionBtn"
+            data-order-view="${esc(o.id)}">
+            View
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="8">
+          <div class="empty">
+            No orders found.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+$("orderSearch").addEventListener(
+  "input",
+  renderOrders
+);
+
+$("orderStatusFilter").addEventListener(
+  "change",
+  renderOrders
+);
+
+
+/* ================= ORDER DETAILS ================= */
+
+async function openOrder(orderId){
+
+  const order =
+    state.orders.find(
+      o => o.id === orderId
+    );
+
+  if(!order) return;
+
+  const riderOptions =
+    state.riders.map(
+      r=>`
+
+      <option
+        value="${esc(r.id)}"
+        ${
+          (
+            order.riderId === r.id
+          )
+          ? "selected"
+          : ""
+        }>
+
+        ${esc(
+          r.name ||
+          r.id
+        )}
+
+      </option>
+
+    `
+    ).join("");
+
+  showModal(
+    "Order " + orderId,
+
+    `
+
+    <div class="grid grid2">
+
+      <div class="alert">
+        <strong>Order ID</strong>
+        <p>${esc(order.id)}</p>
+      </div>
+
+      <div class="alert">
+        <strong>Customer</strong>
+        <p>
+          ${esc(
+            order.customerName ||
+            order.customer ||
+            order.customerUid ||
+            ""
+          )}
+        </p>
+      </div>
+
+      <div class="alert">
+        <strong>Mobile</strong>
+        <p>
+          ${esc(
+            order.phone ||
+            order.customerPhone ||
+            ""
+          )}
+        </p>
+      </div>
+
+      <div class="alert">
+        <strong>Total</strong>
+        <p>
+          ${money(
+            order.total ||
+            order.finalPayable ||
+            0
+          )}
+        </p>
+      </div>
+
+      <div class="alert">
+        <strong>Delivery Charge</strong>
+        <p>
+          ${money(
+            order.deliveryCharge || 0
+          )}
+        </p>
+      </div>
+
+      <div class="alert">
+        <strong>Platform Charge</strong>
+        <p>
+          ${money(
+            order.platformCharge || 0
+          )}
+        </p>
+      </div>
+
+      <div class="alert">
+        <strong>Payment</strong>
+        <p>
+          ${esc(
+            order.paymentMethod ||
+            ""
+          )}
+          ·
+          ${esc(
+            order.paymentStatus ||
+            ""
+          )}
+        </p>
+      </div>
+
+      <div class="alert">
+        <strong>Transaction ID</strong>
+        <p>
+          ${esc(
+            order.transactionId ||
+            ""
+          )}
+        </p>
+      </div>
+
+    </div>
+
+
+    <div class="field">
+      <label>Delivery Address</label>
+      <textarea
+        class="textarea"
+        readonly>${esc(
+          order.address ||
+          order.deliveryAddress ||
+          ""
+        )}</textarea>
+    </div>
+
+
+    <div class="field">
+      <label>Special Note</label>
+      <textarea
+        class="textarea"
+        readonly>${esc(
+          order.note ||
+          order.deliveryNote ||
+          ""
+        )}</textarea>
+    </div>
+
+
+    <div class="formGrid">
+
+      <div class="field">
+
+        <label>Order Status</label>
+
+        <select
+          id="editOrderStatus"
+          class="select">
+
+          ${
+            [
+              "Pending",
+              "Confirmed",
+              "Processing",
+              "Out for Delivery",
+              "Delivered",
+              "Cancelled"
+            ].map(
+              s=>`
+
+              <option
+                ${
+                  order.status === s
+                  ? "selected"
+                  : ""
+                }>
+                ${s}
+              </option>
+
+            `
+            ).join("")
+          }
+
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Assign Rider</label>
+
+        <select
+          id="editOrderRider"
+          class="select">
+
+          <option value="">
+            Unassigned
+          </option>
+
+          ${riderOptions}
+
+        </select>
+
+      </div>
+
+    </div>
+
+
+    <div
+      style="
+        display:flex;
+        gap:10px;
+        flex-wrap:wrap;
+        margin-top:10px
+      ">
+
+      <button
+        class="primary"
+        id="saveOrderBtn">
+        Save Order
+      </button>
+
+      <button
+        class="secondary"
+        id="printOrderBtn">
+        Print Order
+      </button>
+
+    </div>
+
+    `
+  );
+
+
+  $("saveOrderBtn").addEventListener(
+    "click",
+    async ()=>{
+
+      try{
+
+        const newStatus =
+          $("editOrderStatus").value;
+
+        const riderId =
+          $("editOrderRider").value;
+
+        await updateDoc(
+          doc(db,"orders",orderId),
+          {
+
+            status:newStatus,
+
+            riderId:riderId || null,
+
+            updatedAt:
+              serverTimestamp()
+
+          }
+        );
+
+        await writeAudit(
+          "Orders",
+          "Update Order",
+          orderId
+        );
+
+        toast(
+          "Order updated."
+        );
+
+        await loadAllData();
+
+        closeModal();
+
+        renderOrders();
+
+      }catch(error){
+
+        console.error(error);
+
+        toast(
+          "Order update failed: " +
+          error.code
+        );
+
+      }
+
+    }
+  );
+
+
+  $("printOrderBtn").addEventListener(
+    "click",
+    ()=>printOrder(order)
+  );
+
+}
+
+
+function printOrder(order){
+
+  const popup =
+    window.open(
+      "",
+      "_blank"
+    );
+
+  if(!popup){
+
+    toast(
+      "Popup blocked. Allow popup."
+    );
+
+    return;
+
+  }
+
+  popup.document.write(`
+
+    <html>
+
+    <head>
+
+      <title>
+        NatureBite Order ${esc(order.id)}
+      </title>
+
+      <style>
+
+        body{
+          font-family:Arial;
+          padding:30px;
+          color:#222;
+        }
+
+        h1{
+          color:#174f36;
+        }
+
+        table{
+          width:100%;
+          border-collapse:collapse;
+          margin-top:20px;
+        }
+
+        td,th{
+          border:1px solid #ddd;
+          padding:8px;
+          text-align:left;
+        }
+
+      </style>
+
+    </head>
+
+    <body>
+
+      <h1>NatureBite</h1>
+
+      <h2>
+        Order ${esc(order.id)}
+      </h2>
+
+      <p>
+        Customer:
+        ${esc(
+          order.customerName ||
+          order.customer ||
+          ""
+        )}
+      </p>
+
+      <p>
+        Mobile:
+        ${esc(
+          order.phone ||
+          order.customerPhone ||
+          ""
+        )}
+      </p>
+
+      <p>
+        Address:
+        ${esc(
+          order.address ||
+          order.deliveryAddress ||
+          ""
+        )}
+      </p>
+
+      <table>
+
+        <tr>
+          <th>Information</th>
+          <th>Value</th>
+        </tr>
+
+        <tr>
+          <td>Status</td>
+          <td>${esc(order.status || "")}</td>
+        </tr>
+
+        <tr>
+          <td>Payment</td>
+          <td>${esc(order.paymentMethod || "")}</td>
+        </tr>
+
+        <tr>
+          <td>Delivery Charge</td>
+          <td>${money(order.deliveryCharge || 0)}</td>
+        </tr>
+
+        <tr>
+          <td>Platform Charge</td>
+          <td>${money(order.platformCharge || 0)}</td>
+        </tr>
+
+        <tr>
+          <td>Total</td>
+          <td>${money(
+            order.total ||
+            order.finalPayable ||
+            0
+          )}</td>
+        </tr>
+
+      </table>
+
+      <br>
+
+      <p>
+        Rider:
+        ${esc(
+          order.riderName ||
+          order.riderId ||
+          "Not Assigned"
+        )}
+      </p>
+
+      <script>
+        window.onload=function(){
+          window.print();
+        };
+      <\/script>
+
+    </body>
+
+    </html>
+
+  `);
+
+  popup.document.close();
+
+}
+
+
+/* ================= PRODUCTS ================= */
+
+function renderProducts(){
+
+  $("productsTable").innerHTML =
+    state.products.length
+    ? state.products.map(p=>`
+
+      <tr>
+
+        <td>
+          <b>${esc(p.id)}</b>
+        </td>
+
+        <td>
+          ${esc(p.category || "")}
+        </td>
+
+        <td>
+          ${statusBadge(
+            p.status || "active"
+          )}
+        </td>
+
+        <td>
+          ${p.featured ? "Yes" : "No"}
+        </td>
+
+        <td>
+
+          <button
+            class="actionBtn"
+            data-product-edit="${esc(p.id)}">
+            Edit
+          </button>
+
+          <button
+            class="actionBtn"
+            data-product-delete="${esc(p.id)}">
+            Delete
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="5">
+          <div class="empty">
+            No products found.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+function openProductModal(product=null){
+
+  const editing =
+    !!product;
+
+  showModal(
+    editing
+      ? "Edit Product"
+      : "Add Product",
+
+    `
+
+    <div class="formGrid">
+
+      <div class="field">
+
+        <label>Product Name</label>
+
+        <input
+          id="productName"
+          class="input"
+          value="${esc(
+            product?.id || ""
+          )}">
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Category</label>
+
+        <input
+          id="productCategory"
+          class="input"
+          value="${esc(
+            product?.category || ""
+          )}">
+
+      </div>
+
+
+      <div class="field formFull">
+
+        <label>Description</label>
+
+        <textarea
+          id="productDescription"
+          class="textarea">${esc(
+            product?.description || ""
+          )}</textarea>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Status</label>
+
+        <select
+          id="productStatus"
+          class="select">
+
+          <option
+            ${
+              product?.status === "active"
+              ? "selected"
+              : ""
+            }>
+            active
+          </option>
+
+          <option
+            ${
+              product?.status === "inactive"
+              ? "selected"
+              : ""
+            }>
+            inactive
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Featured</label>
+
+        <select
+          id="productFeatured"
+          class="select">
+
+          <option value="true"
+            ${
+              product?.featured
+              ? "selected"
+              : ""
+            }>
+            Yes
+          </option>
+
+          <option value="false"
+            ${
+              !product?.featured
+              ? "selected"
+              : ""
+            }>
+            No
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+
+    <button
+      class="primary"
+      id="saveProductBtn">
+
+      ${editing
+        ? "Update Product"
+        : "Create Product"}
+
+    </button>
+
+    `
+  );
+
+
+  $("saveProductBtn").addEventListener(
+    "click",
+    async ()=>{
+
+      const name =
+        $("productName").value.trim();
+
+      if(!name){
+
+        toast(
+          "Product name required."
+        );
+
+        return;
+
+      }
+
+      const data = {
+
+        category:
+          $("productCategory")
+          .value.trim(),
+
+        description:
+          $("productDescription")
+          .value.trim(),
+
+        status:
+          $("productStatus").value,
+
+        featured:
+          $("productFeatured").value
+          === "true",
+
+        updatedAt:
+          serverTimestamp()
+
+      };
+
+
+      try{
+
+        if(editing){
+
+          await updateDoc(
+            doc(
+              db,
+              "products",
+              product.id
+            ),
+            data
+          );
+
+        }else{
+
+          await setDoc(
+            doc(
+              db,
+              "products",
+              name
+            ),
+            {
+              ...data,
+              createdAt:
+                serverTimestamp()
+            }
+          );
+
+        }
+
+        await writeAudit(
+          "Products",
+          editing
+          ? "Edit Product"
+          : "Create Product",
+          name
+        );
+
+        toast(
+          "Product saved."
+        );
+
+        await loadAllData();
+
+        closeModal();
+
+        renderProducts();
+
+      }catch(error){
+
+        console.error(error);
+
+        toast(
+          "Product save failed: " +
+          error.code
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+/* ================= INVENTORY ================= */
+
+function renderInventory(){
+
+  const low =
+    state.variants.filter(
+      v => Number(v.stock || 0) <= 10
+    );
+
+  const total =
+    state.variants.reduce(
+      (sum,v)=>
+        sum +
+        Number(v.stock || 0),
+      0
+    );
+
+  $("inventoryVariants").textContent =
+    state.variants.length;
+
+  $("inventoryStock").textContent =
+    total;
+
+  $("inventoryLow").textContent =
+    low.length;
+
+  $("inventoryTable").innerHTML =
+    state.variants.length
+    ? state.variants.map(v=>`
+
+      <tr>
+
+        <td>${esc(v.id)}</td>
+
+        <td>
+          ${esc(
+            v.productName ||
+            v.productId ||
+            ""
+          )}
+        </td>
+
+        <td>${esc(v.weight || "")}</td>
+
+        <td>${money(v.price)}</td>
+
+        <td>
+          <b>${Number(v.stock || 0)}</b>
+        </td>
+
+        <td>
+          ${statusBadge(
+            v.status || "available"
+          )}
+        </td>
+
+        <td>
+
+          <button
+            class="actionBtn"
+            data-stock-edit="${esc(v.id)}">
+            Edit Stock
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="7">
+          <div class="empty">
+            No variants found.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+/* ================= CUSTOMERS ================= */
+
+function renderCustomers(){
+
+  $("customersTable").innerHTML =
+    state.customers.length
+    ? state.customers.map(c=>`
+
+      <tr>
+
+        <td>
+          ${esc(c.id)}
+        </td>
+
+        <td>
+          ${esc(
+            c.name ||
+            c.displayName ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(c.phone || "")}
+        </td>
+
+        <td>
+          ${esc(c.email || "")}
+        </td>
+
+        <td>
+          ${statusBadge(
+            c.status || "Active"
+          )}
+        </td>
+
+        <td>
+
+          <button
+            class="actionBtn"
+            data-customer-view="${esc(c.id)}">
+            View
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="6">
+          <div class="empty">
+            No customers found.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+/* ================= RIDERS ================= */
+
+function renderRiders(){
+
+  $("ridersTable").innerHTML =
+    state.riders.length
+    ? state.riders.map(r=>`
+
+      <tr>
+
+        <td>${esc(r.id)}</td>
+
+        <td>
+          ${esc(r.name || "")}
+        </td>
+
+        <td>
+          ${esc(r.phone || "")}
+        </td>
+
+        <td>
+          ${esc(r.zone || "")}
+        </td>
+
+        <td>
+          ${statusBadge(
+            r.status || "Active"
+          )}
+        </td>
+
+        <td>
+
+          <button
+            class="actionBtn"
+            data-rider-edit="${esc(r.id)}">
+            Edit
+          </button>
+
+          <button
+            class="actionBtn"
+            data-rider-delete="${esc(r.id)}">
+            Delete
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="6">
+          <div class="empty">
+            No riders found.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+/* ================= DELIVERY PARTNERS ================= */
+
+function renderPartners(){
+
+  $("partnersTable").innerHTML =
+    state.partners.length
+    ? state.partners.map(p=>`
+
+      <tr>
+
+        <td>${esc(p.name || p.id)}</td>
+
+        <td>
+          ${esc(
+            p.type ||
+            "External Delivery"
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            p.phone ||
+            p.contact ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${statusBadge(
+            p.status || "Active"
+          )}
+        </td>
+
+        <td>
+
+          <button
+            class="actionBtn"
+            data-partner-edit="${esc(p.id)}">
+            Edit
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="5">
+          <div class="empty">
+            No delivery partners.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+/* ================= PAYMENTS ================= */
+
+function renderPayments(){
+
+  $("paymentsTable").innerHTML =
+    state.payments.length
+    ? state.payments.map(p=>`
+
+      <tr>
+
+        <td>${esc(p.id)}</td>
+
+        <td>
+          ${esc(
+            p.orderId ||
+            p.order ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            p.customerId ||
+            p.customer ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            p.method ||
+            p.paymentMethod ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            p.transactionId ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${money(p.amount)}
+        </td>
+
+        <td>
+          ${statusBadge(
+            p.status || "Pending"
+          )}
+        </td>
+
+        <td>
+
+          <button
+            class="actionBtn"
+            data-payment-approve="${esc(p.id)}">
+            Approve
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="8">
+          <div class="empty">
+            No payments found.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+/* ================= REFUNDS ================= */
+
+function renderRefunds(){
+
+  $("refundsTable").innerHTML =
+    state.refunds.length
+    ? state.refunds.map(r=>`
+
+      <tr>
+
+        <td>${esc(r.id)}</td>
+
+        <td>
+          ${esc(
+            r.orderId ||
+            r.order ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            r.customerId ||
+            r.customer ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${money(r.amount)}
+        </td>
+
+        <td>
+          ${esc(
+            r.reason || ""
+          )}
+        </td>
+
+        <td>
+          ${statusBadge(
+            r.status || "Pending"
+          )}
+        </td>
+
+        <td>
+
+          <button
+            class="actionBtn"
+            data-refund-approve="${esc(r.id)}">
+            Approve
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="7">
+          <div class="empty">
+            No refunds.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+/* ================= CANCELLATIONS ================= */
+
+function renderCancellations(){
+
+  const rows =
+    state.orders.filter(
+      o =>
+        String(o.status)
+        .toLowerCase()
+        === "cancelled"
+    );
+
+  $("cancellationsTable").innerHTML =
+    rows.length
+    ? rows.map(o=>`
+
+      <tr>
+
+        <td>${esc(o.id)}</td>
+
+        <td>
+          ${esc(
+            o.customerName ||
+            o.customer ||
+            o.customerUid ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${money(
+            o.total ||
+            o.finalPayable ||
+            0
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            o.riderId ||
+            "Not Assigned"
+          )}
+        </td>
+
+        <td>
+          ${statusBadge(
+            o.handoverStatus ||
+            "Pending"
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            o.handoverProofUrl ||
+            "No proof"
+          )}
+        </td>
+
+        <td>
+
+          <button
+            class="actionBtn"
+            data-order-view="${esc(o.id)}">
+            View
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="7">
+          <div class="empty">
+            No cancelled orders.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+/* ================= EXPENSES ================= */
+
+function renderExpenses(){
+
+  $("expensesTable").innerHTML =
+    state.expenses.length
+    ? state.expenses.map(e=>`
+
+      <tr>
+
+        <td>${esc(e.id)}</td>
+
+        <td>
+          ${esc(
+            e.title ||
+            e.description ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            e.category ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${money(e.amount)}
+        </td>
+
+        <td>
+          ${esc(
+            e.date ||
+            ""
+          )}
+        </td>
+
+        <td>
+
+          <button
+            class="actionBtn"
+            data-expense-delete="${esc(e.id)}">
+            Delete
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="6">
+          <div class="empty">
+            No expenses.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+/* ================= REPORTS ================= */
+
+function renderReports(){
+
+  const sales =
+    state.orders.reduce(
+      (s,o)=>
+        s +
+        Number(
+          o.total ||
+          o.finalPayable ||
+          0
+        ),
+      0
+    );
+
+  const delivery =
+    state.orders.reduce(
+      (s,o)=>
+        s +
+        Number(
+          o.deliveryCharge || 0
+        ),
+      0
+    );
+
+  const platform =
+    state.orders.reduce(
+      (s,o)=>
+        s +
+        Number(
+          o.platformCharge || 0
+        ),
+      0
+    );
+
+  const expenses =
+    state.expenses.reduce(
+      (s,e)=>
+        s +
+        Number(e.amount || 0),
+      0
+    );
+
+  const profit =
+    sales -
+    expenses;
+
+  $("reportSales").textContent =
+    money(sales);
+
+  $("reportDelivery").textContent =
+    money(delivery);
+
+  $("reportExpenses").textContent =
+    money(expenses);
+
+  $("reportProfit").textContent =
+    money(profit);
+
+  $("reportsTable").innerHTML = `
+
+    <tr>
+      <td>Total Orders</td>
+      <td>${state.orders.length}</td>
+    </tr>
+
+    <tr>
+      <td>Delivered Orders</td>
+      <td>
+        ${
+          state.orders.filter(
+            o => o.status === "Delivered"
+          ).length
+        }
+      </td>
+    </tr>
+
+    <tr>
+      <td>Cancelled Orders</td>
+      <td>
+        ${
+          state.orders.filter(
+            o => o.status === "Cancelled"
+          ).length
+        }
+      </td>
+    </tr>
+
+    <tr>
+      <td>Product Sales</td>
+      <td>${money(sales)}</td>
+    </tr>
+
+    <tr>
+      <td>Delivery Income</td>
+      <td>${money(delivery)}</td>
+    </tr>
+
+    <tr>
+      <td>Platform Income</td>
+      <td>${money(platform)}</td>
+    </tr>
+
+    <tr>
+      <td>Total Expenses</td>
+      <td>${money(expenses)}</td>
+    </tr>
+
+    <tr>
+      <td>Estimated Net Profit</td>
+      <td>${money(profit)}</td>
+    </tr>
+
+  `;
+
+}
+
+
+/* ================= OFFERS ================= */
+
+function renderOffers(){
+
+  const all = [
+
+    ...state.coupons.map(
+      x=>({
+        ...x,
+        source:"Coupon"
+      })
+    ),
+
+    ...state.offers.map(
+      x=>({
+        ...x,
+        source:"Offer"
+      })
+    )
+
+  ];
+
+  $("offersTable").innerHTML =
+    all.length
+    ? all.map(x=>`
+
+      <tr>
+
+        <td>
+          ${esc(
+            x.code ||
+            x.id
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            x.source
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            x.value ||
+            x.discount ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${money(
+            x.minimumOrder ||
+            x.minOrder ||
+            0
+          )}
+        </td>
+
+        <td>
+          ${statusBadge(
+            x.status ||
+            "Active"
+          )}
+        </td>
+
+        <td>
+
+          <button
+            class="actionBtn"
+            data-coupon-delete="${esc(x.id)}">
+            Delete
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="6">
+          <div class="empty">
+            No offers or coupons.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+/* ================= WHEEL ================= */
+
+function renderWheel(){
+
+  if(!state.wheel.length){
+
+    $("wheelTable").innerHTML =
+      `<div class="empty">
+        No wheel rewards.
+      </div>`;
+
+    return;
+
+  }
+
+  $("wheelTable").innerHTML = `
+
+    <div class="tableWrap">
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>REWARD</th>
+            <th>VALUE</th>
+            <th>PROBABILITY</th>
+            <th>STATUS</th>
+            <th>ACTION</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          ${
+            state.wheel.map(x=>`
+
+              <tr>
+
+                <td>
+                  ${esc(
+                    x.name ||
+                    x.reward ||
+                    x.id
+                  )}
+                </td>
+
+                <td>
+                  ${esc(
+                    x.value ||
+                    ""
+                  )}
+                </td>
+
+                <td>
+                  ${esc(
+                    x.probability ||
+                    ""
+                  )}
+                </td>
+
+                <td>
+                  ${statusBadge(
+                    x.status ||
+                    "Active"
+                  )}
+                </td>
+
+                <td>
+
+                  <button
+                    class="actionBtn"
+                    data-wheel-delete="${esc(x.id)}">
+                    Delete
+                  </button>
+
+                </td>
+
+              </tr>
+
+            `).join("")
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ================= DRAW ================= */
+
+function renderDraw(){
+
+  if(!state.draws.length){
+
+    $("drawTable").innerHTML =
+      `<div class="empty">
+        No lucky draws.
+      </div>`;
+
+    return;
+
+  }
+
+  $("drawTable").innerHTML = `
+
+    <div class="tableWrap">
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>DRAW</th>
+            <th>PRIZE</th>
+            <th>START</th>
+            <th>END</th>
+            <th>STATUS</th>
+            <th>ACTION</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          ${
+            state.draws.map(x=>`
+
+              <tr>
+
+                <td>
+                  ${esc(
+                    x.name ||
+                    x.title ||
+                    x.id
+                  )}
+                </td>
+
+                <td>
+                  ${esc(
+                    x.prize ||
+                    ""
+                  )}
+                </td>
+
+                <td>
+                  ${esc(
+                    x.startDate ||
+                    ""
+                  )}
+                </td>
+
+                <td>
+                  ${esc(
+                    x.endDate ||
+                    ""
+                  )}
+                </td>
+
+                <td>
+                  ${statusBadge(
+                    x.status ||
+                    "Active"
+                  )}
+                </td>
+
+                <td>
+
+                  <button
+                    class="actionBtn"
+                    data-draw-delete="${esc(x.id)}">
+                    Delete
+                  </button>
+
+                </td>
+
+              </tr>
+
+            `).join("")
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ================= REVIEWS ================= */
+
+function renderReviews(){
+
+  $("reviewsTable").innerHTML =
+    state.reviews.length
+    ? state.reviews.map(r=>`
+
+      <tr>
+
+        <td>
+          ${esc(
+            r.productName ||
+            r.productId ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            r.customerName ||
+            r.customerUid ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            r.rating ||
+            ""
+          )}/5
+        </td>
+
+        <td>
+          ${esc(
+            r.comment ||
+            r.review ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${statusBadge(
+            r.status ||
+            "Published"
+          )}
+        </td>
+
+        <td>
+
+          <button
+            class="actionBtn"
+            data-review-delete="${esc(r.id)}">
+            Delete
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="6">
+          <div class="empty">
+            No reviews.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+/* ================= BANNERS ================= */
+
+function renderBanners(){
+
+  $("bannersTable").innerHTML =
+    state.banners.length
+    ? state.banners.map(b=>`
+
+      <tr>
+
+        <td>
+          ${esc(
+            b.title ||
+            b.name ||
+            b.id
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            b.link ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${statusBadge(
+            b.status ||
+            "Active"
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            b.sortOrder ||
+            0
+          )}
+        </td>
+
+        <td>
+
+          <button
+            class="actionBtn"
+            data-banner-delete="${esc(b.id)}">
+            Delete
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="5">
+          <div class="empty">
+            No banners.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+/* ================= SUPPORT ================= */
+
+function renderSupport(){
+
+  $("supportTable").innerHTML =
+    state.support.length
+    ? state.support.map(s=>`
+
+      <tr>
+
+        <td>
+          ${esc(s.id)}
+        </td>
+
+        <td>
+          ${esc(
+            s.customerName ||
+            s.customerUid ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            s.category ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            s.message ||
+            s.description ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${statusBadge(
+            s.status ||
+            "Open"
+          )}
+        </td>
+
+        <td>
+
+          <button
+            class="actionBtn"
+            data-support-view="${esc(s.id)}">
+            View
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="6">
+          <div class="empty">
+            No support tickets.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+/* ================= NOTIFICATIONS ================= */
+
+function renderNotifications(){
+
+  $("notificationsTable").innerHTML =
+    state.notifications.length
+    ? state.notifications.map(n=>`
+
+      <tr>
+
+        <td>
+          ${esc(
+            n.title ||
+            n.message ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            n.type ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            n.customerUid ||
+            "All"
+          )}
+        </td>
+
+        <td>
+          ${statusBadge(
+            n.status ||
+            "Unread"
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            n.createdAt || ""
+          )}
+        </td>
+
+        <td>
+
+          <button
+            class="actionBtn"
+            data-notification-delete="${esc(n.id)}">
+            Delete
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="6">
+          <div class="empty">
+            No notifications.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+/* ================= STAFF ================= */
+
+function renderStaff(){
+
+  $("staffTable").innerHTML =
+    state.staff.length
+    ? state.staff.map(s=>`
+
+      <tr>
+
+        <td>
+          ${esc(s.id)}
+        </td>
+
+        <td>
+          ${esc(
+            s.name ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            s.email ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            s.role ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${statusBadge(
+            s.status ||
+            "Active"
+          )}
+        </td>
+
+        <td>
+
+          <button
+            class="actionBtn"
+            data-staff-edit="${esc(s.id)}">
+            Edit
+          </button>
+
+        </td>
+
+      </tr>
+
+    `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="6">
+          <div class="empty">
+            No staff profiles found.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+/* ================= PERMISSIONS ================= */
+
+function renderPermissions(){
+
+  const modules = [
+
+    "Orders",
+    "Products",
+    "Inventory",
+    "Customers",
+    "Payments",
+    "Refunds",
+    "Reports",
+    "Expenses",
+    "Riders",
+    "Delivery Partners",
+    "Notifications",
+    "Offers/Coupons",
+    "Lucky Wheel",
+    "Lucky Draw",
+    "Reviews",
+    "Support",
+    "Staff",
+    "Settings",
+    "Permissions",
+    "Banners",
+    "AI Assistant",
+    "Audit Logs",
+    "Cancellations"
+
+  ];
+
+  $("permissionMatrix").innerHTML = `
+
+    <div class="tableWrap">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>MODULE</th>
+            <th>VIEW</th>
+            <th>CREATE</th>
+            <th>EDIT</th>
+            <th>DELETE</th>
+            <th>APPROVE</th>
+            <th>EXPORT</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          ${
+            modules.map(
+              m=>`
+
+              <tr>
+
+                <td>
+                  <b>${m}</b>
+                </td>
+
+                <td>✓</td>
+                <td>✓</td>
+                <td>✓</td>
+                <td>✓</td>
+                <td>✓</td>
+                <td>✓</td>
+
+              </tr>
+
+            `
+            ).join("")
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ================= SETTINGS ================= */
+
+function renderSettings(){
+
+  const s =
+    state.settings || {};
+
+  $("setBusiness").value =
+    s.businessName ||
+    "NatureBite";
+
+  $("setStandardDelivery").value =
+    s.standardDelivery ??
+    60;
+
+  $("setExpressDelivery").value =
+    s.expressDelivery ??
+    80;
+
+  $("setFreeDelivery").value =
+    s.freeDelivery ??
+    0;
+
+  $("setPlatformCharge").value =
+    s.platformCharge ??
+    5;
+
+  $("setPlatformType").value =
+    s.platformChargeType ||
+    "fixed";
+
+  $("setCOD").value =
+    String(
+      s.codEnabled ??
+      true
+    );
+
+  $("setPrepay").value =
+    String(
+      s.deliveryPrepaidRequired ??
+      true
+    );
+
+}
+
+
+/* ================= AUDIT ================= */
+
+function renderAudit(){
+
+  $("auditTable").innerHTML =
+    state.audit.length
+    ? [...state.audit]
+      .reverse()
+      .slice(0,100)
+      .map(a=>`
+
+        <tr>
+
+          <td>
+            ${esc(
+              a.createdAt || ""
+            )}
+          </td>
+
+          <td>
+            ${esc(
+              a.userEmail ||
+              a.uid ||
+              ""
+            )}
+          </td>
+
+          <td>
+            ${esc(
+              a.action ||
+              ""
+            )}
+          </td>
+
+          <td>
+            ${esc(
+              a.module ||
+              ""
+            )}
+          </td>
+
+          <td>
+            ${esc(
+              a.detail ||
+              ""
+            )}
+          </td>
+
+        </tr>
+
+      `).join("")
+
+    : `
+
+      <tr>
+        <td colspan="5">
+          <div class="empty">
+            No audit logs.
+          </div>
+        </td>
+      </tr>
+
+    `;
+
+}
+
+
+/* ================= AUDIT WRITER ================= */
+
+async function writeAudit(
+  moduleName,
+  action,
+  detail
+){
+
+  try{
+
+    await addDoc(
+      collection(
+        db,
+        "audit_logs"
+      ),
+      {
+
+        uid:
+          currentUser?.uid ||
+          "",
+
+        userEmail:
+          currentUser?.email ||
+          "",
+
+        module:
+          moduleName,
+
+        action:
+          action,
+
+        detail:
+          detail,
+
+        createdAt:
+          serverTimestamp()
+
+      }
+    );
+
+  }catch(error){
+
+    console.warn(
+      "Audit log failed:",
+      error
+    );
+
+  }
+
+}
+
+
+/* ================= SETTINGS SAVE ================= */
+
+$("saveSettingsBtn")
+.addEventListener(
+  "click",
+  async ()=>{
+
+    try{
+
+      const data = {
+
+        businessName:
+          $("setBusiness").value.trim(),
+
+        standardDelivery:
+          Number(
+            $("setStandardDelivery").value
+          ),
+
+        expressDelivery:
+          Number(
+            $("setExpressDelivery").value
+          ),
+
+        freeDelivery:
+          Number(
+            $("setFreeDelivery").value
+          ),
+
+        platformCharge:
+          Number(
+            $("setPlatformCharge").value
+          ),
+
+        platformChargeType:
+          $("setPlatformType").value,
+
+        codEnabled:
+          $("setCOD").value === "true",
+
+        deliveryPrepaidRequired:
+          $("setPrepay").value === "true",
+
+        updatedAt:
+          serverTimestamp()
+
+      };
+
+
+      await setDoc(
+        doc(
+          db,
+          "settings",
+          "platform"
+        ),
+        data,
+        {
+          merge:true
+        }
+      );
+
+
+      await writeAudit(
+        "Settings",
+        "Update Settings",
+        "Platform settings updated"
+      );
+
+
+      state.settings =
+        data;
+
+      toast(
+        "Settings saved."
+      );
+
+    }catch(error){
+
+      console.error(error);
+
+      toast(
+        "Settings save failed: " +
+        error.code
+      );
+
+    }
+
+  }
+);
+
+
+/* ================= ADD EXPENSE ================= */
+
+function openExpenseModal(){
+
+  showModal(
+    "Add Expense",
+
+    `
+
+    <div class="formGrid">
+
+      <div class="field">
+        <label>Title</label>
+        <input
+          id="expenseTitle"
+          class="input">
+      </div>
+
+      <div class="field">
+        <label>Category</label>
+        <input
+          id="expenseCategory"
+          class="input">
+      </div>
+
+      <div class="field">
+        <label>Amount</label>
+        <input
+          id="expenseAmount"
+          class="input"
+          type="number">
+      </div>
+
+      <div class="field">
+        <label>Date</label>
+        <input
+          id="expenseDate"
+          class="input"
+          type="date">
+      </div>
+
+    </div>
+
+    <button
+      id="saveExpense"
+      class="primary">
+      Save Expense
+    </button>
+
+    `
+  );
+
+
+  $("saveExpense").addEventListener(
+    "click",
+    async ()=>{
+
+      try{
+
+        await addDoc(
+          collection(
+            db,
+            "expenses"
+          ),
+          {
+
+            title:
+              $("expenseTitle")
+              .value.trim(),
+
+            category:
+              $("expenseCategory")
+              .value.trim(),
+
+            amount:
+              Number(
+                $("expenseAmount").value
+              ),
+
+            date:
+              $("expenseDate").value,
+
+            createdAt:
+              serverTimestamp()
+
+          }
+        );
+
+        await writeAudit(
+          "Expenses",
+          "Create Expense",
+          $("expenseTitle").value
+        );
+
+        toast(
+          "Expense added."
+        );
+
+        await loadAllData();
+
+        closeModal();
+
+        renderExpenses();
+
+      }catch(error){
+
+        toast(
+          "Expense failed: " +
+          error.code
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+/* ================= ADD RIDER ================= */
+
+function openRiderModal(rider=null){
+
+  showModal(
+    rider
+    ? "Edit Rider"
+    : "Add Rider",
+
+    `
+
+    <div class="formGrid">
+
+      <div class="field">
+
+        <label>Name</label>
+
+        <input
+          id="riderName"
+          class="input"
+          value="${esc(
+            rider?.name || ""
+          )}">
+
+      </div>
+
+      <div class="field">
+
+        <label>Phone</label>
+
+        <input
+          id="riderPhone"
+          class="input"
+          value="${esc(
+            rider?.phone || ""
+          )}">
+
+      </div>
+
+      <div class="field">
+
+        <label>Zone</label>
+
+        <input
+          id="riderZone"
+          class="input"
+          value="${esc(
+            rider?.zone || ""
+          )}">
+
+      </div>
+
+      <div class="field">
+
+        <label>Status</label>
+
+        <select
+          id="riderStatus"
+          class="select">
+
+          <option>Active</option>
+          <option>Inactive</option>
+          <option>Blocked</option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+    <button
+      id="saveRider"
+      class="primary">
+      Save Rider
+    </button>
+
+    `
+  );
+
+
+  $("saveRider").addEventListener(
+    "click",
+    async ()=>{
+
+      const data = {
+
+        name:
+          $("riderName").value.trim(),
+
+        phone:
+          $("riderPhone").value.trim(),
+
+        zone:
+          $("riderZone").value.trim(),
+
+        status:
+          $("riderStatus").value,
+
+        updatedAt:
+          serverTimestamp()
+
+      };
+
+
+      try{
+
+        if(rider){
+
+          await updateDoc(
+            doc(
+              db,
+              "riders",
+              rider.id
+            ),
+            data
+          );
+
+        }else{
+
+          await addDoc(
+            collection(
+              db,
+              "riders"
+            ),
+            {
+              ...data,
+              createdAt:
+                serverTimestamp()
+            }
+          );
+
+        }
+
+        await loadAllData();
+
+        closeModal();
+
+        renderRiders();
+
+        toast(
+          "Rider saved."
+        );
+
+      }catch(error){
+
+        toast(
+          "Rider save failed: " +
+          error.code
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+/* ================= ADD PARTNER ================= */
+
+function openPartnerModal(partner=null){
+
+  showModal(
+    partner
+    ? "Edit Delivery Partner"
+    : "Add Delivery Partner",
+
+    `
+
+    <div class="formGrid">
+
+      <div class="field">
+
+        <label>Name</label>
+
+        <input
+          id="partnerName"
+          class="input"
+          value="${esc(
+            partner?.name || ""
+          )}">
+
+      </div>
+
+      <div class="field">
+
+        <label>Type</label>
+
+        <select
+          id="partnerType"
+          class="select">
+
+          <option>Internal Delivery</option>
+          <option>External Delivery Partner</option>
+
+        </select>
+
+      </div>
+
+      <div class="field">
+
+        <label>Contact</label>
+
+        <input
+          id="partnerPhone"
+          class="input"
+          value="${esc(
+            partner?.phone || ""
+          )}">
+
+      </div>
+
+      <div class="field">
+
+        <label>Status</label>
+
+        <select
+          id="partnerStatus"
+          class="select">
+
+          <option>Active</option>
+          <option>Inactive</option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+    <button
+      id="savePartner"
+      class="primary">
+      Save Partner
+    </button>
+
+    `
+  );
+
+
+  $("savePartner").addEventListener(
+    "click",
+    async ()=>{
+
+      const data = {
+
+        name:
+          $("partnerName").value.trim(),
+
+        type:
+          $("partnerType").value,
+
+        phone:
+          $("partnerPhone").value.trim(),
+
+        status:
+          $("partnerStatus").value,
+
+        updatedAt:
+          serverTimestamp()
+
+      };
+
+
+      try{
+
+        if(partner){
+
+          await updateDoc(
+            doc(
+              db,
+              "delivery_partners",
+              partner.id
+            ),
+            data
+          );
+
+        }else{
+
+          await addDoc(
+            collection(
+              db,
+              "delivery_partners"
+            ),
+            {
+              ...data,
+              createdAt:
+                serverTimestamp()
+            }
+          );
+
+        }
+
+        await loadAllData();
+
+        closeModal();
+
+        renderPartners();
+
+        toast(
+          "Partner saved."
+        );
+
+      }catch(error){
+
+        toast(
+          "Partner save failed."
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+/* ================= COUPON ================= */
+
+function openCouponModal(){
+
+  showModal(
+    "Add Coupon",
+
+    `
+
+    <div class="formGrid">
+
+      <div class="field">
+        <label>Coupon Code</label>
+        <input
+          id="couponCode"
+          class="input">
+      </div>
+
+      <div class="field">
+        <label>Discount Type</label>
+        <select
+          id="couponType"
+          class="select">
+          <option>fixed</option>
+          <option>percentage</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Value</label>
+        <input
+          id="couponValue"
+          class="input"
+          type="number">
+      </div>
+
+      <div class="field">
+        <label>Minimum Order</label>
+        <input
+          id="couponMinimum"
+          class="input"
+          type="number">
+      </div>
+
+    </div>
+
+    <button
+      id="saveCoupon"
+      class="primary">
+      Save Coupon
+    </button>
+
+    `
+  );
+
+
+  $("saveCoupon").addEventListener(
+    "click",
+    async ()=>{
+
+      const code =
+        $("couponCode")
+        .value.trim()
+        .toUpperCase();
+
+      if(!code){
+
+        toast(
+          "Coupon code required."
+        );
+
+        return;
+
+      }
+
+      try{
+
+        await setDoc(
+          doc(
+            db,
+            "coupons",
+            code
+          ),
+          {
+
+            code,
+
+            type:
+              $("couponType").value,
+
+            value:
+              Number(
+                $("couponValue").value
+              ),
+
+            minimumOrder:
+              Number(
+                $("couponMinimum").value
+              ),
+
+            status:"Active",
+
+            createdAt:
+              serverTimestamp()
+
+          }
+        );
+
+        await loadAllData();
+
+        closeModal();
+
+        renderOffers();
+
+        toast(
+          "Coupon saved."
+        );
+
+      }catch(error){
+
+        toast(
+          "Coupon save failed."
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+/* ================= SIMPLE ADD MODALS ================= */
+
+async function addSimple(
+  collectionName,
+  data,
+  title
+){
+
+  try{
+
+    await addDoc(
+      collection(
+        db,
+        collectionName
+      ),
+      {
+        ...data,
+        createdAt:
+          serverTimestamp()
+      }
+    );
+
+    await loadAllData();
+
+    toast(
+      title + " saved."
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    toast(
+      title +
+      " failed: " +
+      error.code
+    );
+
+  }
+
+}
+
+
+/* ================= BUTTONS ================= */
+
+$("addProductBtn")
+.addEventListener(
+  "click",
+  ()=>openProductModal()
+);
+
+$("addRiderBtn")
+.addEventListener(
+  "click",
+  ()=>openRiderModal()
+);
+
+$("addPartnerBtn")
+.addEventListener(
+  "click",
+  ()=>openPartnerModal()
+);
+
+$("addExpenseBtn")
+.addEventListener(
+  "click",
+  openExpenseModal
+);
+
+$("addCouponBtn")
+.addEventListener(
+  "click",
+  openCouponModal
+);
+
+$("addWheelBtn")
+.addEventListener(
+  "click",
+  async ()=>{
+
+    const name =
+      prompt(
+        "Reward name:"
+      );
+
+    if(!name) return;
+
+    await addSimple(
+      "wheelRewards",
+      {
+        name,
+        value:"",
+        probability:0,
+        status:"Active"
+      },
+      "Reward"
+    );
+
+    renderWheel();
+
+  }
+);
+
+$("addDrawBtn")
+.addEventListener(
+  "click",
+  async ()=>{
+
+    const name =
+      prompt(
+        "Lucky Draw name:"
+      );
+
+    if(!name) return;
+
+    await addSimple(
+      "lucky_draw",
+      {
+        name,
+        prize:"",
+        status:"Active"
+      },
+      "Lucky Draw"
+    );
+
+    renderDraw();
+
+  }
+);
+
+$("addBannerBtn")
+.addEventListener(
+  "click",
+  async ()=>{
+
+    const title =
+      prompt(
+        "Banner title:"
+      );
+
+    if(!title) return;
+
+    await addSimple(
+      "banners",
+      {
+        title,
+        link:"",
+        status:"Active",
+        sortOrder:0
+      },
+      "Banner"
+    );
+
+    renderBanners();
+
+  }
+);
+
+$("addNotificationBtn")
+.addEventListener(
+  "click",
+  async ()=>{
+
+    const title =
+      prompt(
+        "Notification title:"
+      );
+
+    if(!title) return;
+
+    await addSimple(
+      "notifications",
+      {
+        title,
+        message:title,
+        type:"System",
+        status:"Unread",
+        customerUid:""
+      },
+      "Notification"
+    );
+
+    renderNotifications();
+
+  }
+);
+
+$("addStaffBtn")
+.addEventListener(
+  "click",
+  ()=>{
+
+    showModal(
+      "Staff Profile",
+
+      `
+
+      <div class="formGrid">
+
+        <div class="field">
+
+          <label>UID</label>
+
+          <input
+            id="staffUid"
+            class="input"
+            placeholder="Firebase Auth UID">
+
+        </div>
+
+        <div class="field">
+
+          <label>Name</label>
+
+          <input
+            id="staffName"
+            class="input">
+
+        </div>
+
+        <div class="field">
+
+          <label>Email</label>
+
+          <input
+            id="staffEmail"
+            class="input">
+
+        </div>
+
+        <div class="field">
+
+          <label>Role</label>
+
+          <select
+            id="staffRole"
+            class="select">
+
+            <option value="Order Manager">
+              Order Manager
+            </option>
+
+            <option value="Product Manager">
+              Product Manager
+            </option>
+
+            <option value="Inventory Manager">
+              Inventory Manager
+            </option>
+
+            <option value="Accountant/Finance">
+              Accountant/Finance
+            </option>
+
+            <option value="Delivery Manager">
+              Delivery Manager
+            </option>
+
+            <option value="Customer Support">
+              Customer Support
+            </option>
+
+            <option value="Marketing Manager">
+              Marketing Manager
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+      <p
+        class="muted"
+        style="margin:12px 0">
+
+        Note: This creates the staff profile.
+        Firebase Authentication account must
+        be created separately by a trusted
+        admin/backend process.
+
+      </p>
+
+      <button
+        id="saveStaff"
+        class="primary">
+        Save Profile
+      </button>
+
+      `
+    );
+
+
+    $("saveStaff")
+    .addEventListener(
+      "click",
+      async ()=>{
+
+        const uid =
+          $("staffUid")
+          .value.trim();
+
+        if(!uid){
+
+          toast(
+            "UID required."
+          );
+
+          return;
+
+        }
+
+        const profile = {
+
+          name:
+            $("staffName")
+            .value.trim(),
+
+          email:
+            $("staffEmail")
+            .value.trim(),
+
+          role:
+            $("staffRole").value,
+
+          status:"Active",
+
+          permissions:{},
+
+          updatedAt:
+            serverTimestamp()
+
+        };
+
+
+        try{
+
+          await setDoc(
+            doc(
+              db,
+              "staff",
+              uid
+            ),
+            profile,
+            {
+              merge:true
+            }
+          );
+
+
+          await setDoc(
+            doc(
+              db,
+              "users",
+              uid
+            ),
+            profile,
+            {
+              merge:true
+            }
+          );
+
+
+          await writeAudit(
+            "Staff",
+            "Create Staff Profile",
+            uid
+          );
+
+
+          await loadAllData();
+
+          closeModal();
+
+          renderStaff();
+
+          toast(
+            "Staff profile saved."
+          );
+
+        }catch(error){
+
+          console.error(error);
+
+          toast(
+            "Staff save failed: " +
+            error.code
+          );
+
+        }
+
+      }
+    );
+
+  }
+);
+
+
+/* ================= REFRESH ================= */
+
+$("refreshBtn")
+.addEventListener(
+  "click",
+  async ()=>{
+
+    toast(
+      "Refreshing..."
+    );
+
+    await loadAllData();
+
+    const active =
+      document
+      .querySelector(".page.active");
+
+    if(active){
+
+      openPage(
+        active.id
+        .replace("page-","")
+      );
+
+    }
+
+    toast(
+      "Data refreshed."
+    );
+
+  }
+);
+
+
+/* ================= LOGOUT ================= */
+
+$("logoutBtn")
+.addEventListener(
+  "click",
+  async ()=>{
+
+    await signOut(auth);
+
+  }
+);
+
+
+/* ================= GLOBAL SEARCH ================= */
+
+$("globalSearch")
+.addEventListener(
+  "keydown",
+  e=>{
+
+    if(
+      e.key !== "Enter"
+    ) return;
+
+    const term =
+      $("globalSearch")
+      .value
+      .trim()
+      .toLowerCase();
+
+    if(!term) return;
+
+    const order =
+      state.orders.find(
+        o =>
+          JSON.stringify(o)
+          .toLowerCase()
+          .includes(term)
+      );
+
+    if(order){
+
+      openPage("orders");
+
+      setTimeout(
+        ()=>{
+          $("orderSearch").value =
+            term;
+
+          renderOrders();
+        },
+        100
+      );
+
+      return;
+
+    }
+
+    const product =
+      state.products.find(
+        p =>
+          JSON.stringify(p)
+          .toLowerCase()
+          .includes(term)
+      );
+
+    if(product){
+
+      openPage("products");
+
+      return;
+
+    }
+
+    toast(
+      "No matching record found."
+    );
+
+  }
+);
+
+
+/* ================= EVENT DELEGATION ================= */
+
+document.addEventListener(
+  "click",
+  async e=>{
+
+    const orderBtn =
+      e.target.closest(
+        "[data-order-view]"
+      );
+
+    if(orderBtn){
+
+      await openOrder(
+        orderBtn.dataset.orderView
+      );
+
+      return;
+
+    }
+
+
+    const productEdit =
+      e.target.closest(
+        "[data-product-edit]"
+      );
+
+    if(productEdit){
+
+      const product =
+        state.products.find(
+          p =>
+            p.id ===
+            productEdit.dataset.productEdit
+        );
+
+      if(product){
+
+        openProductModal(
+          product
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    const productDelete =
+      e.target.closest(
+        "[data-product-delete]"
+      );
+
+    if(productDelete){
+
+      if(
+        !confirm(
+          "এই product delete করবেন?"
+        )
+      ) return;
+
+      try{
+
+        await deleteDoc(
+          doc(
+            db,
+            "products",
+            productDelete.dataset.productDelete
+          )
+        );
+
+        await writeAudit(
+          "Products",
+          "Delete Product",
+          productDelete.dataset.productDelete
+        );
+
+        await loadAllData();
+
+        renderProducts();
+
+        toast(
+          "Product deleted."
+        );
+
+      }catch(error){
+
+        toast(
+          "Delete failed: " +
+          error.code
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    const stockEdit =
+      e.target.closest(
+        "[data-stock-edit]"
+      );
+
+    if(stockEdit){
+
+      const variant =
+        state.variants.find(
+          v =>
+            v.id ===
+            stockEdit.dataset.stockEdit
+        );
+
+      if(!variant) return;
+
+      const newStock =
+        prompt(
+          "New stock:",
+          variant.stock || 0
+        );
+
+      if(newStock === null)
+        return;
+
+      try{
+
+        await updateDoc(
+          doc(
+            db,
+            "product_variants",
+            variant.id
+          ),
+          {
+            stock:
+              Number(newStock),
+            updatedAt:
+              serverTimestamp()
+          }
+        );
+
+        await loadAllData();
+
+        renderInventory();
+
+        toast(
+          "Stock updated."
+        );
+
+      }catch(error){
+
+        toast(
+          "Stock update failed: " +
+          error.code
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    const riderEdit =
+      e.target.closest(
+        "[data-rider-edit]"
+      );
+
+    if(riderEdit){
+
+      const rider =
+        state.riders.find(
+          r =>
+            r.id ===
+            riderEdit.dataset.riderEdit
+        );
+
+      openRiderModal(
+        rider
+      );
+
+      return;
+
+    }
+
+
+    const riderDelete =
+      e.target.closest(
+        "[data-rider-delete]"
+      );
+
+    if(riderDelete){
+
+      if(
+        !confirm(
+          "Rider delete করবেন?"
+        )
+      ) return;
+
+      try{
+
+        await deleteDoc(
+          doc(
+            db,
+            "riders",
+            riderDelete.dataset.riderDelete
+          )
+        );
+
+        await loadAllData();
+
+        renderRiders();
+
+        toast(
+          "Rider deleted."
+        );
+
+      }catch(error){
+
+        toast(
+          "Delete failed."
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    const partnerEdit =
+      e.target.closest(
+        "[data-partner-edit]"
+      );
+
+    if(partnerEdit){
+
+      const partner =
+        state.partners.find(
+          p =>
+            p.id ===
+            partnerEdit.dataset.partnerEdit
+        );
+
+      openPartnerModal(
+        partner
+      );
+
+      return;
+
+    }
+
+
+    const expenseDelete =
+      e.target.closest(
+        "[data-expense-delete]"
+      );
+
+    if(expenseDelete){
+
+      if(
+        !confirm(
+          "Expense delete করবেন?"
+        )
+      ) return;
+
+      try{
+
+        await deleteDoc(
+          doc(
+            db,
+            "expenses",
+            expenseDelete.dataset.expenseDelete
+          )
+        );
+
+        await loadAllData();
+
+        renderExpenses();
+
+        toast(
+          "Expense deleted."
+        );
+
+      }catch(error){
+
+        toast(
+          "Delete failed."
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    const paymentApprove =
+      e.target.closest(
+        "[data-payment-approve]"
+      );
+
+    if(paymentApprove){
+
+      try{
+
+        await updateDoc(
+          doc(
+            db,
+            "payments",
+            paymentApprove.dataset.paymentApprove
+          ),
+          {
+            status:"Verified",
+            verifiedBy:
+              currentUser.uid,
+            verifiedAt:
+              serverTimestamp()
+          }
+        );
+
+        await writeAudit(
+          "Payments",
+          "Verify Payment",
+          paymentApprove.dataset.paymentApprove
+        );
+
+        await loadAllData();
+
+        renderPayments();
+
+        toast(
+          "Payment verified."
+        );
+
+      }catch(error){
+
+        toast(
+          "Payment verification failed: " +
+          error.code
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    const refundApprove =
+      e.target.closest(
+        "[data-refund-approve]"
+      );
+
+    if(refundApprove){
+
+      try{
+
+        await updateDoc(
+          doc(
+            db,
+            "refunds",
+            refundApprove.dataset.refundApprove
+          ),
+          {
+            status:"Approved",
+            approvedBy:
+              currentUser.uid,
+            updatedAt:
+              serverTimestamp()
+          }
+        );
+
+        await loadAllData();
+
+        renderRefunds();
+
+        toast(
+          "Refund approved."
+        );
+
+      }catch(error){
+
+        toast(
+          "Refund failed."
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    const reviewDelete =
+      e.target.closest(
+        "[data-review-delete]"
+      );
+
+    if(reviewDelete){
+
+      if(
+        !confirm(
+          "Review delete করবেন?"
+        )
+      ) return;
+
+      try{
+
+        await deleteDoc(
+          doc(
+            db,
+            "reviews",
+            reviewDelete.dataset.reviewDelete
+          )
+        );
+
+        await loadAllData();
+
+        renderReviews();
+
+        toast(
+          "Review deleted."
+        );
+
+      }catch(error){
+
+        toast(
+          "Review delete failed."
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    const bannerDelete =
+      e.target.closest(
+        "[data-banner-delete]"
+      );
+
+    if(bannerDelete){
+
+      try{
+
+        await deleteDoc(
+          doc(
+            db,
+            "banners",
+            bannerDelete.dataset.bannerDelete
+          )
+        );
+
+        await loadAllData();
+
+        renderBanners();
+
+        toast(
+          "Banner deleted."
+        );
+
+      }catch(error){
+
+        toast(
+          "Banner delete failed."
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    const notificationDelete =
+      e.target.closest(
+        "[data-notification-delete]"
+      );
+
+    if(notificationDelete){
+
+      try{
+
+        await deleteDoc(
+          doc(
+            db,
+            "notifications",
+            notificationDelete.dataset.notificationDelete
+          )
+        );
+
+        await loadAllData();
+
+        renderNotifications();
+
+        toast(
+          "Notification deleted."
+        );
+
+      }catch(error){
+
+        toast(
+          "Notification delete failed."
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    const wheelDelete =
+      e.target.closest(
+        "[data-wheel-delete]"
+      );
+
+    if(wheelDelete){
+
+      try{
+
+        await deleteDoc(
+          doc(
+            db,
+            "wheelRewards",
+            wheelDelete.dataset.wheelDelete
+          )
+        );
+
+        await loadAllData();
+
+        renderWheel();
+
+        toast(
+          "Reward deleted."
+        );
+
+      }catch(error){
+
+        toast(
+          "Reward delete failed."
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    const drawDelete =
+      e.target.closest(
+        "[data-draw-delete]"
+      );
+
+    if(drawDelete){
+
+      try{
+
+        await deleteDoc(
+          doc(
+            db,
+            "lucky_draw",
+            drawDelete.dataset.drawDelete
+          )
+        );
+
+        await loadAllData();
+
+        renderDraw();
+
+        toast(
+          "Draw deleted."
+        );
+
+      }catch(error){
+
+        toast(
+          "Draw delete failed."
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    const supportView =
+      e.target.closest(
+        "[data-support-view]"
+      );
+
+    if(supportView){
+
+      const ticket =
+        state.support.find(
+          x =>
+            x.id ===
+            supportView.dataset.supportView
+        );
+
+      if(ticket){
+
+        showModal(
+          "Support Ticket",
+
+          `
+
+          <div class="alert">
+
+            <strong>
+              Ticket
+            </strong>
+
+            <p>
+              ${esc(ticket.id)}
+            </p>
+
+          </div>
+
+          <div class="alert">
+
+            <strong>
+              Category
+            </strong>
+
+            <p>
+              ${esc(
+                ticket.category ||
+                ""
+              )}
+            </p>
+
+          </div>
+
+          <div class="alert">
+
+            <strong>
+              Customer
+            </strong>
+
+            <p>
+              ${esc(
+                ticket.customerUid ||
+                ""
+              )}
+            </p>
+
+          </div>
+
+          <div class="field">
+
+            <label>Message</label>
+
+            <textarea
+              class="textarea"
+              readonly>${esc(
+                ticket.message ||
+                ticket.description ||
+                ""
+              )}</textarea>
+
+          </div>
+
+          `
+
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    const ai =
+      e.target.closest(
+        "[data-ai]"
+      );
+
+    if(ai){
+
+      runAI(
+        ai.dataset.ai
+      );
+
+      return;
+
+    }
+
+  }
+);
+
+
+/* ================= AI ================= */
+
+function runAI(type){
+
+  let result = "";
+
+  if(type === "inventory"){
+
+    const low =
+      state.variants.filter(
+        v =>
+          Number(v.stock || 0) <= 10
+      );
+
+    result =
+      low.length
+      ? `Inventory alert: ${low.length} product variant(s) have stock at or below 10. Review purchasing and stock replenishment.`
+      : "Inventory analysis: No immediate low-stock alert.";
+
+  }
+
+  if(type === "sales"){
+
+    const sales =
+      state.orders.reduce(
+        (s,o)=>
+          s +
+          Number(
+            o.total ||
+            o.finalPayable ||
+            0
+          ),
+        0
+      );
+
+    result =
+      `Sales analysis: Current recorded order value is ${money(sales)} across ${state.orders.length} order(s).`;
+
+  }
+
+  if(type === "risk"){
+
+    const cancelled =
+      state.orders.filter(
+        o =>
+          o.status ===
+          "Cancelled"
+      ).length;
+
+    const pendingPayments =
+      state.payments.filter(
+        p =>
+          String(p.status)
+          .toLowerCase()
+          === "pending"
+      ).length;
+
+    result =
+      `Risk analysis: ${cancelled} cancelled order(s) and ${pendingPayments} pending payment record(s) require operational review.`;
+
+  }
+
+  $("aiResult").textContent =
+    result;
+
+}
+
+
+/* ================= PRINT REPORT ================= */
+
+$("printReportBtn")
+.addEventListener(
+  "click",
+  ()=>{
+
+    const sales =
+      $("reportSales")
+      .textContent;
+
+    const delivery =
+      $("reportDelivery")
+      .textContent;
+
+    const expenses =
+      $("reportExpenses")
+      .textContent;
+
+    const profit =
+      $("reportProfit")
+      .textContent;
+
+    const w =
+      window.open(
+        "",
+        "_blank"
+      );
+
+    if(!w){
+
+      toast(
+        "Popup blocked."
+      );
+
+      return;
+
+    }
+
+    w.document.write(`
+
+      <html>
+
+      <head>
+
+        <title>
+          NatureBite Business Report
+        </title>
+
+        <style>
+
+          body{
+            font-family:Arial;
+            padding:30px;
+          }
+
+          h1{
+            color:#174f36;
+          }
+
+          .box{
+            border:1px solid #ddd;
+            padding:15px;
+            margin:10px 0;
+          }
+
+        </style>
+
+      </head>
+
+      <body>
+
+        <h1>
+          NatureBite
+        </h1>
+
+        <h2>
+          Business Report
+        </h2>
+
+        <div class="box">
+          Sales: ${sales}
+        </div>
+
+        <div class="box">
+          Delivery Income: ${delivery}
+        </div>
+
+        <div class="box">
+          Expenses: ${expenses}
+        </div>
+
+        <div class="box">
+          Net Profit: ${profit}
+        </div>
+
+        <script>
+          window.onload=function(){
+            window.print();
+          };
+        <\/script>
+
+      </body>
+
+      </html>
+
+    `);
+
+    w.document.close();
+
+  }
+);
+
+
+/* ================= INITIAL BUTTON HELPERS ================= */
+
+window.openPage =
+  openPage;
+
 </script>
+
 </body>
 </html>
