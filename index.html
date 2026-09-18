@@ -1,479 +1,8761 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>NatureBite Admin Panel</title>
-<style>
-:root{--g:#2E7D32;--s:#A5C18E;--c:#F5F2E8;--b:#5D4037;--t:#243126;--m:#7A847B;--l:#E7E9E2;--d:#C62828;--w:#9b6a00;--blue:#2d65a0}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,system-ui,sans-serif;background:#f7f7f2;color:var(--t)}
-button,input,select,textarea{font:inherit}button{cursor:pointer}
-.app{display:flex;min-height:100vh}.side{position:fixed;left:0;top:0;width:250px;height:100vh;background:var(--g);color:#fff;padding:18px 12px;overflow:auto;z-index:20}
-.brand{font-size:21px;font-weight:800;padding:12px 10px 22px;border-bottom:1px solid #ffffff22}.brand small{display:block;font-size:9px;opacity:.65;margin-top:4px}
-.nav h6{font-size:9px;opacity:.55;letter-spacing:1px;margin:18px 10px 7px}.nav button{width:100%;border:0;background:transparent;color:#eef7ec;text-align:left;padding:10px 11px;border-radius:8px;font-size:13px;margin:2px 0}.nav button.active,.nav button:hover{background:#ffffff20}
-.user{border-top:1px solid #ffffff22;margin-top:15px;padding:15px 8px;font-size:12px}.main{margin-left:250px;width:calc(100% - 250px)}
-.top{height:70px;background:#fff;border-bottom:1px solid var(--l);display:flex;align-items:center;padding:0 25px;gap:12px;position:sticky;top:0;z-index:10}
-.search{width:400px;max-width:48vw;border:0;background:#f3f2eb;border-radius:22px;padding:12px 17px;outline:0}.grow{flex:1}.iconbtn{border:0;background:#fff;font-size:19px}.new{background:var(--g);color:#fff;border:0;border-radius:8px;padding:10px 14px;font-size:12px;font-weight:bold}
-.wrap{padding:25px}.title{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}.title h1{margin:0;font-size:25px}.title p{color:var(--m);font-size:12px;margin:6px 0}.period button{border:1px solid var(--l);background:#fff;padding:8px 12px;font-size:11px}.period .on{background:#edf5ea;color:var(--g);font-weight:bold}
-.page{display:none}.page.active{display:block}.card{background:#fff;border:1px solid var(--l);border-radius:12px;box-shadow:0 7px 24px #2a432d0c}.kpis{display:grid;grid-template-columns:repeat(7,1fr);gap:11px}.kpi{padding:14px;min-height:108px}.label{font-size:9px;color:#89928a;text-transform:uppercase}.val{font-size:20px;font-weight:800;margin-top:9px}.meta{font-size:10px;color:var(--g);margin-top:6px}.bad{color:var(--d)!important}.bar,.progress{height:6px;background:#edf0e9;border-radius:5px;margin-top:10px}.bar i,.progress i{display:block;height:100%;background:var(--g);border-radius:5px}
-.cols{display:grid;grid-template-columns:1.7fr .8fr;gap:18px;margin-top:18px}.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}.panel{padding:18px;margin-bottom:18px}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.head h2{font-size:14px;margin:0}.link{font-size:11px;color:var(--g);font-weight:bold;background:none;border:0}
-.chart{height:225px}.chart svg{width:100%;height:100%}table{width:100%;border-collapse:collapse;font-size:11px}th{font-size:9px;color:#9a9f98;text-align:left;padding:8px;border-bottom:1px solid var(--l)}td{padding:11px 8px;border-bottom:1px solid #f0f1ed}
-.status{font-size:8px;font-weight:800;padding:5px 7px;border-radius:12px;background:#edf5ea;color:var(--g)}.processing{background:#fff4d9;color:var(--w)}.out{background:#eaf1fb;color:var(--blue)}.cancel{background:#fdeaea;color:var(--d)}
-.alert,.reco{padding:11px;border-radius:9px;margin-bottom:9px;background:#fcfcf8;border:1px solid var(--l);font-size:11px}.alert p,.reco p{font-size:10px;color:var(--m);margin:4px 0;line-height:1.4}.reco{border-left:3px solid var(--g);background:#f3f7ed}.reco button,.primary{background:var(--g);color:#fff;border:0;border-radius:6px;padding:7px 10px;font-size:10px}
-.metric{font-size:11px;margin:12px 0}.metric span{color:var(--m)}.metric b{float:right}.progress i{background:var(--s)}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}.input,.select,.textarea{border:1px solid var(--l);background:#fff;border-radius:8px;padding:10px 12px;outline:none}.input:focus,.select:focus,.textarea:focus{border-color:var(--g)}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.statbox{padding:16px}.statbox .big{font-size:22px;font-weight:800;margin-top:5px}.empty{padding:35px;text-align:center;color:var(--m)}
-.actions{display:flex;gap:7px;flex-wrap:wrap}.secondary{background:#fff;color:var(--g);border:1px solid var(--g);border-radius:7px;padding:7px 10px;font-size:10px}.danger{background:#fff;color:var(--d);border:1px solid #e9b7b7;border-radius:7px;padding:7px 10px;font-size:10px}
-.badge{display:inline-block;padding:4px 7px;border-radius:12px;font-size:9px;background:#edf5ea;color:var(--g)}.muted{color:var(--m)}.small{font-size:10px}
-.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:50;padding:20px}.modal.show{display:flex}.modalbox{width:min(700px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:14px;padding:22px}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.close{border:0;background:#f3f3ed;border-radius:50%;width:32px;height:32px}
-.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;font-size:10px;color:var(--m);margin-bottom:5px}.field.full{grid-column:1/-1}
-.toast{position:fixed;right:20px;bottom:20px;background:#243126;color:#fff;padding:12px 16px;border-radius:8px;font-size:12px;display:none;z-index:100}.toast.show{display:block}
-.mobile-menu{display:none;border:0;background:#fff;font-size:20px}
-@media(max-width:1200px){.kpis{grid-template-columns:repeat(4,1fr)}.grid4{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:850px){.side{transform:translateX(-100%);transition:.2s}.side.open{transform:translateX(0)}.main{margin-left:0;width:100%}.mobile-menu{display:block}.cols,.two,.grid3,.formgrid{grid-template-columns:1fr}.grid4{grid-template-columns:1fr 1fr}.wrap{padding:15px}.top{padding:0 12px}.search{width:45vw}.title{gap:10px}.kpis{grid-template-columns:1fr 1fr}.title h1{font-size:21px}}
-</style>
+
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+
 <style>
-.delivery-tools{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:15px 0}.codebox{border:1px solid var(--l);border-radius:10px;padding:14px;text-align:center;background:#fff}.codebox h3{font-size:11px;margin:0 0 10px}.codebox img{max-width:180px}.codebox svg{max-width:100%;height:70px}.delivery-step{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}.delivery-step button{border:1px solid var(--l);background:#fff;border-radius:7px;padding:7px 9px;font-size:10px}.delivery-step button:hover{border-color:var(--g);color:var(--g)}
-@media(max-width:700px){.delivery-tools{grid-template-columns:1fr}}
-@media print{body *{visibility:hidden!important}.print-area,.print-area *{visibility:visible!important}.print-area{position:absolute;left:0;top:0;width:100%;padding:20px;background:#fff!important}.no-print{display:none!important}}
+
+:root{
+  --green:#246b38;
+  --green2:#3d8750;
+  --lightgreen:#eaf4e8;
+  --cream:#f7f5ed;
+  --white:#ffffff;
+  --text:#243126;
+  --muted:#788078;
+  --border:#e2e6df;
+  --red:#c62828;
+  --orange:#b26a00;
+  --blue:#2867a5;
+  --shadow:0 8px 30px rgba(35,55,40,.07);
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--cream);
+  color:var(--text);
+}
+
+button,
+input,
+select,
+textarea{
+  font-family:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+.login-screen{
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at top right,#dcebd8,transparent 40%),
+    var(--cream);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:9999;
+}
+
+.login-box{
+  width:min(420px,100%);
+  background:white;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:32px;
+  box-shadow:var(--shadow);
+}
+
+.login-brand{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.login-brand .logo{
+  font-size:28px;
+  font-weight:800;
+  color:var(--green);
+}
+
+.login-brand p{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.login-field{
+  margin-bottom:15px;
+}
+
+.login-field label{
+  display:block;
+  font-size:12px;
+  font-weight:bold;
+  margin-bottom:7px;
+}
+
+.login-field input{
+  width:100%;
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  outline:none;
+}
+
+.login-field input:focus{
+  border-color:var(--green);
+}
+
+.login-btn{
+  width:100%;
+  border:0;
+  padding:13px;
+  border-radius:9px;
+  background:var(--green);
+  color:white;
+  font-weight:bold;
+}
+
+.login-error{
+  color:var(--red);
+  font-size:12px;
+  margin-top:12px;
+  min-height:18px;
+}
+
+/* =========================
+   APP
+========================= */
+
+.app{
+  min-height:100vh;
+}
+
+.sidebar{
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  width:255px;
+  background:var(--green);
+  color:white;
+  padding:18px 12px;
+  overflow:auto;
+  z-index:100;
+  transition:.25s;
+}
+
+.brand{
+  padding:12px 10px 22px;
+  border-bottom:1px solid rgba(255,255,255,.15);
+  margin-bottom:12px;
+}
+
+.brand-title{
+  font-size:22px;
+  font-weight:800;
+}
+
+.brand-sub{
+  font-size:9px;
+  opacity:.65;
+  letter-spacing:1px;
+  margin-top:5px;
+}
+
+.nav-section{
+  margin-top:18px;
+}
+
+.nav-title{
+  font-size:9px;
+  letter-spacing:1px;
+  opacity:.55;
+  margin:0 10px 6px;
+}
+
+.nav-btn{
+  width:100%;
+  background:transparent;
+  color:white;
+  border:0;
+  text-align:left;
+  padding:10px 11px;
+  border-radius:8px;
+  margin:2px 0;
+  font-size:12px;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+  background:rgba(255,255,255,.14);
+}
+
+.admin-user{
+  margin-top:20px;
+  padding:15px 9px;
+  border-top:1px solid rgba(255,255,255,.15);
+  font-size:11px;
+}
+
+.main{
+  margin-left:255px;
+  min-height:100vh;
+}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:50;
+  height:70px;
+  background:white;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:0 25px;
+}
+
+.mobile-menu{
+  display:none;
+  border:0;
+  background:white;
+  font-size:22px;
+}
+
+.search{
+  width:400px;
+  max-width:45vw;
+  border:0;
+  background:#f2f3ed;
+  padding:12px 17px;
+  border-radius:25px;
+  outline:none;
+}
+
+.grow{
+  flex:1;
+}
+
+.top-btn{
+  border:0;
+  background:white;
+  font-size:18px;
+}
+
+.primary-btn{
+  background:var(--green);
+  color:white;
+  border:0;
+  border-radius:8px;
+  padding:10px 14px;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.secondary-btn{
+  background:white;
+  color:var(--green);
+  border:1px solid var(--green);
+  border-radius:7px;
+  padding:7px 10px;
+  font-size:10px;
+}
+
+.danger-btn{
+  background:white;
+  color:var(--red);
+  border:1px solid #e7b8b8;
+  border-radius:7px;
+  padding:7px 10px;
+  font-size:10px;
+}
+
+.page{
+  display:none;
+  padding:25px;
+}
+
+.page.active{
+  display:block;
+}
+
+.page-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.page-head h1{
+  margin:0;
+  font-size:25px;
+}
+
+.page-head p{
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:13px;
+  box-shadow:var(--shadow);
+}
+
+.panel{
+  padding:18px;
+}
+
+.grid{
+  display:grid;
+  gap:14px;
+}
+
+.grid-2{
+  grid-template-columns:repeat(2,1fr);
+}
+
+.grid-3{
+  grid-template-columns:repeat(3,1fr);
+}
+
+.grid-4{
+  grid-template-columns:repeat(4,1fr);
+}
+
+.kpis{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:11px;
+}
+
+.kpi{
+  padding:15px;
+  min-height:110px;
+}
+
+.kpi-label{
+  font-size:9px;
+  color:#929991;
+  text-transform:uppercase;
+}
+
+.kpi-value{
+  font-size:21px;
+  font-weight:800;
+  margin-top:9px;
+}
+
+.kpi-meta{
+  font-size:10px;
+  color:var(--green);
+  margin-top:6px;
+}
+
+.red{
+  color:var(--red)!important;
+}
+
+.blue{
+  color:var(--blue)!important;
+}
+
+.orange{
+  color:var(--orange)!important;
+}
+
+.progress{
+  height:5px;
+  background:#edf0e9;
+  border-radius:5px;
+  margin-top:10px;
+}
+
+.progress span{
+  display:block;
+  height:100%;
+  width:60%;
+  background:var(--green);
+  border-radius:5px;
+}
+
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:13px;
+}
+
+.section-title h2{
+  margin:0;
+  font-size:14px;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.small{
+  font-size:10px;
+}
+
+.toolbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:15px;
+}
+
+.input,
+.select,
+.textarea{
+  border:1px solid var(--border);
+  background:white;
+  border-radius:8px;
+  padding:10px 12px;
+  outline:none;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus{
+  border-color:var(--green);
+}
+
+.textarea{
+  width:100%;
+  min-height:90px;
+  resize:vertical;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:11px;
+}
+
+th{
+  color:#929991;
+  font-size:9px;
+  text-align:left;
+  padding:9px 7px;
+  border-bottom:1px solid var(--border);
+}
+
+td{
+  padding:11px 7px;
+  border-bottom:1px solid #f0f1ed;
+  vertical-align:middle;
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:15px;
+  background:var(--lightgreen);
+  color:var(--green);
+  font-size:9px;
+  font-weight:bold;
+}
+
+.badge.orange{
+  background:#fff2d8;
+  color:var(--orange)!important;
+}
+
+.badge.red{
+  background:#fde9e9;
+  color:var(--red)!important;
+}
+
+.badge.blue{
+  background:#eaf2fb;
+  color:var(--blue)!important;
+}
+
+.empty{
+  padding:35px;
+  text-align:center;
+  color:var(--muted);
+}
+
+.alert{
+  border:1px solid var(--border);
+  background:#fcfcf8;
+  border-radius:9px;
+  padding:11px;
+  margin-bottom:9px;
+  font-size:11px;
+}
+
+.alert p{
+  color:var(--muted);
+  font-size:10px;
+  margin:5px 0 0;
+}
+
+.reco{
+  border-left:3px solid var(--green);
+  background:#f3f7ef;
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:10px;
+  font-size:11px;
+}
+
+.statbox{
+  padding:17px;
+}
+
+.stat-big{
+  font-size:23px;
+  font-weight:800;
+  margin-top:5px;
+}
+
+.actions{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.dashboard-cols{
+  display:grid;
+  grid-template-columns:1.6fr .8fr;
+  gap:18px;
+  margin-top:18px;
+}
+
+.dashboard-two{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  margin-top:18px;
+}
+
+.chart{
+  height:230px;
+  position:relative;
+}
+
+.chart svg{
+  width:100%;
+  height:100%;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:500;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modal-box{
+  width:min(780px,100%);
+  max-height:92vh;
+  overflow:auto;
+  background:white;
+  border-radius:15px;
+  padding:22px;
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+}
+
+.modal-head h2{
+  margin:0;
+  font-size:18px;
+}
+
+.close{
+  border:0;
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:#f1f2ed;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.field label{
+  display:block;
+  font-size:10px;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+
+.field.full{
+  grid-column:1/-1;
+}
+
+.qr-area{
+  display:flex;
+  gap:25px;
+  align-items:center;
+  flex-wrap:wrap;
+  padding:15px;
+  background:#fafaf5;
+  border-radius:10px;
+  margin-top:15px;
+}
+
+#orderQR img,
+#orderQR canvas{
+  display:block;
+}
+
+.barcode-wrap{
+  background:white;
+  padding:8px;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  background:#243126;
+  color:white;
+  padding:12px 16px;
+  border-radius:8px;
+  font-size:11px;
+  z-index:1000;
+  display:none;
+}
+
+.toast.show{
+  display:block;
+}
+
+/* =========================
+   REPORT
+========================= */
+
+.report-controls{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.report-controls button{
+  background:white;
+  border:1px solid var(--border);
+  padding:8px 12px;
+  font-size:10px;
+}
+
+.report-controls button.active{
+  background:var(--green);
+  color:white;
+}
+
+/* =========================
+   SETTINGS
+========================= */
+
+.setting-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  padding:15px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.setting-info b{
+  font-size:12px;
+}
+
+.setting-info p{
+  margin:4px 0 0;
+  color:var(--muted);
+  font-size:10px;
+}
+
+.switch{
+  position:relative;
+  width:46px;
+  height:24px;
+}
+
+.switch input{
+  display:none;
+}
+
+.slider{
+  position:absolute;
+  inset:0;
+  background:#ccc;
+  border-radius:20px;
+  transition:.2s;
+}
+
+.slider:before{
+  content:"";
+  position:absolute;
+  width:18px;
+  height:18px;
+  left:3px;
+  top:3px;
+  background:white;
+  border-radius:50%;
+  transition:.2s;
+}
+
+.switch input:checked + .slider{
+  background:var(--green);
+}
+
+.switch input:checked + .slider:before{
+  transform:translateX(22px);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:1200px){
+
+  .kpis{
+    grid-template-columns:repeat(4,1fr);
+  }
+
+  .grid-4{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:850px){
+
+  .sidebar{
+    transform:translateX(-100%);
+  }
+
+  .sidebar.open{
+    transform:translateX(0);
+  }
+
+  .main{
+    margin-left:0;
+  }
+
+  .mobile-menu{
+    display:block;
+  }
+
+  .topbar{
+    padding:0 12px;
+  }
+
+  .search{
+    max-width:none;
+    width:45vw;
+  }
+
+  .page{
+    padding:15px;
+  }
+
+  .kpis{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .dashboard-cols,
+  .dashboard-two,
+  .grid-2,
+  .grid-3,
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .grid-4{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .page-head h1{
+    font-size:21px;
+  }
+
+  table{
+    min-width:700px;
+  }
+
+  .card{
+    overflow:auto;
+  }
+
+}
+
 </style>
 </head>
+
 <body>
 
-<div class="app">
-<aside class="side" id="sidebar">
-  <div class="brand">🌿 NatureBite<small>ADMIN & STAFF MANAGEMENT</small></div>
-  <nav class="nav">
-    <h6>OVERVIEW</h6>
-    <button class="active" onclick="showPage('dashboard',this)">▦ Dashboard</button>
-    <h6>COMMERCE</h6>
-    <button data-perm="orders" onclick="showPage('orders',this)">▤ Orders</button>
-    <button data-perm="products" onclick="showPage('products',this)">□ Products</button>
-    <button data-perm="inventory" onclick="showPage('inventory',this)">▥ Inventory</button>
-    <button data-perm="customers" onclick="showPage('customers',this)">♙ Customers</button>
-    <h6>LOGISTICS</h6>
-    <button data-perm="riders" onclick="showPage('riders',this)">◇ Riders</button>
-    <button data-perm="deliveryPartners" onclick="showPage('partners',this)">⇄ Delivery Partners</button>
-    <h6>FINANCE</h6>
-    <button data-perm="payments" onclick="showPage('payments',this)">৳ Payments</button>
-    <button data-perm="refunds" onclick="showPage('refunds',this)">↩ Refunds</button>
-    <button data-perm="orders" onclick="showPage('cancellations',this)">× Cancellations</button>
-    <button data-perm="expenses" onclick="showPage('expenses',this)">▣ Expenses</button>
-    <button data-perm="reports" onclick="showPage('reports',this)">▤ Reports</button>
-    <h6>ENGAGEMENT</h6>
-    <button data-perm="offers" onclick="showPage('offers',this)">☆ Offers & Coupons</button>
-    <button data-perm="luckyWheel" onclick="showPage('wheel',this)">◉ Lucky Wheel</button>
-    <button data-perm="luckyDraw" onclick="showPage('draw',this)">🎟 Lucky Draw</button>
-    <button data-perm="reviews" onclick="showPage('reviews',this)">★ Reviews</button>
-    <button data-perm="support" onclick="showPage('support',this)">◌ Support</button>
-    <button data-perm="notifications" onclick="showPage('notifications',this)">🔔 Notifications</button>
-    <h6>MANAGEMENT</h6>
-    <button data-perm="staff" onclick="showPage('staff',this)">♙ Staff & Permissions</button>
-    <button onclick="showPage('ai',this)">✦ AI Assistant</button>
-    <button data-perm="settings" onclick="showPage('settings',this)">⚙ Settings</button>
-    <button data-perm="auditLogs" onclick="showPage('audit',this)">◫ Audit Logs</button>
-  </nav>
-  <div class="user">👤 <b>Super Admin</b><br><small>Full access</small></div>
-</aside>
+<!-- =========================
+     LOGIN SCREEN
+========================= -->
 
-<main class="main">
-<header class="top">
-  <button class="mobile-menu" onclick="toggleSide()">☰</button>
-  <input id="globalSearch" class="search" placeholder="Search orders, products, customers, riders..." oninput="globalSearch()">
-  <span class="grow"></span>
-  <button class="iconbtn" onclick="showPage('notifications')">🔔</button>
-  <button class="new" onclick="openNewAction()">＋ New Action</button>
-</header>
+<div id="loginScreen" class="login-screen">
 
-<section class="wrap">
+  <div class="login-box">
 
-<!-- DASHBOARD -->
+    <div class="login-brand">
+      <div class="logo">🌿 NatureBite</div>
+      <p>Admin & Staff Management</p>
+    </div>
+
+    <form id="loginForm">
+
+      <div class="login-field">
+        <label>Email</label>
+        <input
+          id="loginEmail"
+          type="email"
+          placeholder="admin@example.com"
+          required
+        >
+      </div>
+
+      <div class="login-field">
+        <label>Password</label>
+        <input
+          id="loginPassword"
+          type="password"
+          placeholder="Password"
+          required
+        >
+      </div>
+
+      <button class="login-btn" type="submit">
+        Login
+      </button>
+
+      <div id="loginError" class="login-error"></div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     APP
+========================= -->
+
+<div id="app" class="app hidden">
+
+  <aside id="sidebar" class="sidebar">
+
+    <div class="brand">
+      <div class="brand-title">🌿 NatureBite</div>
+      <div class="brand-sub">ADMIN & STAFF MANAGEMENT</div>
+    </div>
+
+    <nav>
+
+      <div class="nav-section">
+        <div class="nav-title">DASHBOARD</div>
+
+        <button
+          class="nav-btn active"
+          data-page="dashboard"
+          onclick="showPage('dashboard',this)"
+        >
+          ▦ Dashboard
+        </button>
+      </div>
+
+
+      <div class="nav-section">
+        <div class="nav-title">OPERATIONS</div>
+
+        <button class="nav-btn" data-perm="orders" data-page="orders"
+          onclick="showPage('orders',this)">
+          ▤ Orders
+        </button>
+
+        <button class="nav-btn" data-perm="products" data-page="products"
+          onclick="showPage('products',this)">
+          □ Products
+        </button>
+
+        <button class="nav-btn" data-perm="inventory" data-page="inventory"
+          onclick="showPage('inventory',this)">
+          ▥ Inventory
+        </button>
+
+        <button class="nav-btn" data-perm="customers" data-page="customers"
+          onclick="showPage('customers',this)">
+          ♙ Customers
+        </button>
+
+        <button class="nav-btn" data-perm="riders" data-page="riders"
+          onclick="showPage('riders',this)">
+          ◇ Riders
+        </button>
+
+        <button class="nav-btn" data-perm="deliveryPartners" data-page="partners"
+          onclick="showPage('partners',this)">
+          ⇄ Delivery Partners
+        </button>
+
+      </div>
+
+
+      <div class="nav-section">
+        <div class="nav-title">FINANCE</div>
+
+        <button class="nav-btn" data-perm="payments" data-page="payments"
+          onclick="showPage('payments',this)">
+          ৳ Payments
+        </button>
+
+        <button class="nav-btn" data-perm="refunds" data-page="refunds"
+          onclick="showPage('refunds',this)">
+          ↩ Refunds
+        </button>
+
+        <button class="nav-btn" data-perm="cancellations" data-page="cancellations"
+          onclick="showPage('cancellations',this)">
+          × Cancellations
+        </button>
+
+        <button class="nav-btn" data-perm="expenses" data-page="expenses"
+          onclick="showPage('expenses',this)">
+          ▣ Expenses
+        </button>
+
+        <button class="nav-btn" data-perm="reports" data-page="reports"
+          onclick="showPage('reports',this)">
+          ▤ Reports
+        </button>
+
+      </div>
+
+
+      <div class="nav-section">
+        <div class="nav-title">MARKETING</div>
+
+        <button class="nav-btn" data-perm="offers" data-page="offers"
+          onclick="showPage('offers',this)">
+          ☆ Offers & Coupons
+        </button>
+
+        <button class="nav-btn" data-perm="luckyWheel" data-page="wheel"
+          onclick="showPage('wheel',this)">
+          ◉ Lucky Wheel
+        </button>
+
+        <button class="nav-btn" data-perm="luckyDraw" data-page="draw"
+          onclick="showPage('draw',this)">
+          🎟 Lucky Draw
+        </button>
+
+        <button class="nav-btn" data-perm="reviews" data-page="reviews"
+          onclick="showPage('reviews',this)">
+          ★ Reviews
+        </button>
+
+        <button class="nav-btn" data-perm="banners" data-page="banners"
+          onclick="showPage('banners',this)">
+          ▣ Banners
+        </button>
+
+      </div>
+
+
+      <div class="nav-section">
+        <div class="nav-title">CUSTOMER</div>
+
+        <button class="nav-btn" data-perm="support" data-page="support"
+          onclick="showPage('support',this)">
+          ◌ Support
+        </button>
+
+        <button class="nav-btn" data-perm="notifications" data-page="notifications"
+          onclick="showPage('notifications',this)">
+          🔔 Notifications
+        </button>
+
+      </div>
+
+
+      <div class="nav-section">
+        <div class="nav-title">MANAGEMENT</div>
+
+        <button class="nav-btn" data-perm="staff" data-page="staff"
+          onclick="showPage('staff',this)">
+          ♙ Staff
+        </button>
+
+        <button class="nav-btn" data-perm="permissions" data-page="permissions"
+          onclick="showPage('permissions',this)">
+          🔐 Permissions
+        </button>
+
+      </div>
+
+
+      <div class="nav-section">
+        <div class="nav-title">INTELLIGENCE</div>
+
+        <button class="nav-btn" data-perm="aiAssistant" data-page="ai"
+          onclick="showPage('ai',this)">
+          ✦ AI Assistant
+        </button>
+
+      </div>
+
+
+      <div class="nav-section">
+        <div class="nav-title">SYSTEM</div>
+
+        <button class="nav-btn" data-perm="settings" data-page="settings"
+          onclick="showPage('settings',this)">
+          ⚙ Settings
+        </button>
+
+        <button class="nav-btn" data-perm="auditLogs" data-page="audit"
+          onclick="showPage('audit',this)">
+          ◫ Audit Logs
+        </button>
+
+      </div>
+
+    </nav>
+
+
+    <div class="admin-user">
+
+      👤 <b id="sideUserName">Admin</b>
+
+      <br>
+
+      <span id="sideUserRole">
+        Administrator
+      </span>
+
+      <br><br>
+
+      <button
+        class="secondary-btn"
+        style="color:white;border-color:white;background:transparent"
+        onclick="logout()"
+      >
+        Logout
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <button
+        class="mobile-menu"
+        onclick="toggleSidebar()"
+      >
+        ☰
+      </button>
+
+      <input
+        id="globalSearch"
+        class="search"
+        placeholder="Search orders, products, customers..."
+        oninput="globalSearch()"
+      >
+
+      <div class="grow"></div>
+
+      <button
+        class="top-btn"
+        onclick="showPage('notifications')"
+      >
+        🔔
+      </button>
+
+      <button
+        class="primary-btn"
+        onclick="openNewAction()"
+      >
+        ＋ New Action
+      </button>
+
+    </header>
+
+
+<!-- =========================
+ DASHBOARD
+========================= -->
+
 <section id="dashboard" class="page active">
-<div class="title"><div><h1>Operational Overview</h1><p>NatureBite business management dashboard.</p></div><div class="period"><button class="on">Today</button><button>Weekly</button><button>Monthly</button></div></div>
-<div class="kpis">
-<div class="card kpi"><div class="label">Total Sales</div><div class="val" id="kSales">৳0</div><div class="meta">Live order calculation</div><div class="bar"><i style="width:72%"></i></div></div>
-<div class="card kpi"><div class="label">Total Orders</div><div class="val" id="kOrders">0</div><div class="meta">All orders</div><div class="bar"><i style="width:65%"></i></div></div>
-<div class="card kpi"><div class="label">Delivered</div><div class="val" id="kDelivered">0</div><div class="meta">Completed</div><div class="bar"><i style="width:53%"></i></div></div>
-<div class="card kpi"><div class="label">Pending</div><div class="val" id="kPending">0</div><div class="meta">Needs attention</div><div class="bar"><i style="width:43%"></i></div></div>
-<div class="card kpi"><div class="label">Cancelled</div><div class="val bad" id="kCancelled">0</div><div class="meta bad">Review</div><div class="bar"><i style="width:18%"></i></div></div>
-<div class="card kpi"><div class="label">Net Profit</div><div class="val" id="kProfit">৳0</div><div class="meta">Demo calculation</div><div class="bar"><i style="width:61%"></i></div></div>
-<div class="card kpi"><div class="label">Low Stock</div><div class="val bad" id="kLow">0</div><div class="meta bad">Critical items</div><div class="bar"><i style="width:30%"></i></div></div>
-</div>
 
-<div class="cols">
-<div>
-<div class="card panel"><div class="head"><h2>Sales & Revenue</h2><button class="link" onclick="showPage('reports')">View report →</button></div>
-<div class="chart"><svg viewBox="0 0 760 220" preserveAspectRatio="none"><g stroke="#e8eae4"><line x2="760" y1="185" y2="185"/><line x2="760" y1="130" y2="130"/><line x2="760" y1="75" y2="75"/><line x2="760" y1="20" y2="20"/></g><polyline fill="none" stroke="#2E7D32" stroke-width="4" points="0,165 70,142 140,151 210,108 280,126 350,87 420,102 490,66 560,83 630,48 700,61 760,32"/><polyline fill="none" stroke="#A5C18E" stroke-width="3" points="0,182 70,172 140,176 210,151 280,160 350,135 420,142 490,118 560,126 630,108 700,113 760,94"/></svg></div></div>
-<div class="card panel"><div class="head"><h2>Recent Orders</h2><button class="link" onclick="showPage('orders')">View full list →</button></div><div id="recentOrders"></div></div>
-</div>
-<div>
-<div class="card panel"><div class="head"><h2>Admin Notifications</h2><button class="link" onclick="showPage('notifications')">View all</button></div><div id="dashNotifications"></div></div>
-<div class="card panel"><div class="head"><h2>AI Recommendations</h2><span class="badge">AI</span></div><div class="reco"><b>Inventory Suggestion</b><p>Review fast-moving products and replenish stock before critical level.</p><button onclick="showPage('inventory')">Review</button></div><div class="reco"><b>Campaign Idea</b><p>Create a weekend healthy-snacks promotion for returning customers.</p><button onclick="showPage('offers')">View idea</button></div></div>
-</div>
-</div>
-<div class="two">
-<div class="card panel"><div class="head"><h2>Order Status Overview</h2></div><div id="statusOverview"></div></div>
-<div class="card panel"><div class="head"><h2>Rider / COD Alerts</h2></div><div class="alert">৳ <b>COD Pending Settlement</b><p>Review rider settlement requests from the Riders module.</p></div><div class="alert">🚴 <b>Rider Performance</b><p>Check delivery success and failed deliveries.</p></div></div>
-</div>
+  <div class="page-head">
+
+    <div>
+      <h1>Dashboard</h1>
+      <p>NatureBite business overview</p>
+    </div>
+
+    <div>
+      <button class="secondary-btn" onclick="loadAllData()">
+        ↻ Refresh
+      </button>
+    </div>
+
+  </div>
+
+
+  <div class="kpis">
+
+    <div class="card kpi">
+      <div class="kpi-label">Total Sales</div>
+      <div class="kpi-value" id="kSales">৳0</div>
+      <div class="kpi-meta">Order revenue</div>
+    </div>
+
+    <div class="card kpi">
+      <div class="kpi-label">Total Orders</div>
+      <div class="kpi-value" id="kOrders">0</div>
+      <div class="kpi-meta">All orders</div>
+    </div>
+
+    <div class="card kpi">
+      <div class="kpi-label">Delivered</div>
+      <div class="kpi-value" id="kDelivered">0</div>
+      <div class="kpi-meta">Completed</div>
+    </div>
+
+    <div class="card kpi">
+      <div class="kpi-label">Pending</div>
+      <div class="kpi-value orange" id="kPending">0</div>
+      <div class="kpi-meta">Needs action</div>
+    </div>
+
+    <div class="card kpi">
+      <div class="kpi-label">Cancelled</div>
+      <div class="kpi-value red" id="kCancelled">0</div>
+      <div class="kpi-meta red">Review</div>
+    </div>
+
+    <div class="card kpi">
+      <div class="kpi-label">Net Profit</div>
+      <div class="kpi-value" id="kProfit">৳0</div>
+      <div class="kpi-meta">Revenue - expenses</div>
+    </div>
+
+    <div class="card kpi">
+      <div class="kpi-label">Low Stock</div>
+      <div class="kpi-value red" id="kLow">0</div>
+      <div class="kpi-meta red">Attention</div>
+    </div>
+
+  </div>
+
+
+  <div class="dashboard-cols">
+
+    <div>
+
+      <div class="card panel">
+
+        <div class="section-title">
+          <h2>Sales Overview</h2>
+
+          <button
+            class="secondary-btn"
+            onclick="showPage('reports')"
+          >
+            Reports →
+          </button>
+
+        </div>
+
+        <div class="chart">
+
+          <svg viewBox="0 0 800 230" preserveAspectRatio="none">
+
+            <g stroke="#e8ebe5">
+              <line x1="0" x2="800" y1="190" y2="190"/>
+              <line x1="0" x2="800" y1="140" y2="140"/>
+              <line x1="0" x2="800" y1="90" y2="90"/>
+              <line x1="0" x2="800" y1="40" y2="40"/>
+            </g>
+
+            <polyline
+              fill="none"
+              stroke="#246b38"
+              stroke-width="4"
+              points="
+              0,180
+              70,160
+              140,165
+              210,130
+              280,145
+              350,105
+              420,120
+              490,82
+              560,100
+              630,62
+              700,75
+              800,35
+              "
+            />
+
+            <polyline
+              fill="none"
+              stroke="#9fbe8d"
+              stroke-width="3"
+              points="
+              0,195
+              70,185
+              140,188
+              210,165
+              280,172
+              350,150
+              420,155
+              490,135
+              560,142
+              630,120
+              700,125
+              800,105
+              "
+            />
+
+          </svg>
+
+        </div>
+
+      </div>
+
+
+      <div class="card panel" style="margin-top:18px">
+
+        <div class="section-title">
+          <h2>Recent Orders</h2>
+
+          <button
+            class="secondary-btn"
+            onclick="showPage('orders')"
+          >
+            View All
+          </button>
+
+        </div>
+
+        <div id="recentOrders"></div>
+
+      </div>
+
+    </div>
+
+
+    <div>
+
+      <div class="card panel">
+
+        <div class="section-title">
+          <h2>Admin Notifications</h2>
+
+          <button
+            class="secondary-btn"
+            onclick="showPage('notifications')"
+          >
+            View
+          </button>
+
+        </div>
+
+        <div id="dashboardNotifications"></div>
+
+      </div>
+
+
+      <div class="card panel" style="margin-top:18px">
+
+        <div class="section-title">
+          <h2>AI Recommendations</h2>
+          <span class="badge">AI</span>
+        </div>
+
+        <div class="reco">
+          <b>Inventory</b>
+          <p class="small muted">
+            Review low-stock products and replenish before stockout.
+          </p>
+        </div>
+
+        <div class="reco">
+          <b>Delivery</b>
+          <p class="small muted">
+            Check pending rider assignments and COD settlements.
+          </p>
+        </div>
+
+        <div class="reco">
+          <b>Marketing</b>
+          <p class="small muted">
+            Returning customers may be suitable for coupon campaigns.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="dashboard-two">
+
+    <div class="card panel">
+
+      <div class="section-title">
+        <h2>Order Status</h2>
+      </div>
+
+      <div id="statusOverview"></div>
+
+    </div>
+
+
+    <div class="card panel">
+
+      <div class="section-title">
+        <h2>Rider / COD Alerts</h2>
+      </div>
+
+      <div class="alert">
+        💰 <b>COD Settlement</b>
+        <p>
+          Review pending rider settlements.
+        </p>
+      </div>
+
+      <div class="alert">
+        🚴 <b>Rider Assignment</b>
+        <p>
+          Check orders without assigned riders.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
 </section>
 
-<!-- ORDERS -->
+
+<!-- =========================
+ ORDERS
+========================= -->
+
 <section id="orders" class="page">
-<div class="title"><div><h1>Orders Management</h1><p>Manage customer orders, status, rider assignment and delivery information.</p></div><button class="new" onclick="exportCSV('orders')">Export CSV</button></div>
-<div class="toolbar"><input class="input" id="orderSearch" placeholder="Search Order ID / customer" oninput="renderOrders()"><select class="select" id="orderFilter" onchange="renderOrders()"><option value="">All Status</option><option>Order Placed</option><option>Order Confirmed</option><option>Processing</option><option>Packed</option><option>Rider Assigned</option><option>Picked Up</option><option>Out for Delivery</option><option>Delivered</option><option>Cancelled</option></select></div>
-<div class="card panel"><div id="ordersTable"></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Orders</h1>
+      <p>Customer orders and delivery management</p>
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="secondary-btn"
+        onclick="printSelectedOrders()"
+      >
+        🖨 Print Selected
+      </button>
+
+      <button
+        class="primary-btn"
+        onclick="exportOrdersCSV()"
+      >
+        Export CSV
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="toolbar">
+
+    <input
+      class="input"
+      id="orderSearch"
+      placeholder="Order ID / customer / phone"
+      oninput="renderOrders()"
+    >
+
+    <select
+      class="select"
+      id="orderStatusFilter"
+      onchange="renderOrders()"
+    >
+      <option value="">All Status</option>
+      <option>Order Placed</option>
+      <option>Payment Verification</option>
+      <option>Order Confirmed</option>
+      <option>Packing</option>
+      <option>Ready for Pickup</option>
+      <option>Rider Assigned</option>
+      <option>Picked Up</option>
+      <option>Out for Delivery</option>
+      <option>Delivered</option>
+      <option>Cancelled</option>
+    </select>
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div id="ordersTable"></div>
+
+  </div>
+
 </section>
 
-<!-- PRODUCTS -->
+
+<!-- =========================
+ PRODUCTS
+========================= -->
+
 <section id="products" class="page">
-<div class="title"><div><h1>Products</h1><p>Products, variants, pricing and active status.</p></div><button class="new" onclick="openProductModal()">＋ Add Product</button></div>
-<div class="toolbar"><input class="input" id="productSearch" placeholder="Search product..." oninput="renderProducts()"><select class="select" id="productCat" onchange="renderProducts()"><option value="">All Categories</option><option>Healthy Snacks</option><option>Kids Special Foods</option><option>Diabetic/Keto-Friendly</option><option>Instant Mix Items</option></select></div>
-<div class="card panel"><div id="productsTable"></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Products</h1>
+      <p>Products, variants, prices and stock</p>
+    </div>
+
+    <button
+      class="primary-btn"
+      onclick="openProductModal()"
+    >
+      ＋ Add Product
+    </button>
+
+  </div>
+
+
+  <div class="toolbar">
+
+    <input
+      class="input"
+      id="productSearch"
+      placeholder="Search product..."
+      oninput="renderProducts()"
+    >
+
+    <select
+      class="select"
+      id="productCategoryFilter"
+      onchange="renderProducts()"
+    >
+      <option value="">All Categories</option>
+      <option>Healthy Snacks</option>
+      <option>Kids Special Foods</option>
+      <option>Diabetic/Keto-Friendly Products</option>
+      <option>Instant Mix Items</option>
+    </select>
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div id="productsTable"></div>
+
+  </div>
+
 </section>
 
-<!-- INVENTORY -->
+
+<!-- =========================
+ INVENTORY
+========================= -->
+
 <section id="inventory" class="page">
-<div class="title"><div><h1>Inventory</h1><p>Stock levels, SKU and low-stock monitoring.</p></div><button class="new" onclick="openStockModal()">＋ Stock Update</button></div>
-<div class="grid3" id="inventoryStats"></div>
-<div class="card panel" style="margin-top:15px"><div id="inventoryTable"></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Inventory</h1>
+      <p>Variant stock management</p>
+    </div>
+
+  </div>
+
+
+  <div
+    class="grid grid-3"
+    id="inventoryStats"
+  ></div>
+
+
+  <div class="card panel" style="margin-top:15px">
+
+    <div id="inventoryTable"></div>
+
+  </div>
+
 </section>
 
-<!-- CUSTOMERS -->
+
+<!-- =========================
+ CUSTOMERS
+========================= -->
+
 <section id="customers" class="page">
-<div class="title"><div><h1>Customers</h1><p>Customer accounts and order activity.</p></div></div>
-<div class="toolbar"><input class="input" id="customerSearch" placeholder="Search customer / phone" oninput="renderCustomers()"></div>
-<div class="card panel"><div id="customersTable"></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Customers</h1>
+      <p>Customer accounts and activity</p>
+    </div>
+
+  </div>
+
+
+  <div class="toolbar">
+
+    <input
+      class="input"
+      id="customerSearch"
+      placeholder="Search name / phone / email"
+      oninput="renderCustomers()"
+    >
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div id="customersTable"></div>
+
+  </div>
+
 </section>
 
-<!-- RIDERS -->
+
+<!-- =========================
+ RIDERS
+========================= -->
+
 <section id="riders" class="page">
-<div class="title"><div><h1>Riders</h1><p>Rider approval, performance, salary and settlement management.</p></div><button class="new" onclick="openRiderModal()">＋ Add Rider</button></div>
-<div class="grid4" id="riderStats"></div>
-<div class="card panel" style="margin-top:15px"><div id="ridersTable"></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Riders</h1>
+      <p>Rider performance and COD settlement</p>
+    </div>
+
+  </div>
+
+
+  <div
+    class="grid grid-4"
+    id="riderStats"
+  ></div>
+
+
+  <div class="card panel" style="margin-top:15px">
+
+    <div id="ridersTable"></div>
+
+  </div>
+
 </section>
 
-<!-- PARTNERS -->
+
+<!-- =========================
+ DELIVERY PARTNERS
+========================= -->
+
 <section id="partners" class="page">
-<div class="title"><div><h1>Delivery Partners</h1><p>Manage internal and external delivery options.</p></div></div>
-<div class="grid4" id="partnerCards"></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Delivery Partners</h1>
+      <p>Internal and external delivery services</p>
+    </div>
+
+  </div>
+
+
+  <div
+    class="grid grid-4"
+    id="partnerCards"
+  ></div>
+
 </section>
 
-<!-- PAYMENTS -->
+
+<!-- =========================
+ PAYMENTS
+========================= -->
+
 <section id="payments" class="page">
-<div class="title"><div><h1>Payments</h1><p>Payment verification and payment status.</p></div></div>
-<div class="card panel"><div id="paymentsTable"></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Payments</h1>
+      <p>Payment verification requests</p>
+    </div>
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div id="paymentsTable"></div>
+
+  </div>
+
 </section>
 
-<!-- REFUNDS -->
+
+<!-- =========================
+ REFUNDS
+========================= -->
+
 <section id="refunds" class="page">
-<div class="title"><div><h1>Refunds</h1><p>Review and process refund requests.</p></div></div>
-<div class="card panel"><div id="refundsTable"></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Refunds</h1>
+      <p>Refund requests</p>
+    </div>
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div id="refundsTable"></div>
+
+  </div>
+
 </section>
 
-<!-- CANCELLATIONS -->
+
+<!-- =========================
+ CANCELLATIONS
+========================= -->
+
 <section id="cancellations" class="page">
-<div class="title"><div><h1>Cancellations</h1><p>Cancelled orders and parcel return/handover tracking.</p></div></div>
-<div class="card panel"><div id="cancelTable"></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Cancellations</h1>
+      <p>Cancellation and food handover tracking</p>
+    </div>
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div id="cancellationsTable"></div>
+
+  </div>
+
 </section>
 
-<!-- EXPENSES -->
+
+<!-- =========================
+ EXPENSES
+========================= -->
+
 <section id="expenses" class="page">
-<div class="title"><div><h1>Expenses</h1><p>Business expenses and adjustments.</p></div><button class="new" onclick="openExpenseModal()">＋ Add Expense</button></div>
-<div class="card panel"><div id="expenseTable"></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Expenses</h1>
+      <p>Business expenses</p>
+    </div>
+
+    <button
+      class="primary-btn"
+      onclick="openExpenseModal()"
+    >
+      ＋ Add Expense
+    </button>
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div id="expensesTable"></div>
+
+  </div>
+
 </section>
 
-<!-- REPORTS -->
+
+<!-- =========================
+ REPORTS
+========================= -->
+
 <section id="reports" class="page">
-<div class="title"><div><h1>Reports</h1><p>Business performance overview.</p></div><button class="new" onclick="exportCSV('orders')">Export Orders</button></div>
-<div class="grid4" id="reportStats"></div>
-<div class="two" style="margin-top:15px"><div class="card panel"><h2>Revenue Summary</h2><div id="revenueReport"></div></div><div class="card panel"><h2>Delivery Summary</h2><div id="deliveryReport"></div></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Reports</h1>
+      <p>Sales, orders, delivery and profit reports</p>
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="secondary-btn"
+        onclick="printReport()"
+      >
+        🖨 Print Report
+      </button>
+
+      <button
+        class="primary-btn"
+        onclick="exportOrdersCSV()"
+      >
+        Export
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="report-controls">
+
+    <button
+      class="active"
+      id="reportToday"
+      onclick="setReportPeriod('today',this)"
+    >
+      Today
+    </button>
+
+    <button
+      id="reportWeek"
+      onclick="setReportPeriod('week',this)"
+    >
+      This Week
+    </button>
+
+    <button
+      id="reportMonth"
+      onclick="setReportPeriod('month',this)"
+    >
+      This Month
+    </button>
+
+    <button
+      id="reportPrevious"
+      onclick="setReportPeriod('previous',this)"
+    >
+      Previous Month
+    </button>
+
+    <button
+      id="reportCustom"
+      onclick="setReportPeriod('custom',this)"
+    >
+      Custom
+    </button>
+
+  </div>
+
+
+  <div
+    id="customReportBox"
+    class="card panel"
+    style="margin-top:12px;display:none"
+  >
+
+    <div class="toolbar">
+
+      <div>
+        <label class="small muted">Start Date</label>
+        <input
+          id="reportStart"
+          type="date"
+          class="input"
+        >
+      </div>
+
+      <div>
+        <label class="small muted">End Date</label>
+        <input
+          id="reportEnd"
+          type="date"
+          class="input"
+        >
+      </div>
+
+      <button
+        class="primary-btn"
+        onclick="applyCustomReport()"
+        style="align-self:end"
+      >
+        Apply
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div
+    class="grid grid-4"
+    id="reportStats"
+    style="margin-top:15px"
+  ></div>
+
+
+  <div
+    class="grid grid-2"
+    style="margin-top:15px"
+  >
+
+    <div class="card panel">
+
+      <div class="section-title">
+        <h2>Revenue Summary</h2>
+      </div>
+
+      <div id="revenueReport"></div>
+
+    </div>
+
+
+    <div class="card panel">
+
+      <div class="section-title">
+        <h2>Delivery Summary</h2>
+      </div>
+
+      <div id="deliveryReport"></div>
+
+    </div>
+
+  </div>
+
+
+  <div
+    class="card panel"
+    style="margin-top:15px"
+  >
+
+    <div class="section-title">
+      <h2>Product Sales</h2>
+    </div>
+
+    <div id="productSalesReport"></div>
+
+  </div>
+
 </section>
 
-<!-- OFFERS -->
+
+<!-- =========================
+ OFFERS
+========================= -->
+
 <section id="offers" class="page">
-<div class="title"><div><h1>Offers & Coupons</h1><p>Manage promotional campaigns and coupons.</p></div><button class="new" onclick="openCouponModal()">＋ Add Coupon</button></div>
-<div class="card panel"><div id="couponTable"></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Offers & Coupons</h1>
+      <p>Promotional campaigns</p>
+    </div>
+
+    <button
+      class="primary-btn"
+      onclick="openCouponModal()"
+    >
+      ＋ Add Coupon
+    </button>
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div id="couponTable"></div>
+
+  </div>
+
 </section>
 
-<!-- WHEEL -->
+
+<!-- =========================
+ WHEEL
+========================= -->
+
 <section id="wheel" class="page">
-<div class="title"><div><h1>Lucky Wheel</h1><p>Manage rewards and spin configuration.</p></div></div>
-<div class="grid3"><div class="card panel"><h2>Wheel Status</h2><p class="muted">Active</p></div><div class="card panel"><h2>Total Spins</h2><p id="spinCount" style="font-size:25px;font-weight:800">0</p></div><div class="card panel"><h2>Rewards</h2><p class="muted">Coupon / Discount / Free Delivery</p></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Lucky Wheel</h1>
+      <p>Wheel rewards and spins</p>
+    </div>
+
+  </div>
+
+
+  <div class="grid grid-3">
+
+    <div class="card statbox">
+      <div class="small muted">Wheel Status</div>
+      <div class="stat-big">Active</div>
+    </div>
+
+    <div class="card statbox">
+      <div class="small muted">Total Spins</div>
+      <div class="stat-big" id="spinCount">0</div>
+    </div>
+
+    <div class="card statbox">
+      <div class="small muted">Reward Types</div>
+      <div class="stat-big">3+</div>
+    </div>
+
+  </div>
+
+
+  <div class="card panel" style="margin-top:15px">
+
+    <div id="wheelRewardsTable"></div>
+
+  </div>
+
 </section>
 
-<!-- DRAW -->
+
+<!-- =========================
+ DRAW
+========================= -->
+
 <section id="draw" class="page">
-<div class="title"><div><h1>Lucky Draw</h1><p>Draw campaigns and entries.</p></div><button class="new" onclick="openDrawModal()">＋ New Draw</button></div>
-<div class="card panel"><div id="drawTable"></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Lucky Draw</h1>
+      <p>Campaigns and entries</p>
+    </div>
+
+    <button
+      class="primary-btn"
+      onclick="openDrawModal()"
+    >
+      ＋ New Draw
+    </button>
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div id="drawTable"></div>
+
+  </div>
+
 </section>
 
-<!-- REVIEWS -->
+
+<!-- =========================
+ REVIEWS
+========================= -->
+
 <section id="reviews" class="page">
-<div class="title"><div><h1>Reviews</h1><p>Customer product reviews and moderation.</p></div></div>
-<div class="card panel"><div id="reviewsTable"></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Reviews</h1>
+      <p>Customer reviews</p>
+    </div>
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div id="reviewsTable"></div>
+
+  </div>
+
 </section>
 
-<!-- SUPPORT -->
+
+<!-- =========================
+ BANNERS
+========================= -->
+
+<section id="banners" class="page">
+
+  <div class="page-head">
+
+    <div>
+      <h1>Banners</h1>
+      <p>Website/app promotional banners</p>
+    </div>
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div class="empty">
+      Banner management is ready for Firestore banner documents.
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+ SUPPORT
+========================= -->
+
 <section id="support" class="page">
-<div class="title"><div><h1>Customer Support</h1><p>Support tickets and customer messages.</p></div></div>
-<div class="card panel"><div id="supportTable"></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Support</h1>
+      <p>Customer support tickets</p>
+    </div>
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div id="supportTable"></div>
+
+  </div>
+
 </section>
 
-<!-- NOTIFICATIONS -->
+
+<!-- =========================
+ NOTIFICATIONS
+========================= -->
+
 <section id="notifications" class="page">
-<div class="title"><div><h1>Notifications</h1><p>Admin and staff operational alerts.</p></div><button class="new" onclick="openNotificationModal()">＋ Send Notification</button></div>
-<div class="card panel"><div id="notificationTable"></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Notifications</h1>
+      <p>Admin notification center</p>
+    </div>
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div id="notificationsTable"></div>
+
+  </div>
+
 </section>
 
-<!-- STAFF -->
+
+<!-- =========================
+ STAFF
+========================= -->
+
 <section id="staff" class="page">
-<div class="title"><div><h1>Staff & Permissions</h1><p>Role-based access control. Production enforcement must be done with Firebase Auth + Security Rules.</p></div><button class="new" onclick="openStaffModal()">＋ Add Staff</button></div>
-<div class="card panel"><div id="staffTable"></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Staff</h1>
+      <p>Staff accounts and roles</p>
+    </div>
+
+    <button
+      class="primary-btn"
+      onclick="openStaffModal()"
+    >
+      ＋ Add Staff
+    </button>
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div id="staffTable"></div>
+
+  </div>
+
 </section>
 
-<!-- AI -->
+
+<!-- =========================
+ PERMISSIONS
+========================= -->
+
+<section id="permissions" class="page">
+
+  <div class="page-head">
+
+    <div>
+      <h1>Permissions</h1>
+      <p>Module access reference</p>
+    </div>
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div id="permissionsTable"></div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+ AI
+========================= -->
+
 <section id="ai" class="page">
-<div class="title"><div><h1>AI Assistant</h1><p>Business recommendations and approval queue.</p></div></div>
-<div class="grid3"><div class="card panel"><h2>📦 Inventory</h2><p class="muted">Identify low stock and fast-moving products.</p><button class="primary" onclick="toast('AI inventory analysis requested')">Analyze</button></div><div class="card panel"><h2>📈 Sales</h2><p class="muted">Review sales trends and campaign opportunities.</p><button class="primary" onclick="toast('AI sales analysis requested')">Analyze</button></div><div class="card panel"><h2>⚠️ Risk</h2><p class="muted">Highlight cancellations, COD and operational risks.</p><button class="primary" onclick="toast('AI risk analysis requested')">Analyze</button></div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>AI Assistant</h1>
+      <p>Business intelligence and recommendations</p>
+    </div>
+
+  </div>
+
+
+  <div class="grid grid-3">
+
+    <div class="card panel">
+      <h2>Inventory AI</h2>
+      <p class="muted small">
+        Identify low-stock and fast-moving variants.
+      </p>
+    </div>
+
+    <div class="card panel">
+      <h2>Sales AI</h2>
+      <p class="muted small">
+        Review sales trends and product performance.
+      </p>
+    </div>
+
+    <div class="card panel">
+      <h2>Operations AI</h2>
+      <p class="muted small">
+        Review pending payments, cancellations and delivery.
+      </p>
+    </div>
+
+  </div>
+
+
+  <div class="card panel" style="margin-top:15px">
+
+    <h2 style="font-size:15px">
+      Current Recommendations
+    </h2>
+
+    <div id="aiRecommendations"></div>
+
+  </div>
+
 </section>
 
-<!-- SETTINGS -->
+
+<!-- =========================
+ SETTINGS
+========================= -->
+
 <section id="settings" class="page">
-<div class="title"><div><h1>Settings</h1><p>Business, delivery and platform settings.</p></div><button class="new" onclick="saveSettings()">Save Settings</button></div>
-<div class="card panel"><div class="formgrid">
-<div class="field"><label>Business Name</label><input class="input" id="setBusiness" value="NatureBite"></div>
-<div class="field"><label>Free Delivery Minimum</label><input class="input" id="setFree" type="number" value="1000"></div>
-<div class="field"><label>Default Delivery Charge</label><input class="input" id="setDelivery" type="number" value="60"></div>
-<div class="field"><label>Platform/App Charge %</label><input class="input" id="setPlatform" type="number" value="2"></div>
-<div class="field"><label>COD Enabled</label><select class="select" id="setCOD"><option>Yes</option><option>No</option></select></div>
-<div class="field"><label>Delivery Charge Prepayment</label><select class="select" id="setPrepay"><option>Enabled</option><option>Disabled</option></select></div>
-</div></div>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Settings</h1>
+      <p>Business and delivery configuration</p>
+    </div>
+
+    <button
+      class="primary-btn"
+      onclick="saveSettings()"
+    >
+      Save Settings
+    </button>
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div class="section-title">
+      <h2>Delivery Settings</h2>
+    </div>
+
+
+    <div class="setting-row">
+
+      <div class="setting-info">
+        <b>Free Delivery Campaign</b>
+        <p>
+          When ON, customer checkout will show Free Delivery only.
+        </p>
+      </div>
+
+      <label class="switch">
+
+        <input
+          id="freeDeliveryEnabled"
+          type="checkbox"
+        >
+
+        <span class="slider"></span>
+
+      </label>
+
+    </div>
+
+
+    <div class="form-grid" style="margin-top:15px">
+
+      <div class="field">
+
+        <label>Standard Delivery Charge</label>
+
+        <input
+          id="standardDelivery"
+          class="input"
+          type="number"
+          value="60"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Express Delivery Charge</label>
+
+        <input
+          id="expressDelivery"
+          class="input"
+          type="number"
+          value="80"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Free Delivery Charge</label>
+
+        <input
+          id="freeDelivery"
+          class="input"
+          type="number"
+          value="0"
+          readonly
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Campaign Name</label>
+
+        <input
+          id="freeDeliveryCampaignName"
+          class="input"
+          placeholder="Example: Weekend Free Delivery"
+        >
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card panel" style="margin-top:15px">
+
+    <div class="section-title">
+      <h2>Platform Charge</h2>
+    </div>
+
+
+    <div class="form-grid">
+
+      <div class="field">
+
+        <label>Platform Charge</label>
+
+        <input
+          id="platformCharge"
+          class="input"
+          type="number"
+          value="5"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Charge Type</label>
+
+        <select
+          id="platformChargeType"
+          class="select"
+        >
+          <option value="fixed">Fixed</option>
+          <option value="percentage">Percentage</option>
+        </select>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card panel" style="margin-top:15px">
+
+    <div class="section-title">
+      <h2>Payment Policy</h2>
+    </div>
+
+
+    <div class="setting-row">
+
+      <div class="setting-info">
+        <b>Delivery Prepaid Required</b>
+        <p>
+          Customer must pay delivery charge before order confirmation.
+        </p>
+      </div>
+
+      <label class="switch">
+
+        <input
+          id="deliveryPrepaidRequired"
+          type="checkbox"
+          checked
+        >
+
+        <span class="slider"></span>
+
+      </label>
+
+    </div>
+
+  </div>
+
 </section>
 
-<!-- AUDIT -->
+
+<!-- =========================
+ AUDIT
+========================= -->
+
 <section id="audit" class="page">
-<div class="title"><div><h1>Audit Logs</h1><p>Track important admin/staff activities.</p></div></div>
-<div class="card panel"><div id="auditTable"></div></div>
-</section>
+
+  <div class="page-head">
+
+    <div>
+      <h1>Audit Logs</h1>
+      <p>Staff and admin activity</p>
+    </div>
+
+  </div>
+
+
+  <div class="card panel">
+
+    <div id="auditTable"></div>
+
+  </div>
 
 </section>
-</main>
+
+
+  </main>
+
 </div>
 
-<div class="modal" id="modal"><div class="modalbox"><div class="modalhead"><h2 id="modalTitle">Action</h2><button class="close" onclick="closeModal()">×</button></div><div id="modalBody"></div></div></div>
-<div class="toast" id="toast"></div>
+
+<!-- =========================
+ MODAL
+========================= -->
+
+<div
+  id="modal"
+  class="modal"
+  onclick="modalOutside(event)"
+>
+
+  <div
+    class="modal-box"
+    id="modalBox"
+  >
+
+    <div class="modal-head">
+
+      <h2 id="modalTitle">
+        Modal
+      </h2>
+
+      <button
+        class="close"
+        onclick="closeModal()"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <div id="modalContent"></div>
+
+  </div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div
+  id="toast"
+  class="toast"
+></div>
+
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-import { getFirestore, collection, doc, getDoc, getDocs, onSnapshot, addDoc, setDoc, updateDoc, deleteDoc, query, orderBy, limit, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-functions.js";
 
-const firebaseConfig={apiKey:"AIzaSyAlrkdWd2UMGAp3yZkp0tlhxxXWSCjSvg",authDomain:"naturebite-bcdad.firebaseapp.com",projectId:"naturebite-bcdad",storageBucket:"naturebite-bcdad.firebasestorage.app",messagingSenderId:"860834516769",appId:"1:860834516769:web:5c2fa96a1de26e337a3860"};
-const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app); const functions=getFunctions(app,"asia-south1");
-let authReady=false;
-const $=id=>document.getElementById(id);
-const money=n=>"৳"+Math.round(Number(n)||0).toLocaleString("en-BD");
-const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-function toast(msg){const x=$("toast");x.textContent=msg;x.classList.add("show");setTimeout(()=>x.classList.remove("show"),2200)}
-function closeModal(){$("modal").classList.remove("show")}
-function openModal(title,body){$("modalTitle").textContent=title;$("modalBody").innerHTML=body;$("modal").classList.add("show")}
-function toggleSide(){$("sidebar").classList.toggle("open")}; window.toggleSide=toggleSide; window.closeModal=closeModal;
-const state={orders:[],products:[],customers:[],riders:[],payments:[],refunds:[],expenses:[],coupons:[],draws:[],reviews:[],support:[],notifications:[],staff:[],audit:[],settings:{business:"NatureBite",free:1000,delivery:60,platform:2,cod:"Yes",prepay:"Enabled"}};
-let unsub=[]; let currentUser=null; let currentStaff=null;
-function status(s){let c="";if(["Cancelled","Failed","Rejected"].includes(s))c="cancel";else if(["Processing","Pending","Refund Pending"].includes(s))c="processing";else if(s==="Out for Delivery")c="out";return `<span class="status ${c}">${esc(s).toUpperCase()}</span>`}
+/* ==========================================
+   FIREBASE
+========================================== */
 
-function showLogin(){
-  let overlay=document.getElementById("loginOverlay");
-  if(!overlay){
-    overlay=document.createElement("div");
-    overlay.id="loginOverlay";
-    overlay.style.cssText="position:fixed;inset:0;z-index:200;background:#f7f7f2;display:grid;place-items:center;padding:20px";
-    overlay.innerHTML=`<div class="card" style="width:min(420px,100%);padding:28px"><div style="font-size:26px;font-weight:800;color:#2E7D32">🌿 NatureBite</div><p class="muted">Admin & Staff Management</p><div class="field"><label>Email</label><input class="input" id="loginEmail" type="email" placeholder="admin@example.com" style="width:100%"></div><div class="field" style="margin-top:12px"><label>Password</label><input class="input" id="loginPassword" type="password" placeholder="Password" style="width:100%"></div><button class="new" style="width:100%;margin-top:15px" id="loginBtn">Login</button><p id="loginError" class="bad small" style="margin-top:10px"></p></div>`;
-    document.body.appendChild(overlay);
-    overlay.querySelector("#loginBtn").onclick=async()=>{try{overlay.querySelector("#loginError").textContent="";await signInWithEmailAndPassword(auth,overlay.querySelector("#loginEmail").value.trim(),overlay.querySelector("#loginPassword").value); }catch(e){overlay.querySelector("#loginError").textContent=e.code||e.message}};
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  addDoc,
+  updateDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+
+const firebaseConfig = {
+
+  apiKey:
+    "AIzaSyCBaUWZflbj0RVfdyl1vZ1CB3SYD42vkI_0",
+
+  authDomain:
+    "naturebite-c5d88.firebaseapp.com",
+
+  projectId:
+    "naturebite-c5d88",
+
+  storageBucket:
+    "naturebite-c5d88.firebasestorage.app",
+
+  messagingSenderId:
+    "467003957826",
+
+  appId:
+    "1:467003957826:web:483a261d12ac396dca43db"
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+
+/* ==========================================
+   STATE
+========================================== */
+
+const state = {
+
+  orders:[],
+  products:[],
+  variants:[],
+  customers:[],
+  riders:[],
+  payments:[],
+  refunds:[],
+  expenses:[],
+  coupons:[],
+  draws:[],
+  reviews:[],
+  support:[],
+  notifications:[],
+  staff:[],
+  audit:[],
+  wheelRewards:[],
+  spins:0,
+
+  settings:{}
+
+};
+
+
+let currentUser = null;
+
+let currentRole = "staff";
+
+let currentPermissions = {};
+
+let reportPeriod = "today";
+
+
+/* ==========================================
+   HELPERS
+========================================== */
+
+const $ = id => document.getElementById(id);
+
+
+function money(value){
+
+  const n = Number(value || 0);
+
+  return "৳" + n.toLocaleString("en-BD");
+
+}
+
+
+function esc(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+function dateValue(v){
+
+  if(!v) return null;
+
+  if(v?.toDate){
+    return v.toDate();
   }
-  overlay.style.display="grid";
-}
-function hideLogin(){const x=document.getElementById("loginOverlay");if(x)x.style.display="none";}
 
-async function checkRole(user){const snap=await getDoc(doc(db,"staff",user.uid));if(!snap.exists())throw new Error("Staff profile not found for this account.");const d=snap.data();if(d.status&&d.status!=="Active")throw new Error("This staff account is inactive.");return {id:snap.id,...d}}
-function bootApp(){location.reload()}
-window.logout=()=>signOut(auth);
+  if(v instanceof Date){
+    return v;
+  }
 
-async function col(name){const snap=await getDocs(collection(db,name));return snap.docs.map(d=>({id:d.id,...d.data()}))}
-function listen(name,handler){const u=onSnapshot(collection(db,name),snap=>handler(snap.docs.map(d=>({id:d.id,...d.data()}))),e=>{console.error(name,e);toast(name+" load failed")});unsub.push(u)}
-async function loadLive(){
- state.orders=await col("orders");
- state.customers=await col("customers");
- state.riders=await col("riders");
- state.payments=await col("payments");
- state.refunds=await col("refunds");
- state.expenses=await col("expenses");
- state.coupons=await col("coupons");
- state.draws=await col("lucky_draw");
- state.reviews=await col("reviews");
- state.support=await col("support_tickets");
- state.notifications=await col("notifications");
- state.staff=await col("staff");
- state.audit=await col("audit_logs");
- const bs=await getDoc(doc(db,"business_settings","main"));if(bs.exists())state.settings={...state.settings,...bs.data()};
- const ps=await col("products"), vs=await col("product_variants");
- state.products=vs.length?vs.map(v=>{const p=ps.find(x=>x.id===v.productId)||{};return {...v,id:v.id,name:p.name||v.productName||"Product",category:p.categoryId||p.category||"",variant:v.name||v.weight||"",price:Number(v.price||0),stock:Number(v.stock||0),sku:v.sku||"",active:v.active!==false}}):ps.map(p=>({...p,price:Number(p.price||0),stock:Number(p.stock||0)}));
- renderAll();
- ["orders","customers","riders","payments","refunds","expenses","coupons","draws","reviews","support","notifications","staff","audit"].forEach(n=>listen(n,rows=>{state[n]=rows;renderAll()}));
-}
-const PERM_LABELS={orders:"Orders",products:"Products",inventory:"Inventory",customers:"Customers",riders:"Riders",payments:"Payments",refunds:"Refunds",reports:"Reports",expenses:"Expenses",staff:"Staff",settings:"Settings",notifications:"Notifications",deliveryPartners:"Delivery Partners",offers:"Offers & Coupons",luckyWheel:"Lucky Wheel",luckyDraw:"Lucky Draw",reviews:"Reviews",support:"Support",auditLogs:"Audit Logs"};
-function canView(permission){return currentStaff?.role==="Super Admin" || currentStaff?.permissions?.[permission]===true;}
-function applyPermissions(){
-  document.querySelectorAll('.nav button[data-perm]').forEach(b=>{b.style.display=canView(b.dataset.perm)?'':'none';});
-}
-function openSimpleModal(title,body){openModal(title,body);}
-function openProductModal(){openSimpleModal('Add Product','<p class="muted">Product creation UI is connected to Firestore structure and will be enabled in the Product Manager workflow.</p>');}
-function openStockModal(){showPage('inventory');}
-function openRiderModal(){openSimpleModal('Add Rider','<p class="muted">Rider onboarding is handled through the Rider Registration workflow. Use the Riders module to review applicants.</p>');}
-function openExpenseModal(){openSimpleModal('Add Expense','<p class="muted">Expense entry UI is reserved for Finance permission.</p>');}
-function openCouponModal(){openSimpleModal('Add Coupon','<p class="muted">Coupon management is available to staff with Offers permission.</p>');}
-function openDrawModal(){openSimpleModal('New Lucky Draw','<p class="muted">Lucky Draw configuration will use the lucky_draw collection.</p>');}
-function openNotificationModal(){openSimpleModal('Send Notification','<p class="muted">Notification sending will be connected to FCM in the notification deployment phase.</p>');}
-function renderAll(){renderDashboard();renderOrders();renderProducts();renderInventory();renderCustomers();renderRiders();renderPartners();renderPayments();renderRefunds();renderCancellations();renderExpenses();renderReports();renderCoupons();renderDraws();renderReviews();renderSupport();renderNotifications();renderStaff();renderAudit();}
-function renderDashboard(){const sales=state.orders.reduce((s,o)=>s+Number(o.total??o.value??o.finalPayable??0),0),del=state.orders.filter(o=>o.status==="Delivered").length,cancel=state.orders.filter(o=>o.status==="Cancelled").length,pending=state.orders.filter(o=>!["Delivered","Cancelled"].includes(o.status)).length,low=state.products.filter(p=>Number(p.stock)<=Number(p.lowStockThreshold||10)).length,exp=state.expenses.reduce((s,e)=>s+Number(e.amount||0),0);$("kSales").textContent=money(sales);$("kOrders").textContent=state.orders.length;$("kDelivered").textContent=del;$("kPending").textContent=pending;$("kCancelled").textContent=cancel;$("kProfit").textContent=money(sales-exp);$("kLow").textContent=low;$("recentOrders").innerHTML=`<table><thead><tr><th>ORDER</th><th>CUSTOMER</th><th>STATUS</th><th>VALUE</th><th>RIDER</th></tr></thead><tbody>${state.orders.slice(0,5).map(o=>`<tr><td><b>${esc(o.id)}</b></td><td>${esc(o.customerName||o.customer||o.customerId||"—")}</td><td>${status(o.status||"Pending")}</td><td>${money(o.total??o.value??o.finalPayable)}</td><td>${esc(o.riderName||o.rider||"—")}</td></tr>`).join("")}</tbody></table>`;$("dashNotifications").innerHTML=state.notifications.slice(0,5).map(n=>`<div class="alert">🔔 <b>${esc(n.title||n.type||"Notification")}</b><p>${esc(n.message||"")}</p></div>`).join("");const counts={};state.orders.forEach(o=>counts[o.status]=(counts[o.status]||0)+1);$("statusOverview").innerHTML=["Delivered","Processing","Out for Delivery","Pending","Cancelled"].map(s=>`<div class="metric"><span>${s}</span><b>${counts[s]||0}</b><div class="progress"><i style="width:${Math.min(100,((counts[s]||0)/Math.max(1,state.orders.length))*100)}%"></i></div></div>`).join("")}
-function renderOrders(){const q=($("orderSearch")?.value||"").toLowerCase(),f=$("orderFilter")?.value||"";const rows=state.orders.filter(o=>(!q||JSON.stringify(o).toLowerCase().includes(q))&&(!f||o.status===f));$("ordersTable").innerHTML=`<table><thead><tr><th>ORDER</th><th>CUSTOMER</th><th>STATUS</th><th>VALUE</th><th>PAYMENT</th><th>RIDER</th><th>ACTION</th></tr></thead><tbody>${rows.map(o=>`<tr><td><b>${esc(o.id)}</b><br><span class="muted">${esc(o.deliveryAddress||o.address||"")}</span></td><td>${esc(o.customerName||o.customer||o.customerId||"")}<br>${esc(o.phone||o.customerPhone||"")}</td><td>${status(o.status||"Pending")}</td><td>${money(o.total??o.value??o.finalPayable)}</td><td>${esc(o.paymentStatus||o.payment||"Pending")}</td><td>${esc(o.riderName||o.rider||"Unassigned")}</td><td><button class="secondary" onclick="viewOrder('${esc(o.id)}')">View</button></td></tr>`).join("")||`<tr><td colspan="7"><div class="empty">No orders found.</div></td></tr>`}</tbody></table>`}
-async function viewOrder(id){
-  const o=state.orders.find(x=>x.id===id); if(!o)return;
-  const total=Number(o.total??o.value??o.finalPayable??o.totalAmount??0);
-  const code=String(o.trackingCode||o.orderCode||o.id);
-  openModal("Order Delivery — "+id,`<div class="grid3">
-    <div><b>Customer</b><p>${esc(o.customerName||o.customer||o.customerId||"")}</p></div>
-    <div><b>Phone</b><p>${esc(o.phone||o.customerPhone||"")}</p></div>
-    <div><b>Total</b><p>${money(total)}</p></div>
-  </div>
-  <div class="alert"><b>Delivery Address</b><p>${esc(o.deliveryAddress||o.address||"")}</p>${o.deliveryNote?`<p><b>Note:</b> ${esc(o.deliveryNote)}</p>`:""}</div>
-  <div class="grid3">
-    <div><b>Payment</b><p>${esc(o.paymentStatus||o.payment||"Pending")}</p></div>
-    <div><b>Delivery Charge</b><p>${money(o.deliveryCharge||0)}</p></div>
-    <div><b>Platform Charge</b><p>${money(o.platformCharge||0)}</p></div>
-  </div>
-  <div class="card panel" style="padding:12px;background:#fafaf5"><b>Delivery Status</b>
-    <div class="delivery-step">
-      ${["Order Placed","Order Confirmed","Processing","Packed","Rider Assigned","Picked Up","Out for Delivery","Delivered","Cancelled"].map(st=>`<button onclick="quickOrderStatus('${esc(id)}','${esc(st)}')">${esc(st)}</button>`).join("")}
-    </div>
-    <div class="formgrid">
-      <div class="field"><label>Current Status</label><select class="select" id="mOrderStatus">${["Order Placed","Order Confirmed","Processing","Packed","Rider Assigned","Picked Up","Out for Delivery","Delivered","Cancelled"].map(st=>`<option>${st}</option>`).join("")}</select></div>
-      <div class="field"><label>Assigned Rider ID</label><input class="input" id="mOrderRider" value="${esc(o.riderId||"")}" placeholder="Rider ID"></div>
-    </div>
-  </div>
-  <div class="delivery-tools">
-    <div class="codebox"><h3>QR CODE — SCAN ORDER</h3><div id="orderQR"></div><p class="small muted">${esc(code)}</p></div>
-    <div class="codebox"><h3>BARCODE — ORDER SCAN</h3><svg id="orderBarcode"></svg><p class="small muted">${esc(code)}</p></div>
-  </div>
-  <div class="actions">
-    <button class="primary" onclick="saveOrderModal('${esc(id)}')">Save Changes</button>
-    <button class="secondary" onclick="printOrder('${esc(id)}')">🖨 Print Delivery Sheet</button>
-    <button class="secondary" onclick="copyOrderCode('${esc(code)}')">Copy Scan Code</button>
-  </div>`);
-  $("mOrderStatus").value=o.status||"Order Placed";
-  try{new QRCode($("orderQR"),{text:`NATUREBITE|ORDER|${code}`,width:150,height:150,correctLevel:QRCode.CorrectLevel.M});}catch(e){console.warn(e)}
-  try{JsBarcode("#orderBarcode",code,{format:"CODE128",displayValue:true,fontSize:12,height:58,margin:4});}catch(e){console.warn(e)}
-}
-async function quickOrderStatus(id,newStatus){
-  try{await updateDoc(doc(db,"orders",id),{status:newStatus,updatedAt:serverTimestamp()}); await audit(`Order ${id} status changed to ${newStatus}`); toast(`Order: ${newStatus}`); closeModal(); await loadLive();}
-  catch(e){toast(e?.message||"Unable to update order")}
-}
-async function saveOrderModal(id){try{await updateDoc(doc(db,"orders",id),{status:$("mOrderStatus").value,riderId:$("mOrderRider").value.trim(),updatedAt:serverTimestamp()});await audit("Updated order "+id);closeModal();toast("Order updated");await loadLive()}catch(e){toast(e.message)}}
-function copyOrderCode(code){navigator.clipboard?.writeText(code).then(()=>toast("Scan code copied")).catch(()=>toast(code))}
-function printOrder(id){
-  const o=state.orders.find(x=>x.id===id); if(!o)return;
-  const total=Number(o.total??o.value??o.finalPayable??o.totalAmount??0), code=String(o.trackingCode||o.orderCode||o.id);
-  const qrUrl=`NATUREBITE|ORDER|${code}`;
-  const items=(o.items||[]).map(i=>`<tr><td>${esc(i.productName||i.name||"")}</td><td>${esc(i.variantLabel||i.weight||i.variant||"")}</td><td>${Number(i.quantity||1)}</td><td>${money(Number(i.price||0)*Number(i.quantity||1))}</td></tr>`).join("");
-  const w=window.open("","_blank","width=850,height=900"); if(!w){toast("Please allow popups to print");return}
-  w.document.write(`<!doctype html><html><head><title>NatureBite Delivery ${esc(id)}</title><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"><\\/script><script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"><\\/script><style>body{font-family:Arial;margin:0;padding:25px;color:#222}.head{display:flex;justify-content:space-between;border-bottom:2px solid #222;padding-bottom:12px}.muted{color:#666;font-size:12px}.box{border:1px solid #bbb;padding:12px;margin:12px 0}.codes{display:flex;gap:30px;align-items:center;justify-content:center;margin-top:18px}.code{text-align:center}.code svg{width:260px;height:80px}.items{width:100%;border-collapse:collapse}.items th,.items td{border-bottom:1px solid #ddd;padding:8px;text-align:left;font-size:12px}.total{font-size:20px;font-weight:bold;text-align:right}.small{font-size:11px}.footer{margin-top:25px;border-top:1px solid #ddd;padding-top:10px}</style></head><body>
-  <div class="head"><div><h2 style="margin:0">NatureBite</h2><div class="muted">DELIVERY ORDER SHEET</div></div><div><b>Order: ${esc(id)}</b><br><span class="muted">${esc(new Date().toLocaleString("en-BD"))}</span></div></div>
-  <div class="box"><b>Customer</b><p>${esc(o.customerName||o.customer||o.customerId||"")}<br>${esc(o.phone||o.customerPhone||"")}</p><b>Delivery Address</b><p>${esc(o.deliveryAddress||o.address||"")}</p>${o.deliveryNote?`<b>Delivery Note:</b><p>${esc(o.deliveryNote)}</p>`:""}</div>
-  <table class="items"><thead><tr><th>Product</th><th>Variant</th><th>Qty</th><th>Amount</th></tr></thead><tbody>${items||'<tr><td colspan="4">No item details</td></tr>'}</tbody></table>
-  <div class="box"><div>Delivery Charge: <b>${money(o.deliveryCharge||0)}</b></div><div>Platform Charge: <b>${money(o.platformCharge||0)}</b></div><div>Payment: <b>${esc(o.paymentStatus||o.payment||"Pending")}</b></div><div class="total">Total: ${money(total)}</div></div>
-  <div class="box"><b>Rider:</b> ${esc(o.riderId||o.riderName||"Unassigned")} &nbsp;&nbsp; <b>Status:</b> ${esc(o.status||"Order Placed")}</div>
-  <div class="codes"><div class="code"><b>QR CODE</b><div id="qrcode"></div><div class="small">Scan Order</div></div><div class="code"><b>BARCODE</b><svg id="barcode"></svg><div class="small">${esc(code)}</div></div></div>
-  <div class="footer muted">Scan code is for authorized NatureBite delivery/order workflow. Customer payment/COD must be verified according to order status.</div>
-  <script>new QRCode(document.getElementById('qrcode'),{text:${JSON.stringify(qrUrl)},width:170,height:170});JsBarcode('#barcode',${JSON.stringify(code)},{format:'CODE128',displayValue:true,fontSize:13,height:65,margin:4});setTimeout(()=>window.print(),500);<\/script>
-  </body></html>`);
-  w.document.close();
-}
-function renderProducts(){const q=($("productSearch")?.value||"").toLowerCase(),c=$("productCat")?.value||"";const rows=state.products.filter(p=>(!q||`${p.name} ${p.sku} ${p.variant}`.toLowerCase().includes(q))&&(!c||p.category===c));$("productsTable").innerHTML=`<table><thead><tr><th>PRODUCT</th><th>CATEGORY</th><th>VARIANT</th><th>PRICE</th><th>STOCK</th><th>SKU</th><th>STATUS</th></tr></thead><tbody>${rows.map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.category)}</td><td>${esc(p.variant)}</td><td>${money(p.price)}</td><td class="${p.stock<=10?"bad":""}"><b>${p.stock}</b></td><td>${esc(p.sku)}</td><td><span class="badge">${p.active!==false?"Active":"Inactive"}</span></td></tr>`).join("")}</tbody></table>`}
-function renderInventory(){const low=state.products.filter(p=>p.stock<=10).length,out=state.products.filter(p=>p.stock===0).length,total=state.products.reduce((s,p)=>s+Number(p.stock||0),0);$("inventoryStats").innerHTML=`<div class="card statbox"><div class="muted small">Total Units</div><div class="big">${total}</div></div><div class="card statbox"><div class="muted small">Low Stock</div><div class="big bad">${low}</div></div><div class="card statbox"><div class="muted small">Out of Stock</div><div class="big bad">${out}</div></div>`;$("inventoryTable").innerHTML=`<table><thead><tr><th>PRODUCT</th><th>VARIANT</th><th>SKU</th><th>STOCK</th><th>ACTION</th></tr></thead><tbody>${state.products.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.variant)}</td><td>${esc(p.sku)}</td><td class="${p.stock<=10?"bad":""}"><b>${p.stock}</b></td><td><button class="secondary" onclick="stockEdit('${esc(p.id)}')">Update Stock</button></td></tr>`).join("")}</tbody></table>`}
-async function stockEdit(id){const p=state.products.find(x=>x.id===id);if(!p)return;openModal("Update Stock",`<p>${esc(p.name)} — ${esc(p.variant)}</p><input class="input" id="newStock" type="number" value="${p.stock}"><button class="primary" style="margin-top:15px" onclick="saveStock('${esc(id)}')">Save</button>`)}
-async function saveStock(id){try{await updateDoc(doc(db,"product_variants",id),{stock:Number($("newStock").value),updatedAt:serverTimestamp()});await audit("Updated stock "+id);closeModal();toast("Stock updated")}catch(e){toast(e.message)}}
-function renderCustomers(){const q=($("customerSearch")?.value||"").toLowerCase();const rows=state.customers.filter(c=>`${c.name||""} ${c.phone||""} ${c.email||""}`.toLowerCase().includes(q));$("customersTable").innerHTML=`<table><thead><tr><th>CUSTOMER</th><th>PHONE</th><th>EMAIL</th><th>STATUS</th></tr></thead><tbody>${rows.map(c=>`<tr><td><b>${esc(c.name||c.customerId||c.id)}</b></td><td>${esc(c.phone||"")}</td><td>${esc(c.email||"")}</td><td><span class="badge">${esc(c.accountStatus||c.status||"Active")}</span></td></tr>`).join("")}</tbody></table>`}
-function renderRiders(){$("riderStats").innerHTML=`<div class="card statbox"><div class="muted small">Total Riders</div><div class="big">${state.riders.length}</div></div><div class="card statbox"><div class="muted small">Active</div><div class="big">${state.riders.filter(r=>(r.riderStatus||r.status)==="active"||(r.riderStatus||r.status)==="Active").length}</div></div><div class="card statbox"><div class="muted small">Delivered</div><div class="big">${state.riders.reduce((s,r)=>s+Number(r.totalDelivered||r.deliveries||0),0)}</div></div><div class="card statbox"><div class="muted small">Pending COD</div><div class="big">${money(state.riders.reduce((s,r)=>s+Number(r.pendingSettlement||r.balance||0),0))}</div></div>`;$("ridersTable").innerHTML=`<table><thead><tr><th>RIDER</th><th>PHONE</th><th>ZONE</th><th>STATUS</th><th>DELIVERED</th><th>PENDING COD</th></tr></thead><tbody>${state.riders.map(r=>`<tr><td><b>${esc(r.name||r.riderId||r.id)}</b><br><span class="muted">${esc(r.riderId||r.id)}</span></td><td>${esc(r.phone||"")}</td><td>${esc(r.assignedZoneId||r.zone||"")}</td><td><span class="badge">${esc(r.riderStatus||r.status||"")}</span></td><td>${r.totalDelivered||r.deliveries||0}</td><td>${money(r.pendingSettlement||r.balance||0)}</td></tr>`).join("")}</tbody></table>`}
-function renderPartners(){$("partnerCards").innerHTML=["NatureBite","Pathao","Steadfast","CarryBee"].map(x=>`<div class="card panel"><h2>${x}</h2><p class="muted">${x==="NatureBite"?"Internal Delivery":"External Delivery Partner"}</p><span class="badge">Active</span></div>`).join("")}
-function simpleTable(el,headers,rows){$(el).innerHTML=`<table><thead><tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows||`<tr><td colspan="${headers.length}"><div class="empty">No data.</div></td></tr>`}</tbody></table>`}
-function renderPayments(){simpleTable("paymentsTable",["PAYMENT","ORDER","CUSTOMER","METHOD","AMOUNT","STATUS"],state.payments.map(p=>`<tr><td>${esc(p.id)}</td><td>${esc(p.orderId||p.order||"")}</td><td>${esc(p.customerId||p.customer||"")}</td><td>${esc(p.method||p.paymentMethod||"")}</td><td>${money(p.amount)}</td><td>${status(p.status||"Pending")}</td></tr>`).join(""))}
-function renderRefunds(){simpleTable("refundsTable",["REFUND","ORDER","CUSTOMER","AMOUNT","STATUS"],state.refunds.map(r=>`<tr><td>${esc(r.id)}</td><td>${esc(r.orderId||r.order||"")}</td><td>${esc(r.customerId||r.customer||"")}</td><td>${money(r.amount)}</td><td>${status(r.status||"Pending")}</td></tr>`).join(""))}
-function renderCancellations(){const rows=state.orders.filter(o=>o.status==="Cancelled").map(o=>`<tr><td>${esc(o.id)}</td><td>${esc(o.customerName||o.customer||o.customerId||"")}</td><td>${money(o.total??o.value??0)}</td><td>${esc(o.riderId||o.rider||"")}</td><td><span class="badge">Check handover proof</span></td></tr>`).join("");simpleTable("cancelTable",["ORDER","CUSTOMER","VALUE","RIDER","RETURN/HANDOVER"],rows)}
-function renderExpenses(){simpleTable("expenseTable",["ID","TITLE","CATEGORY","AMOUNT","DATE"],state.expenses.map(e=>`<tr><td>${esc(e.id)}</td><td>${esc(e.title||e.description||"")}</td><td>${esc(e.category||"")}</td><td>${money(e.amount)}</td><td>${esc(e.date||"")}</td></tr>`).join(""))}
-function renderReports(){const sales=state.orders.reduce((s,o)=>s+Number(o.total??o.value??o.finalPayable??0),0),exp=state.expenses.reduce((s,e)=>s+Number(e.amount||0),0),del=state.orders.filter(o=>o.status==="Delivered").length;$("reportStats").innerHTML=`<div class="card statbox"><div class="muted small">Sales</div><div class="big">${money(sales)}</div></div><div class="card statbox"><div class="muted small">Expenses</div><div class="big">${money(exp)}</div></div><div class="card statbox"><div class="muted small">Profit</div><div class="big">${money(sales-exp)}</div></div><div class="card statbox"><div class="muted small">Delivery Rate</div><div class="big">${Math.round(del/Math.max(1,state.orders.length)*100)}%</div></div>`;$("revenueReport").innerHTML=`<div class="metric">Sales <b>${money(sales)}</b></div><div class="metric">Expenses <b>${money(exp)}</b></div><div class="metric">Net <b>${money(sales-exp)}</b></div>`;$("deliveryReport").innerHTML=`<div class="metric">Delivered <b>${del}</b></div>`}
-function renderCoupons(){simpleTable("couponTable",["CODE","TYPE","VALUE","MIN ORDER","STATUS"],state.coupons.map(c=>`<tr><td><b>${esc(c.id||c.code)}</b></td><td>${esc(c.type||"")}</td><td>${c.type==="Percentage"?c.value+"%":money(c.value)}</td><td>${money(c.minOrder??c.min??0)}</td><td><span class="badge">${c.active!==false?"Active":"Inactive"}</span></td></tr>`).join(""))}
-function renderDraws(){simpleTable("drawTable",["ID","CAMPAIGN","ENTRIES","DATE","STATUS"],state.draws.map(d=>`<tr><td>${esc(d.id)}</td><td>${esc(d.name||d.title||"")}</td><td>${d.entries||0}</td><td>${esc(d.date||"")}</td><td><span class="badge">${esc(d.status||"")}</span></td></tr>`).join(""))}
-function renderReviews(){simpleTable("reviewsTable",["ID","CUSTOMER","PRODUCT","RATING","STATUS"],state.reviews.map(r=>`<tr><td>${esc(r.id)}</td><td>${esc(r.customerId||r.customer||"")}</td><td>${esc(r.productId||r.product||"")}</td><td>⭐ ${r.rating||0}</td><td>${status(r.status||"Pending")}</td></tr>`).join(""))}
-function renderSupport(){simpleTable("supportTable",["TICKET","CUSTOMER","SUBJECT","STATUS","DATE"],state.support.map(t=>`<tr><td>${esc(t.id)}</td><td>${esc(t.customerId||t.customer||"")}</td><td>${esc(t.subject||"")}</td><td>${status(t.status||"Open")}</td><td>${esc(t.createdAt?.toDate?.()?.toLocaleDateString?.()||t.date||"")}</td></tr>`).join(""))}
-function renderNotifications(){simpleTable("notificationTable",["TYPE","MESSAGE","TIME"],state.notifications.map(n=>`<tr><td><b>${esc(n.type||n.title||"System")}</b></td><td>${esc(n.message||"")}</td><td>${esc(n.time||"")}</td></tr>`).join(""))}
-function openStaffModal(){
-  const roles=["Order Manager","Product Manager","Inventory Manager","Accountant / Finance","Customer Support","Delivery Manager","Marketing Manager"];
-  const perms=["orders","products","inventory","customers","riders","payments","refunds","reports","expenses","staff","settings","notifications","deliveryPartners","offers","luckyWheel","luckyDraw","reviews","support","auditLogs"];
-  openModal("Add Staff",`<div class="formgrid">
-    <div class="field"><label>Full Name</label><input class="input" id="staffName" placeholder="Staff name"></div>
-    <div class="field"><label>Email</label><input class="input" id="staffEmail" type="email" placeholder="staff@example.com"></div>
-    <div class="field"><label>Initial Password</label><input class="input" id="staffPassword" type="password" placeholder="Minimum 8 characters"></div>
-    <div class="field"><label>Role</label><select class="select" id="staffRole">${roles.map(r=>`<option>${r}</option>`).join("")}</select></div>
-  </div>
-  <div class="field" style="margin-top:14px"><label>Permissions</label><div class="grid3" id="staffPerms">${perms.map(k=>`<label class="card panel" style="padding:10px;display:flex;gap:8px;align-items:center"><input type="checkbox" value="${k}" checked> ${k}</label>`).join("")}</div></div>
-  <div class="actions" style="margin-top:16px"><button class="new" id="createStaffBtn">Create Staff Account</button></div>
-  <p id="staffCreateError" class="bad small" style="margin-top:10px"></p>`);
-  $("createStaffBtn").onclick=async()=>{
-    const btn=$("createStaffBtn"); const err=$("staffCreateError");
-    btn.disabled=true; err.textContent="";
-    try{
-      const permissions={}; document.querySelectorAll("#staffPerms input[type=checkbox]").forEach(x=>permissions[x.value]=x.checked);
-      const createStaff=httpsCallable(functions,"createStaff");
-      const result=await createStaff({name:$("staffName").value,email:$("staffEmail").value,password:$("staffPassword").value,role:$("staffRole").value,permissions});
-      closeModal(); toast(`Staff account created: ${result.data.email}`); audit(`Created staff account: ${result.data.email}`);
-    }catch(e){console.error(e);err.textContent=e?.message||"Unable to create staff account.";}
-    finally{btn.disabled=false;}
-  };
-}
-function renderStaff(){simpleTable("staffTable",["STAFF","EMAIL","ROLE","STATUS","ACTION"],state.staff.map(s=>`<tr><td><b>${esc(s.name||s.displayName||s.id)}</b></td><td>${esc(s.email||"")}</td><td>${esc(s.role||"")}</td><td><span class="badge">${esc(s.status||"Active")}</span></td><td>${s.id!==currentUser?.uid?`<button class="secondary" onclick="toggleStaffStatus('${esc(s.id)}','${s.status==='Active'?'Inactive':'Active'}')">${s.status==='Active'?'Deactivate':'Activate'}</button>`:'<span class="muted small">Current account</span>'}</td></tr>`).join(""))}
-async function toggleStaffStatus(uid,statusValue){try{const fn=httpsCallable(functions,"setStaffStatus");await fn({uid,status:statusValue});await audit(`Changed staff ${uid} status to ${statusValue}`);toast(`Staff ${statusValue}`);}catch(e){toast(e?.message||"Unable to update staff status")}}
-function renderAudit(){simpleTable("auditTable",["TIME","USER","ACTION"],state.audit.map(a=>`<tr><td>${esc(a.time||a.createdAt?.toDate?.()?.toLocaleString?.()||"")}</td><td>${esc(a.user||a.actorEmail||"")}</td><td>${esc(a.action||"")}</td></tr>`).join(""))}
-async function audit(action){try{await addDoc(collection(db,"audit_logs"),{action,user:currentStaff?.name||currentUser?.email||"Admin",actorUid:currentUser.uid,createdAt:serverTimestamp(),time:new Date().toLocaleString("en-BD")})}catch(e){console.warn(e)}}
-function saveSettings(){const data={business:$("setBusiness").value,free:Number($("setFree").value),delivery:Number($("setDelivery").value),platform:Number($("setPlatform").value),cod:$("setCOD").value,prepay:$("setPrepay").value,updatedAt:serverTimestamp()};setDoc(doc(db,"business_settings","main"),data,{merge:true}).then(()=>{state.settings={...state.settings,...data};toast("Settings saved");audit("Updated business settings")}).catch(e=>toast(e.message))}
-function showPage(id,btn){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));$(id)?.classList.add("active");document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));if(btn)btn.classList.add("active");if(innerWidth<851)$("sidebar").classList.remove("open")}
-window.showPage=showPage;window.viewOrder=viewOrder;window.saveOrderModal=saveOrderModal;window.printOrder=printOrder;window.quickOrderStatus=quickOrderStatus;window.copyOrderCode=copyOrderCode;window.stockEdit=stockEdit;window.saveStock=saveStock;
-window.globalSearch=()=>{const q=$("globalSearch").value.trim().toLowerCase();if(!q)return;const hit=state.orders.find(o=>JSON.stringify(o).toLowerCase().includes(q));if(hit){showPage("orders");$("orderSearch").value=q;renderOrders();return}const p=state.products.find(p=>`${p.name} ${p.sku}`.toLowerCase().includes(q));if(p){showPage("products");$("productSearch").value=q;renderProducts()}};
-window.exportCSV=type=>{if(type!=="orders")return;const rows=[["Order ID","Customer","Phone","Status","Total","Payment","Rider","Address"],...state.orders.map(o=>[o.id,o.customerName||o.customer||o.customerId||"",o.phone||o.customerPhone||"",o.status||"",o.total??o.value??o.finalPayable??0,o.paymentStatus||o.payment||"",o.riderId||o.riderName||"",o.deliveryAddress||o.address||""])];const csv=rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(",")).join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="naturebite-orders.csv";a.click();URL.revokeObjectURL(a.href)};
-window.openNewAction=()=>openModal("New Action",`<div class="grid3"><button class="primary" onclick="closeModal();showPage('orders')">Orders</button><button class="primary" onclick="closeModal();showPage('products')">Products</button><button class="primary" onclick="closeModal();showPage('riders')">Riders</button><button class="primary" onclick="closeModal();showPage('offers')">Coupons</button><button class="primary" onclick="closeModal();showPage('expenses')">Expenses</button><button class="primary" onclick="closeModal();showPage('notifications')">Notification</button></div>`);
-window.saveSettings=saveSettings; window.openStaffModal=openStaffModal; window.toggleStaffStatus=toggleStaffStatus;
+  const d = new Date(v);
 
-// Remove demo/localStorage mutations: all management writes now go through Firestore.
-onAuthStateChanged(auth,async user=>{
-  if(!user){authReady=false;showLogin();return;}
+  return isNaN(d) ? null : d;
+
+}
+
+
+function dateText(v){
+
+  const d = dateValue(v);
+
+  if(!d) return "";
+
+  return d.toLocaleString("en-BD");
+
+}
+
+
+function toast(message){
+
+  const el = $("toast");
+
+  el.textContent = message;
+
+  el.classList.add("show");
+
+  setTimeout(()=>{
+    el.classList.remove("show");
+  },3000);
+
+}
+
+
+function statusBadge(value){
+
+  const s = String(value || "Pending");
+
+  let cls = "";
+
+  if(
+    s === "Delivered" ||
+    s === "Order Confirmed"
+  ){
+    cls = "";
+  }
+
+  else if(
+    s === "Cancelled" ||
+    s === "Refunded"
+  ){
+    cls = "red";
+  }
+
+  else if(
+    s === "Out for Delivery" ||
+    s === "Rider Assigned"
+  ){
+    cls = "blue";
+  }
+
+  else{
+    cls = "orange";
+  }
+
+  return `
+    <span class="badge ${cls}">
+      ${esc(s)}
+    </span>
+  `;
+
+}
+
+
+/* ==========================================
+   LOGIN
+========================================== */
+
+$("loginForm").addEventListener("submit",async e=>{
+
+  e.preventDefault();
+
+  $("loginError").textContent = "";
+
+  const email =
+    $("loginEmail").value.trim();
+
+  const password =
+    $("loginPassword").value;
+
   try{
-    currentUser=user;
-    currentStaff=await checkRole(user);
-    hideLogin();
-    authReady=true;
-    applyPermissions();
-    await loadLive();
-  }catch(e){
-    authReady=false;
-    const overlay=document.getElementById("loginOverlay");
-    if(overlay) overlay.style.display="none";
-    document.body.insertAdjacentHTML("beforeend",`<div id="accessDenied" style="position:fixed;inset:0;z-index:300;background:#f7f7f2;display:grid;place-items:center;padding:40px;font-family:Arial"><div class="card" style="padding:30px;max-width:520px"><h2>Access denied</h2><p>${esc(e.message)}</p><button class="new" id="signoutDenied">Sign out</button></div></div>`);
-    document.getElementById("signoutDenied").onclick=()=>signOut(auth);
+
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    $("loginError").textContent =
+      error.message || "Login failed.";
+
   }
+
 });
+
+
+async function logout(){
+
+  await signOut(auth);
+
+}
+
+
+window.logout = logout;
+
+
+/* ==========================================
+   AUTH / ROLE
+========================================== */
+
+onAuthStateChanged(auth,async user=>{
+
+  if(!user){
+
+    currentUser = null;
+
+    $("loginScreen").classList.remove("hidden");
+
+    $("app").classList.add("hidden");
+
+    return;
+
+  }
+
+
+  try{
+
+    currentUser = user;
+
+    const token =
+      await user.getIdTokenResult(true);
+
+    /*
+      Production RBAC:
+      custom claims should be:
+
+      {
+        admin:true,
+        role:"super_admin",
+        permissions:{
+          orders:true,
+          products:true
+        }
+      }
+    */
+
+    const claims = token.claims || {};
+
+
+    if(claims.admin !== true){
+
+      /*
+        Development fallback:
+        check users/{uid}.role.
+        For production, use custom claims.
+      */
+
+      const userSnap =
+        await getDoc(
+          doc(db,"users",user.uid)
+        );
+
+      if(!userSnap.exists()){
+
+        await signOut(auth);
+
+        alert(
+          "This account does not have admin/staff access."
+        );
+
+        return;
+
+      }
+
+      const userData =
+        userSnap.data();
+
+      currentRole =
+        userData.role ||
+        "staff";
+
+      currentPermissions =
+        userData.permissions ||
+        {};
+
+    }
+
+    else{
+
+      currentRole =
+        claims.role ||
+        "super_admin";
+
+      currentPermissions =
+        claims.permissions ||
+        {};
+
+    }
+
+
+    if(
+      currentRole === "super_admin" ||
+      claims.admin === true
+    ){
+
+      currentPermissions = {
+
+        orders:true,
+        products:true,
+        inventory:true,
+        customers:true,
+        riders:true,
+        deliveryPartners:true,
+        payments:true,
+        refunds:true,
+        cancellations:true,
+        expenses:true,
+        reports:true,
+        offers:true,
+        luckyWheel:true,
+        luckyDraw:true,
+        reviews:true,
+        banners:true,
+        support:true,
+        notifications:true,
+        staff:true,
+        permissions:true,
+        aiAssistant:true,
+        settings:true,
+        auditLogs:true
+
+      };
+
+    }
+
+
+    $("sideUserName").textContent =
+      user.displayName ||
+      user.email ||
+      "Admin";
+
+    $("sideUserRole").textContent =
+      currentRole;
+
+
+    $("loginScreen").classList.add("hidden");
+
+    $("app").classList.remove("hidden");
+
+
+    applyPermissions();
+
+    await loadAllData();
+
+  }catch(error){
+
+    console.error(error);
+
+    await signOut(auth);
+
+    alert(
+      "Access verification failed: " +
+      error.message
+    );
+
+  }
+
+});
+
+
+function applyPermissions(){
+
+  document
+    .querySelectorAll("[data-perm]")
+    .forEach(btn=>{
+
+      const permission =
+        btn.dataset.perm;
+
+      const allowed =
+        currentPermissions[permission] === true ||
+        currentRole === "super_admin";
+
+      btn.style.display =
+        allowed ? "" : "none";
+
+    });
+
+}
+
+
+window.applyPermissions = applyPermissions;
+
+
+/* ==========================================
+   PAGE
+========================================== */
+
+function showPage(id,btn){
+
+  const page =
+    $(id);
+
+  if(!page) return;
+
+
+  const permission =
+    document
+      .querySelector(`[data-page="${id}"]`)
+      ?.dataset.perm;
+
+
+  if(
+    permission &&
+    currentRole !== "super_admin" &&
+    currentPermissions[permission] !== true
+  ){
+
+    toast("You do not have permission.");
+
+    return;
+
+  }
+
+
+  document
+    .querySelectorAll(".page")
+    .forEach(p=>
+      p.classList.remove("active")
+    );
+
+
+  page.classList.add("active");
+
+
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach(b=>
+      b.classList.remove("active")
+    );
+
+
+  if(btn){
+    btn.classList.add("active");
+  }
+
+
+  if(window.innerWidth < 851){
+
+    $("sidebar")
+      .classList.remove("open");
+
+  }
+
+
+  if(id === "reports"){
+    renderReports();
+  }
+
+  if(id === "settings"){
+    renderSettings();
+  }
+
+}
+
+
+window.showPage = showPage;
+
+
+/* ==========================================
+   SIDEBAR
+========================================== */
+
+function toggleSidebar(){
+
+  $("sidebar")
+    .classList.toggle("open");
+
+}
+
+
+window.toggleSidebar = toggleSidebar;
+
+
+/* ==========================================
+   MODAL
+========================================== */
+
+function openModal(title,content){
+
+  $("modalTitle").textContent =
+    title;
+
+  $("modalContent").innerHTML =
+    content;
+
+  $("modal").classList.add("show");
+
+}
+
+
+function closeModal(){
+
+  $("modal").classList.remove("show");
+
+}
+
+
+function modalOutside(e){
+
+  if(e.target === $("modal")){
+    closeModal();
+  }
+
+}
+
+
+window.openModal = openModal;
+
+window.closeModal = closeModal;
+
+
+/* ==========================================
+   LOAD FIRESTORE
+========================================== */
+
+async function readCollection(name){
+
+  try{
+
+    const snap =
+      await getDocs(
+        collection(db,name)
+      );
+
+    return snap.docs.map(d=>({
+
+      id:d.id,
+      ...d.data()
+
+    }));
+
+  }catch(error){
+
+    console.warn(
+      "Cannot read",
+      name,
+      error.message
+    );
+
+    return [];
+
+  }
+
+}
+
+
+async function loadAllData(){
+
+  toast("Loading data...");
+
+
+  state.orders =
+    await readCollection("orders");
+
+
+  state.products =
+    await readCollection("products");
+
+
+  state.variants =
+    await readCollection("product_variants");
+
+
+  state.customers =
+    await readCollection("users");
+
+
+  state.riders =
+    await readCollection("riders");
+
+
+  state.payments =
+    await readCollection("payments");
+
+
+  state.refunds =
+    await readCollection("refunds");
+
+
+  state.expenses =
+    await readCollection("expenses");
+
+
+  state.coupons =
+    await readCollection("coupons");
+
+
+  state.draws =
+    await readCollection("luckyDraws");
+
+
+  state.reviews =
+    await readCollection("reviews");
+
+
+  state.support =
+    await readCollection("supportTickets");
+
+
+  state.notifications =
+    await readCollection("adminNotifications");
+
+
+  if(!state.notifications.length){
+
+    state.notifications =
+      await readCollection("notifications");
+
+  }
+
+
+  state.staff =
+    await readCollection("staff");
+
+
+  state.audit =
+    await readCollection("audit_logs");
+
+
+  state.wheelRewards =
+    await readCollection("wheelRewards");
+
+
+  state.spins =
+    (await readCollection("wheelSpins")).length;
+
+
+  await loadSettings();
+
+
+  renderEverything();
+
+  toast("Data updated.");
+
+}
+
+
+window.loadAllData = loadAllData;
+
+
+/* ==========================================
+   SETTINGS
+========================================== */
+
+async function loadSettings(){
+
+  try{
+
+    const snap =
+      await getDoc(
+        doc(db,"settings","platform")
+      );
+
+    if(snap.exists()){
+
+      state.settings =
+        snap.data();
+
+    }
+
+
+    /*
+      Also support older admin settings
+    */
+
+    const oldSnap =
+      await getDoc(
+        doc(db,"business_settings","main")
+      );
+
+    if(oldSnap.exists()){
+
+      state.settings = {
+
+        ...oldSnap.data(),
+        ...state.settings
+
+      };
+
+    }
+
+  }catch(error){
+
+    console.warn(error);
+
+  }
+
+}
+
+
+function renderSettings(){
+
+  const s = state.settings || {};
+
+
+  $("freeDeliveryEnabled").checked =
+    s.freeDeliveryEnabled === true;
+
+
+  $("standardDelivery").value =
+    Number(
+      s.standardDelivery ??
+      60
+    );
+
+
+  $("expressDelivery").value =
+    Number(
+      s.expressDelivery ??
+      80
+    );
+
+
+  $("freeDelivery").value =
+    0;
+
+
+  $("freeDeliveryCampaignName").value =
+    s.freeDeliveryCampaignName ||
+    "";
+
+
+  $("platformCharge").value =
+    Number(
+      s.platformCharge ??
+      5
+    );
+
+
+  $("platformChargeType").value =
+    s.platformChargeType ||
+    "fixed";
+
+
+  $("deliveryPrepaidRequired").checked =
+    s.deliveryPrepaidRequired !== false;
+
+}
+
+
+async function saveSettings(){
+
+  const data = {
+
+    freeDeliveryEnabled:
+      $("freeDeliveryEnabled").checked,
+
+    freeDeliveryCampaignName:
+      $("freeDeliveryCampaignName").value.trim(),
+
+    standardDelivery:
+      Number(
+        $("standardDelivery").value || 0
+      ),
+
+    expressDelivery:
+      Number(
+        $("expressDelivery").value || 0
+      ),
+
+    freeDelivery:0,
+
+    platformCharge:
+      Number(
+        $("platformCharge").value || 0
+      ),
+
+    platformChargeType:
+      $("platformChargeType").value,
+
+    deliveryPrepaidRequired:
+      $("deliveryPrepaidRequired").checked,
+
+    updatedAt:
+      serverTimestamp(),
+
+    updatedBy:
+      currentUser?.uid || null
+
+  };
+
+
+  try{
+
+    /*
+      Customer panel reads:
+      settings/platform
+    */
+
+    await setDoc(
+      doc(db,"settings","platform"),
+      data,
+      {merge:true}
+    );
+
+
+    /*
+      Keep old admin settings compatible
+    */
+
+    await setDoc(
+      doc(db,"business_settings","main"),
+      data,
+      {merge:true}
+    );
+
+
+    state.settings = {
+      ...state.settings,
+      ...data
+    };
+
+
+    await audit(
+      "Updated platform/delivery settings"
+    );
+
+
+    toast(
+      data.freeDeliveryEnabled
+        ? "Free Delivery campaign is ON"
+        : "Free Delivery campaign is OFF"
+    );
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+window.saveSettings = saveSettings;
+
+
+/* ==========================================
+   DASHBOARD
+========================================== */
+
+function orderTotal(o){
+
+  return Number(
+    o.total ??
+    o.finalPayable ??
+    o.value ??
+    0
+  );
+
+}
+
+
+function renderDashboard(){
+
+  const sales =
+    state.orders.reduce(
+      (sum,o)=>
+        sum + orderTotal(o),
+      0
+    );
+
+
+  const delivered =
+    state.orders.filter(
+      o=>o.status === "Delivered"
+    ).length;
+
+
+  const cancelled =
+    state.orders.filter(
+      o=>o.status === "Cancelled"
+    ).length;
+
+
+  const pending =
+    state.orders.length -
+    delivered -
+    cancelled;
+
+
+  const expenses =
+    state.expenses.reduce(
+      (sum,e)=>
+        sum + Number(e.amount || 0),
+      0
+    );
+
+
+  const lowStock =
+    state.variants.filter(
+      v=>Number(v.stock || 0) <= 10
+    ).length;
+
+
+  $("kSales").textContent =
+    money(sales);
+
+  $("kOrders").textContent =
+    state.orders.length;
+
+  $("kDelivered").textContent =
+    delivered;
+
+  $("kPending").textContent =
+    Math.max(0,pending);
+
+  $("kCancelled").textContent =
+    cancelled;
+
+  $("kProfit").textContent =
+    money(sales-expenses);
+
+  $("kLow").textContent =
+    lowStock;
+
+
+  renderRecentOrders();
+
+  renderDashboardNotifications();
+
+  renderStatusOverview();
+
+}
+
+
+function renderRecentOrders(){
+
+  const rows =
+    [...state.orders]
+      .sort(
+        (a,b)=>
+          (dateValue(b.createdAt)?.getTime() || 0) -
+          (dateValue(a.createdAt)?.getTime() || 0)
+      )
+      .slice(0,8);
+
+
+  if(!rows.length){
+
+    $("recentOrders").innerHTML =
+      `<div class="empty">No orders yet.</div>`;
+
+    return;
+
+  }
+
+
+  $("recentOrders").innerHTML = `
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>ORDER</th>
+          <th>CUSTOMER</th>
+          <th>STATUS</th>
+          <th>TOTAL</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        ${rows.map(o=>`
+
+          <tr>
+
+            <td>
+              <b>${esc(o.orderCode || o.id)}</b>
+              <br>
+              <span class="muted small">
+                ${dateText(o.createdAt)}
+              </span>
+            </td>
+
+            <td>
+              ${esc(
+                o.customerName ||
+                o.customer ||
+                o.customerId ||
+                ""
+              )}
+            </td>
+
+            <td>
+              ${statusBadge(o.status)}
+            </td>
+
+            <td>
+              <b>${money(orderTotal(o))}</b>
+            </td>
+
+            <td>
+              <button
+                class="secondary-btn"
+                onclick="viewOrder('${esc(o.id)}')"
+              >
+                View
+              </button>
+            </td>
+
+          </tr>
+
+        `).join("")}
+
+      </tbody>
+
+    </table>
+
+  `;
+
+}
+
+
+function renderDashboardNotifications(){
+
+  const rows =
+    [...state.notifications]
+      .slice(0,6);
+
+
+  if(!rows.length){
+
+    $("dashboardNotifications").innerHTML =
+      `<div class="empty">No notifications.</div>`;
+
+    return;
+
+  }
+
+
+  $("dashboardNotifications").innerHTML =
+    rows.map(n=>`
+
+      <div class="alert">
+
+        <b>
+          ${esc(
+            n.type ||
+            n.title ||
+            "System"
+          )}
+        </b>
+
+        <p>
+          ${esc(n.message || "")}
+        </p>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+function renderStatusOverview(){
+
+  const statuses = [
+
+    "Order Placed",
+    "Payment Verification",
+    "Order Confirmed",
+    "Packing",
+    "Ready for Pickup",
+    "Rider Assigned",
+    "Picked Up",
+    "Out for Delivery",
+    "Delivered",
+    "Cancelled"
+
+  ];
+
+
+  $("statusOverview").innerHTML =
+    statuses.map(s=>{
+
+      const count =
+        state.orders.filter(
+          o=>o.status === s
+        ).length;
+
+
+      return `
+
+        <div class="metric"
+          style="padding:8px 0;border-bottom:1px solid #eee">
+
+          <span>${esc(s)}</span>
+
+          <b>${count}</b>
+
+        </div>
+
+      `;
+
+    }).join("");
+
+}
+
+
+/* ==========================================
+   ORDERS
+========================================== */
+
+function getOrderItems(o){
+
+  if(Array.isArray(o.items))
+    return o.items;
+
+  if(Array.isArray(o.products))
+    return o.products;
+
+  return [];
+
+}
+
+
+function orderCode(o){
+
+  if(o.orderCode)
+    return String(o.orderCode);
+
+  return "NB-" +
+    String(o.id || "")
+      .replace(/[^A-Za-z0-9]/g,"")
+      .slice(-8)
+      .toUpperCase();
+
+}
+
+
+function renderOrders(){
+
+  const q =
+    ($("orderSearch")?.value || "")
+      .toLowerCase()
+      .trim();
+
+
+  const filter =
+    $("orderStatusFilter")?.value || "";
+
+
+  const rows =
+    state.orders.filter(o=>{
+
+      const text =
+        JSON.stringify(o)
+          .toLowerCase();
+
+
+      return (
+        (!q || text.includes(q)) &&
+        (!filter || o.status === filter)
+      );
+
+    });
+
+
+  $("ordersTable").innerHTML = `
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>
+            <input
+              type="checkbox"
+              id="selectAllOrders"
+              onchange="toggleAllOrders(this)"
+            >
+          </th>
+
+          <th>ORDER</th>
+          <th>CUSTOMER</th>
+          <th>STATUS</th>
+          <th>PAYMENT</th>
+          <th>TOTAL</th>
+          <th>RIDER</th>
+          <th>ACTION</th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        ${
+          rows.length
+          ?
+
+          rows.map(o=>`
+
+            <tr>
+
+              <td>
+                <input
+                  class="order-check"
+                  type="checkbox"
+                  value="${esc(o.id)}"
+                >
+              </td>
+
+              <td>
+
+                <b>
+                  ${esc(orderCode(o))}
+                </b>
+
+                <br>
+
+                <span class="muted small">
+                  ${esc(o.id)}
+                </span>
+
+              </td>
+
+
+              <td>
+
+                ${esc(
+                  o.customerName ||
+                  o.customer ||
+                  o.customerId ||
+                  ""
+                )}
+
+                <br>
+
+                <span class="muted small">
+                  ${esc(
+                    o.phone ||
+                    o.customerPhone ||
+                    ""
+                  )}
+                </span>
+
+              </td>
+
+
+              <td>
+                ${statusBadge(o.status)}
+              </td>
+
+
+              <td>
+
+                ${statusBadge(
+                  o.paymentStatus ||
+                  o.payment ||
+                  "Pending"
+                )}
+
+              </td>
+
+
+              <td>
+                <b>
+                  ${money(orderTotal(o))}
+                </b>
+              </td>
+
+
+              <td>
+                ${esc(
+                  o.riderName ||
+                  o.riderId ||
+                  o.rider ||
+                  "Unassigned"
+                )}
+              </td>
+
+
+              <td>
+
+                <button
+                  class="secondary-btn"
+                  onclick="viewOrder('${esc(o.id)}')"
+                >
+                  View
+                </button>
+
+              </td>
+
+            </tr>
+
+          `).join("")
+
+          :
+
+          `<tr>
+             <td colspan="8">
+               <div class="empty">
+                 No orders found.
+               </div>
+             </td>
+           </tr>`
+        }
+
+      </tbody>
+
+    </table>
+
+  `;
+
+}
+
+
+window.renderOrders = renderOrders;
+
+
+function toggleAllOrders(el){
+
+  document
+    .querySelectorAll(".order-check")
+    .forEach(c=>{
+      c.checked = el.checked;
+    });
+
+}
+
+
+window.toggleAllOrders =
+  toggleAllOrders;
+
+
+/* ==========================================
+   VIEW ORDER
+========================================== */
+
+async function viewOrder(id){
+
+  const o =
+    state.orders.find(
+      x=>x.id === id
+    );
+
+
+  if(!o) return;
+
+
+  const items =
+    getOrderItems(o);
+
+
+  const deliveryCharge =
+    Number(
+      o.deliveryCharge ||
+      o.deliveryFee ||
+      0
+    );
+
+
+  const platformCharge =
+    Number(
+      o.platformCharge ||
+      0
+    );
+
+
+  const paymentStatus =
+    o.paymentStatus ||
+    o.payment ||
+    "Pending";
+
+
+  openModal(
+    "Order " + orderCode(o),
+
+    `
+
+    <div class="grid grid-3">
+
+      <div>
+        <div class="small muted">Order Code</div>
+        <b>${esc(orderCode(o))}</b>
+      </div>
+
+      <div>
+        <div class="small muted">Date</div>
+        <b>${esc(dateText(o.createdAt))}</b>
+      </div>
+
+      <div>
+        <div class="small muted">Total</div>
+        <b>${money(orderTotal(o))}</b>
+      </div>
+
+    </div>
+
+
+    <div class="qr-area">
+
+      <div>
+
+        <div id="orderQR"></div>
+
+        <button
+          class="secondary-btn"
+          style="margin-top:8px"
+          onclick="copyOrderCode('${esc(orderCode(o))}')"
+        >
+          Copy Order Code
+        </button>
+
+      </div>
+
+
+      <div class="barcode-wrap">
+
+        <svg id="orderBarcode"></svg>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="card panel"
+      style="margin-top:15px"
+    >
+
+      <div class="section-title">
+        <h2>Customer</h2>
+      </div>
+
+      <div class="grid grid-2">
+
+        <div>
+
+          <div class="small muted">
+            Name
+          </div>
+
+          <b>
+            ${esc(
+              o.customerName ||
+              o.customer ||
+              o.customerId ||
+              ""
+            )}
+          </b>
+
+        </div>
+
+
+        <div>
+
+          <div class="small muted">
+            Mobile
+          </div>
+
+          <b>
+            ${esc(
+              o.phone ||
+              o.customerPhone ||
+              ""
+            )}
+          </b>
+
+        </div>
+
+
+        <div style="grid-column:1/-1">
+
+          <div class="small muted">
+            Delivery Address
+          </div>
+
+          <b>
+            ${esc(
+              o.deliveryAddress ||
+              o.address ||
+              ""
+            )}
+          </b>
+
+        </div>
+
+
+        <div style="grid-column:1/-1">
+
+          <div class="small muted">
+            Special Delivery Note
+          </div>
+
+          <div>
+            ${esc(
+              o.deliveryNote ||
+              o.note ||
+              o.specialNote ||
+              "—"
+            )}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="card panel"
+      style="margin-top:15px"
+    >
+
+      <div class="section-title">
+        <h2>Ordered Products</h2>
+      </div>
+
+      ${
+        items.length
+        ?
+
+        `<table>
+
+          <thead>
+            <tr>
+              <th>PRODUCT</th>
+              <th>VARIANT</th>
+              <th>QTY</th>
+              <th>PRICE</th>
+              <th>TOTAL</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            ${items.map(item=>{
+
+              const qty =
+                Number(
+                  item.quantity ||
+                  item.qty ||
+                  1
+                );
+
+              const price =
+                Number(
+                  item.price ||
+                  0
+                );
+
+              return `
+
+                <tr>
+
+                  <td>
+                    ${esc(
+                      item.productName ||
+                      item.name ||
+                      item.product ||
+                      ""
+                    )}
+                  </td>
+
+                  <td>
+                    ${esc(
+                      item.weight ||
+                      item.variant ||
+                      ""
+                    )}
+                  </td>
+
+                  <td>
+                    ${qty}
+                  </td>
+
+                  <td>
+                    ${money(price)}
+                  </td>
+
+                  <td>
+                    ${money(price*qty)}
+                  </td>
+
+                </tr>
+
+              `;
+
+            }).join("")}
+
+          </tbody>
+
+        </table>`
+
+        :
+
+        `<div class="empty">
+          No item details stored in this order.
+        </div>`
+      }
+
+    </div>
+
+
+    <div
+      class="card panel"
+      style="margin-top:15px"
+    >
+
+      <div class="section-title">
+        <h2>Payment & Charges</h2>
+      </div>
+
+      <div class="grid grid-2">
+
+        <div class="metric">
+          Product Amount
+          <b>
+            ${money(
+              Number(
+                o.subtotal ||
+                o.productTotal ||
+                0
+              )
+            )}
+          </b>
+        </div>
+
+        <div class="metric">
+          Delivery Charge
+          <b>
+            ${money(deliveryCharge)}
+          </b>
+        </div>
+
+        <div class="metric">
+          Platform Charge
+          <b>
+            ${money(platformCharge)}
+          </b>
+        </div>
+
+        <div class="metric">
+          Payment Status
+          <b>
+            ${esc(paymentStatus)}
+          </b>
+        </div>
+
+        <div class="metric">
+          Payment Method
+          <b>
+            ${esc(
+              o.paymentMethod ||
+              o.method ||
+              "COD"
+            )}
+          </b>
+        </div>
+
+        <div class="metric">
+          Transaction ID
+          <b>
+            ${esc(
+              o.transactionId ||
+              o.deliveryTransactionId ||
+              "—"
+            )}
+          </b>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="card panel"
+      style="margin-top:15px"
+    >
+
+      <div class="section-title">
+        <h2>Delivery Management</h2>
+      </div>
+
+      <div class="form-grid">
+
+        <div class="field">
+
+          <label>Status</label>
+
+          <select
+            class="select"
+            id="orderModalStatus"
+            style="width:100%"
+          >
+
+            ${[
+              "Order Placed",
+              "Payment Verification",
+              "Order Confirmed",
+              "Packing",
+              "Ready for Pickup",
+              "Rider Assigned",
+              "Picked Up",
+              "Out for Delivery",
+              "Delivered",
+              "Cancelled"
+            ].map(s=>`
+
+              <option
+                value="${esc(s)}"
+                ${o.status===s ? "selected" : ""}
+              >
+                ${esc(s)}
+              </option>
+
+            `).join("")}
+
+          </select>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>Assigned Rider ID</label>
+
+          <input
+            id="orderModalRider"
+            class="input"
+            style="width:100%"
+            value="${esc(
+              o.riderId ||
+              ""
+            )}"
+            placeholder="Rider ID"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="actions"
+        style="margin-top:15px"
+      >
+
+        <button
+          class="primary-btn"
+          onclick="saveOrderModal('${esc(id)}')"
+        >
+          Save Changes
+        </button>
+
+        <button
+          class="secondary-btn"
+          onclick="printOrder('${esc(id)}')"
+        >
+          🖨 Print Delivery Sheet
+        </button>
+
+      </div>
+
+    </div>
+
+    `
+  );
+
+
+  setTimeout(()=>{
+
+    const qr =
+      $("orderQR");
+
+    if(qr){
+
+      new QRCode(
+        qr,
+        {
+          text:orderCode(o),
+          width:130,
+          height:130
+        }
+      );
+
+    }
+
+
+    const barcode =
+      $("orderBarcode");
+
+    if(barcode){
+
+      JsBarcode(
+        barcode,
+        orderCode(o),
+        {
+          format:"CODE128",
+          width:2,
+          height:55,
+          displayValue:true
+        }
+      );
+
+    }
+
+  },100);
+
+}
+
+
+window.viewOrder = viewOrder;
+
+
+/* ==========================================
+   COPY ORDER CODE
+========================================== */
+
+async function copyOrderCode(code){
+
+  try{
+
+    await navigator.clipboard.writeText(code);
+
+    toast("Order Code copied.");
+
+  }catch{
+
+    toast(code);
+
+  }
+
+}
+
+
+window.copyOrderCode =
+  copyOrderCode;
+
+
+/* ==========================================
+   SAVE ORDER
+========================================== */
+
+async function saveOrderModal(id){
+
+  const status =
+    $("orderModalStatus").value;
+
+  const riderId =
+    $("orderModalRider")
+      .value
+      .trim();
+
+
+  try{
+
+    await updateDoc(
+      doc(db,"orders",id),
+      {
+
+        status,
+
+        riderId,
+
+        updatedAt:
+          serverTimestamp(),
+
+        updatedBy:
+          currentUser.uid
+
+      }
+    );
+
+
+    await audit(
+      "Updated order " + id +
+      " status=" + status
+    );
+
+
+    closeModal();
+
+    await loadAllData();
+
+    toast("Order updated.");
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+window.saveOrderModal =
+  saveOrderModal;
+
+
+/* ==========================================
+   PRINT ORDER
+========================================== */
+
+function printOrder(id){
+
+  const o =
+    state.orders.find(
+      x=>x.id === id
+    );
+
+
+  if(!o) return;
+
+
+  const items =
+    getOrderItems(o);
+
+
+  const code =
+    orderCode(o);
+
+
+  const rows =
+    items.length
+    ?
+
+    items.map(item=>{
+
+      const qty =
+        Number(
+          item.quantity ||
+          item.qty ||
+          1
+        );
+
+      const price =
+        Number(
+          item.price ||
+          0
+        );
+
+      return `
+
+        <tr>
+
+          <td>
+            ${esc(
+              item.productName ||
+              item.name ||
+              item.product ||
+              ""
+            )}
+          </td>
+
+          <td>
+            ${esc(
+              item.weight ||
+              item.variant ||
+              ""
+            )}
+          </td>
+
+          <td>${qty}</td>
+
+          <td>${money(price)}</td>
+
+          <td>${money(price*qty)}</td>
+
+        </tr>
+
+      `;
+
+    }).join("")
+
+    :
+
+    `<tr>
+       <td colspan="5">
+         No product details
+       </td>
+     </tr>`;
+
+
+  const w =
+    window.open(
+      "",
+      "_blank",
+      "width=900,height=900"
+    );
+
+
+  if(!w){
+
+    toast(
+      "Please allow pop-ups to print."
+    );
+
+    return;
+
+  }
+
+
+  w.document.write(`
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>
+NatureBite Delivery ${esc(code)}
+</title>
+
+<script
+src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js">
+<\/script>
+
+<script
+src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js">
+<\/script>
+
+<style>
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  padding:30px;
+  color:#222;
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  border-bottom:2px solid #246b38;
+  padding-bottom:15px;
+}
+
+.logo{
+  color:#246b38;
+  font-size:25px;
+  font-weight:800;
+}
+
+.small{
+  font-size:11px;
+  color:#777;
+}
+
+.box{
+  border:1px solid #ddd;
+  padding:15px;
+  margin-top:15px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.qr{
+  text-align:center;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+}
+
+th,
+td{
+  border:1px solid #ddd;
+  padding:8px;
+  font-size:11px;
+  text-align:left;
+}
+
+th{
+  background:#f3f5ef;
+}
+
+.total{
+  font-size:18px;
+  font-weight:bold;
+  text-align:right;
+  margin-top:15px;
+}
+
+.status{
+  display:inline-block;
+  padding:6px 9px;
+  background:#eaf4e8;
+  color:#246b38;
+  border-radius:15px;
+  font-size:10px;
+  font-weight:bold;
+}
+
+.footer{
+  margin-top:25px;
+  font-size:10px;
+  color:#777;
+  text-align:center;
+}
+
+@media print{
+
+  body{
+    padding:10mm;
+  }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="header">
+
+  <div>
+
+    <div class="logo">
+      🌿 NatureBite
+    </div>
+
+    <div class="small">
+      Delivery Sheet
+    </div>
+
+  </div>
+
+
+  <div>
+
+    <b>
+      Order Code:
+      ${esc(code)}
+    </b>
+
+    <br>
+
+    <span class="small">
+      ${esc(dateText(o.createdAt))}
+    </span>
+
+  </div>
+
+</div>
+
+
+<div class="box grid">
+
+  <div>
+
+    <b>Customer</b>
+
+    <p>
+      ${esc(
+        o.customerName ||
+        o.customer ||
+        o.customerId ||
+        ""
+      )}
+    </p>
+
+    <b>Mobile</b>
+
+    <p>
+      ${esc(
+        o.phone ||
+        o.customerPhone ||
+        ""
+      )}
+    </p>
+
+  </div>
+
+
+  <div>
+
+    <b>Delivery Address</b>
+
+    <p>
+      ${esc(
+        o.deliveryAddress ||
+        o.address ||
+        ""
+      )}
+    </p>
+
+  </div>
+
+</div>
+
+
+<div class="box">
+
+  <b>Delivery Status:</b>
+
+  <span class="status">
+    ${esc(o.status || "Order Placed")}
+  </span>
+
+  <br><br>
+
+  <b>Rider:</b>
+
+  ${esc(
+    o.riderName ||
+    o.riderId ||
+    "Unassigned"
+  )}
+
+</div>
+
+
+<div class="box">
+
+  <b>Products</b>
+
+  <table>
+
+    <thead>
+
+      <tr>
+
+        <th>Product</th>
+        <th>Variant</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Total</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      ${rows}
+
+    </tbody>
+
+  </table>
+
+</div>
+
+
+<div class="box">
+
+  <div class="grid">
+
+    <div>
+
+      <p>
+        Delivery Charge:
+        <b>
+          ${money(
+            Number(
+              o.deliveryCharge ||
+              o.deliveryFee ||
+              0
+            )
+          )}
+        </b>
+      </p>
+
+      <p>
+        Platform Charge:
+        <b>
+          ${money(
+            Number(
+              o.platformCharge ||
+              0
+            )
+          )}
+        </b>
+      </p>
+
+      <p>
+        Payment:
+        <b>
+          ${esc(
+            o.paymentStatus ||
+            o.payment ||
+            "Pending"
+          )}
+        </b>
+      </p>
+
+    </div>
+
+
+    <div>
+
+      <div class="total">
+        Total:
+        ${money(orderTotal(o))}
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<div
+  class="box"
+  style="display:flex;gap:40px;align-items:center"
+>
+
+  <div class="qr">
+
+    <div id="printQR"></div>
+
+    <div class="small">
+      Scan Order Code
+    </div>
+
+  </div>
+
+
+  <div>
+
+    <svg id="printBarcode"></svg>
+
+    <div class="small">
+      CODE128 Barcode
+    </div>
+
+  </div>
+
+</div>
+
+
+<div class="box">
+
+  <b>Delivery Note</b>
+
+  <p>
+    ${esc(
+      o.deliveryNote ||
+      o.note ||
+      o.specialNote ||
+      "No special delivery note."
+    )}
+  </p>
+
+</div>
+
+
+<div class="footer">
+
+  NatureBite — Delivery Management
+
+</div>
+
+
+<script>
+
+window.onload=function(){
+
+  new QRCode(
+    document.getElementById("printQR"),
+    {
+      text:${JSON.stringify(code)},
+      width:120,
+      height:120
+    }
+  );
+
+
+  JsBarcode(
+    "#printBarcode",
+    ${JSON.stringify(code)},
+    {
+      format:"CODE128",
+      width:2,
+      height:55,
+      displayValue:true
+    }
+  );
+
+
+  setTimeout(function(){
+
+    window.print();
+
+  },500);
+
+};
+
+<\/script>
+
+
+</body>
+
+</html>
+
+  `);
+
+
+  w.document.close();
+
+}
+
+
+window.printOrder =
+  printOrder;
+
+
+/* ==========================================
+   PRINT SELECTED ORDERS
+========================================== */
+
+function printSelectedOrders(){
+
+  const ids =
+    [...document.querySelectorAll(".order-check:checked")]
+      .map(x=>x.value);
+
+
+  if(!ids.length){
+
+    toast("Select at least one order.");
+
+    return;
+
+  }
+
+
+  ids.forEach((id,index)=>{
+
+    setTimeout(()=>{
+
+      printOrder(id);
+
+    },index*900);
+
+  });
+
+}
+
+
+window.printSelectedOrders =
+  printSelectedOrders;
+
+
+/* ==========================================
+   PRODUCTS
+========================================== */
+
+function renderProducts(){
+
+  const q =
+    ($("productSearch")?.value || "")
+      .toLowerCase();
+
+
+  const cat =
+    $("productCategoryFilter")?.value || "";
+
+
+  const rows =
+    state.products.filter(p=>{
+
+      const text =
+        `${p.name || ""} ${p.category || ""}`
+          .toLowerCase();
+
+
+      return (
+        (!q || text.includes(q)) &&
+        (!cat || p.category === cat)
+      );
+
+    });
+
+
+  $("productsTable").innerHTML = `
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>PRODUCT</th>
+          <th>CATEGORY</th>
+          <th>VARIANTS</th>
+          <th>STATUS</th>
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        ${
+          rows.length
+
+          ?
+
+          rows.map(p=>{
+
+            const variants =
+              state.variants.filter(
+                v=>
+                  v.productId === p.id ||
+                  v.productId === p.name ||
+                  v.productName === p.name
+              );
+
+
+            return `
+
+              <tr>
+
+                <td>
+                  <b>${esc(p.name)}</b>
+
+                  <br>
+
+                  <span class="muted small">
+                    ${esc(p.description || "")}
+                  </span>
+                </td>
+
+
+                <td>
+                  ${esc(p.category || "")}
+                </td>
+
+
+                <td>
+
+                  ${
+                    variants.length
+                    ?
+
+                    variants.map(v=>`
+
+                      <span
+                        class="badge"
+                        style="margin:2px"
+                      >
+                        ${esc(v.weight || v.name || "")}
+                        —
+                        ${money(v.price)}
+                        —
+                        Stock: ${Number(v.stock || 0)}
+                      </span>
+
+                    `).join("")
+
+                    :
+
+                    `<span class="muted">
+                      No variants
+                    </span>`
+                  }
+
+                </td>
+
+
+                <td>
+                  ${statusBadge(
+                    p.status ||
+                    (p.active===false
+                      ? "Inactive"
+                      : "Active")
+                  )}
+                </td>
+
+              </tr>
+
+            `;
+
+          }).join("")
+
+          :
+
+          `<tr>
+            <td colspan="4">
+              <div class="empty">
+                No products found.
+              </div>
+            </td>
+          </tr>`
+        }
+
+      </tbody>
+
+    </table>
+
+  `;
+
+}
+
+
+window.renderProducts =
+  renderProducts;
+
+
+/* ==========================================
+   PRODUCT MODAL
+========================================== */
+
+function openProductModal(){
+
+  openModal(
+    "Add Product",
+
+    `
+
+    <div class="form-grid">
+
+      <div class="field">
+
+        <label>Product Name</label>
+
+        <input
+          id="newProductName"
+          class="input"
+          style="width:100%"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Category</label>
+
+        <select
+          id="newProductCategory"
+          class="select"
+          style="width:100%"
+        >
+
+          <option>Healthy Snacks</option>
+          <option>Kids Special Foods</option>
+          <option>Diabetic/Keto-Friendly Products</option>
+          <option>Instant Mix Items</option>
+
+        </select>
+
+      </div>
+
+
+      <div class="field full">
+
+        <label>Description</label>
+
+        <textarea
+          id="newProductDescription"
+          class="textarea"
+        ></textarea>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="actions"
+      style="margin-top:15px"
+    >
+
+      <button
+        class="primary-btn"
+        onclick="saveNewProduct()"
+      >
+        Create Product
+      </button>
+
+    </div>
+
+    `
+  );
+
+}
+
+
+window.openProductModal =
+  openProductModal;
+
+
+async function saveNewProduct(){
+
+  const name =
+    $("newProductName")
+      .value
+      .trim();
+
+
+  if(!name){
+
+    toast("Product name required.");
+
+    return;
+
+  }
+
+
+  try{
+
+    await addDoc(
+      collection(db,"products"),
+      {
+
+        name,
+
+        category:
+          $("newProductCategory").value,
+
+        description:
+          $("newProductDescription").value.trim(),
+
+        status:"active",
+
+        featured:false,
+
+        createdAt:
+          serverTimestamp(),
+
+        createdBy:
+          currentUser.uid
+
+      }
+    );
+
+
+    await audit(
+      "Created product " + name
+    );
+
+
+    closeModal();
+
+    await loadAllData();
+
+    toast("Product created.");
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+window.saveNewProduct =
+  saveNewProduct;
+
+
+/* ==========================================
+   INVENTORY
+========================================== */
+
+function renderInventory(){
+
+  const total =
+    state.variants.reduce(
+      (sum,v)=>
+        sum + Number(v.stock || 0),
+      0
+    );
+
+
+  const low =
+    state.variants.filter(
+      v=>Number(v.stock || 0) <= 10
+    ).length;
+
+
+  const out =
+    state.variants.filter(
+      v=>Number(v.stock || 0) <= 0
+    ).length;
+
+
+  $("inventoryStats").innerHTML = `
+
+    <div class="card statbox">
+
+      <div class="small muted">
+        Total Units
+      </div>
+
+      <div class="stat-big">
+        ${total}
+      </div>
+
+    </div>
+
+
+    <div class="card statbox">
+
+      <div class="small muted">
+        Low Stock
+      </div>
+
+      <div class="stat-big red">
+        ${low}
+      </div>
+
+    </div>
+
+
+    <div class="card statbox">
+
+      <div class="small muted">
+        Out of Stock
+      </div>
+
+      <div class="stat-big red">
+        ${out}
+      </div>
+
+    </div>
+
+  `;
+
+
+  $("inventoryTable").innerHTML = `
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>PRODUCT</th>
+          <th>VARIANT</th>
+          <th>PRICE</th>
+          <th>STOCK</th>
+          <th>ACTION</th>
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        ${
+          state.variants.length
+
+          ?
+
+          state.variants.map(v=>`
+
+            <tr>
+
+              <td>
+                ${esc(
+                  v.productName ||
+                  v.productId ||
+                  ""
+                )}
+              </td>
+
+              <td>
+                ${esc(v.weight || "")}
+              </td>
+
+              <td>
+                ${money(v.price)}
+              </td>
+
+              <td>
+
+                <b class="${
+                  Number(v.stock || 0) <= 10
+                  ? "red"
+                  : ""
+                }">
+
+                  ${Number(v.stock || 0)}
+
+                </b>
+
+              </td>
+
+              <td>
+
+                <button
+                  class="secondary-btn"
+                  onclick="editStock('${esc(v.id)}')"
+                >
+                  Update
+                </button>
+
+              </td>
+
+            </tr>
+
+          `).join("")
+
+          :
+
+          `<tr>
+            <td colspan="5">
+              <div class="empty">
+                No variants found.
+              </div>
+            </td>
+          </tr>`
+        }
+
+      </tbody>
+
+    </table>
+
+  `;
+
+}
+
+
+function editStock(id){
+
+  const v =
+    state.variants.find(
+      x=>x.id === id
+    );
+
+
+  if(!v) return;
+
+
+  openModal(
+    "Update Stock",
+
+    `
+
+    <p>
+      <b>
+        ${esc(
+          v.productName ||
+          v.productId ||
+          ""
+        )}
+      </b>
+
+      —
+
+      ${esc(v.weight || "")}
+    </p>
+
+
+    <input
+      id="stockValue"
+      type="number"
+      class="input"
+      style="width:100%"
+      value="${Number(v.stock || 0)}"
+    >
+
+
+    <button
+      class="primary-btn"
+      style="margin-top:15px"
+      onclick="saveStock('${esc(id)}')"
+    >
+      Save Stock
+    </button>
+
+    `
+  );
+
+}
+
+
+window.editStock =
+  editStock;
+
+
+async function saveStock(id){
+
+  try{
+
+    await updateDoc(
+      doc(db,"product_variants",id),
+      {
+
+        stock:
+          Number(
+            $("stockValue").value || 0
+          ),
+
+        updatedAt:
+          serverTimestamp(),
+
+        updatedBy:
+          currentUser.uid
+
+      }
+    );
+
+
+    await audit(
+      "Updated stock " + id
+    );
+
+
+    closeModal();
+
+    await loadAllData();
+
+    toast("Stock updated.");
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+window.saveStock =
+  saveStock;
+
+
+/* ==========================================
+   CUSTOMERS
+========================================== */
+
+function renderCustomers(){
+
+  const q =
+    ($("customerSearch")?.value || "")
+      .toLowerCase();
+
+
+  const rows =
+    state.customers.filter(c=>
+      `${c.name || ""}
+       ${c.phone || ""}
+       ${c.email || ""}
+       ${c.customerId || ""}`
+      .toLowerCase()
+      .includes(q)
+    );
+
+
+  $("customersTable").innerHTML = `
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>CUSTOMER</th>
+          <th>PHONE</th>
+          <th>EMAIL</th>
+          <th>STATUS</th>
+          <th>CREATED</th>
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        ${
+          rows.length
+
+          ?
+
+          rows.map(c=>`
+
+            <tr>
+
+              <td>
+                <b>
+                  ${esc(
+                    c.name ||
+                    c.customerId ||
+                    c.id
+                  )}
+                </b>
+              </td>
+
+              <td>
+                ${esc(c.phone || "")}
+              </td>
+
+              <td>
+                ${esc(c.email || "")}
+              </td>
+
+              <td>
+                ${statusBadge(
+                  c.accountStatus ||
+                  c.status ||
+                  "Active"
+                )}
+              </td>
+
+              <td>
+                ${dateText(c.createdAt)}
+              </td>
+
+            </tr>
+
+          `).join("")
+
+          :
+
+          `<tr>
+            <td colspan="5">
+              <div class="empty">
+                No customers found.
+              </div>
+            </td>
+          </tr>`
+        }
+
+      </tbody>
+
+    </table>
+
+  `;
+
+}
+
+
+window.renderCustomers =
+  renderCustomers;
+
+
+/* ==========================================
+   RIDERS
+========================================== */
+
+function renderRiders(){
+
+  const active =
+    state.riders.filter(
+      r=>
+        String(
+          r.riderStatus ||
+          r.status ||
+          ""
+        ).toLowerCase() === "active"
+    ).length;
+
+
+  const delivered =
+    state.riders.reduce(
+      (sum,r)=>
+        sum +
+        Number(
+          r.totalDelivered ||
+          r.deliveries ||
+          0
+        ),
+      0
+    );
+
+
+  const cod =
+    state.riders.reduce(
+      (sum,r)=>
+        sum +
+        Number(
+          r.pendingSettlement ||
+          r.balance ||
+          0
+        ),
+      0
+    );
+
+
+  $("riderStats").innerHTML = `
+
+    <div class="card statbox">
+      <div class="small muted">
+        Total Riders
+      </div>
+      <div class="stat-big">
+        ${state.riders.length}
+      </div>
+    </div>
+
+    <div class="card statbox">
+      <div class="small muted">
+        Active
+      </div>
+      <div class="stat-big">
+        ${active}
+      </div>
+    </div>
+
+    <div class="card statbox">
+      <div class="small muted">
+        Delivered
+      </div>
+      <div class="stat-big">
+        ${delivered}
+      </div>
+    </div>
+
+    <div class="card statbox">
+      <div class="small muted">
+        Pending COD
+      </div>
+      <div class="stat-big">
+        ${money(cod)}
+      </div>
+    </div>
+
+  `;
+
+
+  $("ridersTable").innerHTML = `
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>RIDER</th>
+          <th>PHONE</th>
+          <th>ZONE</th>
+          <th>STATUS</th>
+          <th>DELIVERED</th>
+          <th>COD</th>
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        ${
+          state.riders.length
+
+          ?
+
+          state.riders.map(r=>`
+
+            <tr>
+
+              <td>
+                <b>
+                  ${esc(
+                    r.name ||
+                    r.riderId ||
+                    r.id
+                  )}
+                </b>
+
+                <br>
+
+                <span class="muted small">
+                  ${esc(
+                    r.riderId ||
+                    r.id
+                  )}
+                </span>
+              </td>
+
+              <td>
+                ${esc(r.phone || "")}
+              </td>
+
+              <td>
+                ${esc(
+                  r.assignedZoneId ||
+                  r.zone ||
+                  ""
+                )}
+              </td>
+
+              <td>
+                ${statusBadge(
+                  r.riderStatus ||
+                  r.status ||
+                  "Active"
+                )}
+              </td>
+
+              <td>
+                ${Number(
+                  r.totalDelivered ||
+                  r.deliveries ||
+                  0
+                )}
+              </td>
+
+              <td>
+                ${money(
+                  r.pendingSettlement ||
+                  r.balance ||
+                  0
+                )}
+              </td>
+
+            </tr>
+
+          `).join("")
+
+          :
+
+          `<tr>
+            <td colspan="6">
+              <div class="empty">
+                No riders found.
+              </div>
+            </td>
+          </tr>`
+        }
+
+      </tbody>
+
+    </table>
+
+  `;
+
+}
+
+
+/* ==========================================
+   PARTNERS
+========================================== */
+
+function renderPartners(){
+
+  const partners = [
+
+    ["NatureBite","Internal Delivery"],
+    ["Pathao","External Delivery"],
+    ["Steadfast","External Delivery"],
+    ["CarryBee","External Delivery"]
+
+  ];
+
+
+  $("partnerCards").innerHTML =
+    partners.map(p=>`
+
+      <div class="card panel">
+
+        <h2 style="font-size:15px">
+          ${esc(p[0])}
+        </h2>
+
+        <p class="muted small">
+          ${esc(p[1])}
+        </p>
+
+        <span class="badge">
+          Available
+        </span>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* ==========================================
+   SIMPLE TABLES
+========================================== */
+
+function simpleTable(
+  element,
+  headers,
+  rows
+){
+
+  $(element).innerHTML = `
+
+    <table>
+
+      <thead>
+
+        <tr>
+          ${headers.map(h=>
+            `<th>${esc(h)}</th>`
+          ).join("")}
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        ${
+          rows ||
+
+          `<tr>
+            <td colspan="${headers.length}">
+              <div class="empty">
+                No data.
+              </div>
+            </td>
+          </tr>`
+        }
+
+      </tbody>
+
+    </table>
+
+  `;
+
+}
+
+
+/* ==========================================
+   PAYMENTS
+========================================== */
+
+function renderPayments(){
+
+  const rows =
+    state.payments.map(p=>`
+
+      <tr>
+
+        <td>
+          ${esc(p.id)}
+        </td>
+
+        <td>
+          ${esc(
+            p.orderId ||
+            p.order ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            p.customerId ||
+            p.customer ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            p.method ||
+            p.paymentMethod ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${money(p.amount)}
+        </td>
+
+        <td>
+          ${statusBadge(
+            p.status ||
+            "Pending"
+          )}
+        </td>
+
+      </tr>
+
+    `).join("");
+
+
+  simpleTable(
+    "paymentsTable",
+    [
+      "PAYMENT",
+      "ORDER",
+      "CUSTOMER",
+      "METHOD",
+      "AMOUNT",
+      "STATUS"
+    ],
+    rows
+  );
+
+}
+
+
+/* ==========================================
+   REFUNDS
+========================================== */
+
+function renderRefunds(){
+
+  const rows =
+    state.refunds.map(r=>`
+
+      <tr>
+
+        <td>
+          ${esc(r.id)}
+        </td>
+
+        <td>
+          ${esc(
+            r.orderId ||
+            r.order ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            r.customerId ||
+            r.customer ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${money(r.amount)}
+        </td>
+
+        <td>
+          ${statusBadge(
+            r.status ||
+            "Pending"
+          )}
+        </td>
+
+      </tr>
+
+    `).join("");
+
+
+  simpleTable(
+    "refundsTable",
+    [
+      "REFUND",
+      "ORDER",
+      "CUSTOMER",
+      "AMOUNT",
+      "STATUS"
+    ],
+    rows
+  );
+
+}
+
+
+/* ==========================================
+   CANCELLATIONS
+========================================== */
+
+function renderCancellations(){
+
+  const rows =
+    state.orders
+      .filter(
+        o=>o.status === "Cancelled"
+      )
+      .map(o=>`
+
+        <tr>
+
+          <td>
+            <b>${esc(orderCode(o))}</b>
+          </td>
+
+          <td>
+            ${esc(
+              o.customerName ||
+              o.customer ||
+              o.customerId ||
+              ""
+            )}
+          </td>
+
+          <td>
+            ${money(orderTotal(o))}
+          </td>
+
+          <td>
+            ${esc(
+              o.riderId ||
+              o.rider ||
+              "—"
+            )}
+          </td>
+
+          <td>
+            ${statusBadge(
+              o.handoverStatus ||
+              "Handover Pending"
+            )}
+          </td>
+
+        </tr>
+
+      `).join("");
+
+
+  simpleTable(
+    "cancellationsTable",
+    [
+      "ORDER",
+      "CUSTOMER",
+      "VALUE",
+      "RIDER",
+      "RETURN/HANDOVER"
+    ],
+    rows
+  );
+
+}
+
+
+/* ==========================================
+   EXPENSES
+========================================== */
+
+function renderExpenses(){
+
+  const rows =
+    state.expenses.map(e=>`
+
+      <tr>
+
+        <td>
+          ${esc(e.id)}
+        </td>
+
+        <td>
+          ${esc(
+            e.title ||
+            e.description ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(e.category || "")}
+        </td>
+
+        <td>
+          ${money(e.amount)}
+        </td>
+
+        <td>
+          ${esc(
+            e.date ||
+            dateText(e.createdAt)
+          )}
+        </td>
+
+      </tr>
+
+    `).join("");
+
+
+  simpleTable(
+    "expensesTable",
+    [
+      "ID",
+      "TITLE",
+      "CATEGORY",
+      "AMOUNT",
+      "DATE"
+    ],
+    rows
+  );
+
+}
+
+
+function openExpenseModal(){
+
+  openModal(
+    "Add Expense",
+
+    `
+
+    <div class="form-grid">
+
+      <div class="field">
+
+        <label>Title</label>
+
+        <input
+          id="expenseTitle"
+          class="input"
+          style="width:100%"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Category</label>
+
+        <input
+          id="expenseCategory"
+          class="input"
+          style="width:100%"
+          placeholder="Packaging / Delivery / Other"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Amount</label>
+
+        <input
+          id="expenseAmount"
+          class="input"
+          style="width:100%"
+          type="number"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Date</label>
+
+        <input
+          id="expenseDate"
+          class="input"
+          style="width:100%"
+          type="date"
+        >
+
+      </div>
+
+
+      <div class="field full">
+
+        <label>Description</label>
+
+        <textarea
+          id="expenseDescription"
+          class="textarea"
+        ></textarea>
+
+      </div>
+
+    </div>
+
+
+    <button
+      class="primary-btn"
+      style="margin-top:15px"
+      onclick="saveExpense()"
+    >
+      Save Expense
+    </button>
+
+    `
+  );
+
+}
+
+
+window.openExpenseModal =
+  openExpenseModal;
+
+
+async function saveExpense(){
+
+  try{
+
+    await addDoc(
+      collection(db,"expenses"),
+      {
+
+        title:
+          $("expenseTitle").value.trim(),
+
+        category:
+          $("expenseCategory").value.trim(),
+
+        amount:
+          Number(
+            $("expenseAmount").value || 0
+          ),
+
+        date:
+          $("expenseDate").value,
+
+        description:
+          $("expenseDescription").value.trim(),
+
+        createdAt:
+          serverTimestamp(),
+
+        createdBy:
+          currentUser.uid
+
+      }
+    );
+
+
+    await audit(
+      "Created expense"
+    );
+
+
+    closeModal();
+
+    await loadAllData();
+
+    toast("Expense saved.");
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+window.saveExpense =
+  saveExpense;
+
+
+/* ==========================================
+   REPORTS
+========================================== */
+
+function getDateRange(){
+
+  const now =
+    new Date();
+
+
+  const start =
+    new Date(now);
+
+  const end =
+    new Date(now);
+
+
+  if(reportPeriod === "today"){
+
+    start.setHours(0,0,0,0);
+
+    end.setHours(23,59,59,999);
+
+  }
+
+
+  else if(reportPeriod === "week"){
+
+    const day =
+      start.getDay();
+
+    const diff =
+      day === 0 ? 6 : day - 1;
+
+    start.setDate(
+      start.getDate() - diff
+    );
+
+    start.setHours(0,0,0,0);
+
+    end.setHours(23,59,59,999);
+
+  }
+
+
+  else if(reportPeriod === "month"){
+
+    start.setDate(1);
+
+    start.setHours(0,0,0,0);
+
+    end.setMonth(
+      end.getMonth()+1,
+      0
+    );
+
+    end.setHours(23,59,59,999);
+
+  }
+
+
+  else if(reportPeriod === "previous"){
+
+    /*
+      Example:
+      September 2026
+      => August 1-31 2026
+    */
+
+    start.setDate(1);
+
+    start.setMonth(
+      start.getMonth()-1
+    );
+
+    start.setHours(0,0,0,0);
+
+    end.setDate(0);
+
+    end.setHours(23,59,59,999);
+
+  }
+
+
+  else if(reportPeriod === "custom"){
+
+    const s =
+      $("reportStart").value;
+
+    const e =
+      $("reportEnd").value;
+
+
+    if(!s || !e)
+      return null;
+
+
+    const customStart =
+      new Date(s + "T00:00:00");
+
+    const customEnd =
+      new Date(e + "T23:59:59");
+
+
+    return {
+      start:customStart,
+      end:customEnd
+    };
+
+  }
+
+
+  return {
+    start,
+    end
+  };
+
+}
+
+
+function ordersInRange(){
+
+  const range =
+    getDateRange();
+
+
+  if(!range)
+    return [];
+
+
+  return state.orders.filter(o=>{
+
+    const d =
+      dateValue(
+        o.createdAt ||
+        o.orderDate ||
+        o.date
+      );
+
+
+    if(!d) return false;
+
+
+    return (
+      d >= range.start &&
+      d <= range.end
+    );
+
+  });
+
+}
+
+
+function setReportPeriod(period,btn){
+
+  reportPeriod =
+    period;
+
+
+  document
+    .querySelectorAll(".report-controls button")
+    .forEach(b=>
+      b.classList.remove("active")
+    );
+
+
+  if(btn)
+    btn.classList.add("active");
+
+
+  $("customReportBox").style.display =
+    period === "custom"
+      ? "block"
+      : "none";
+
+
+  if(period !== "custom"){
+
+    renderReports();
+
+  }
+
+}
+
+
+window.setReportPeriod =
+  setReportPeriod;
+
+
+function applyCustomReport(){
+
+  reportPeriod =
+    "custom";
+
+  renderReports();
+
+}
+
+
+window.applyCustomReport =
+  applyCustomReport;
+
+
+function renderReports(){
+
+  const orders =
+    ordersInRange();
+
+
+  const sales =
+    orders.reduce(
+      (sum,o)=>
+        sum + orderTotal(o),
+      0
+    );
+
+
+  const delivered =
+    orders.filter(
+      o=>o.status === "Delivered"
+    ).length;
+
+
+  const cancelled =
+    orders.filter(
+      o=>o.status === "Cancelled"
+    ).length;
+
+
+  const deliveryIncome =
+    orders.reduce(
+      (sum,o)=>
+        sum +
+        Number(
+          o.deliveryCharge ||
+          o.deliveryFee ||
+          0
+        ),
+      0
+    );
+
+
+  const platformIncome =
+    orders.reduce(
+      (sum,o)=>
+        sum +
+        Number(
+          o.platformCharge ||
+          0
+        ),
+      0
+    );
+
+
+  const expenses =
+    state.expenses.reduce(
+      (sum,e)=>{
+
+        const d =
+          dateValue(
+            e.createdAt ||
+            e.date
+          );
+
+        const range =
+          getDateRange();
+
+
+        if(
+          !range ||
+          !d ||
+          d < range.start ||
+          d > range.end
+        ){
+
+          return sum;
+
+        }
+
+
+        return sum +
+          Number(e.amount || 0);
+
+      },
+      0
+    );
+
+
+  const grossProfit =
+    sales -
+    deliveryIncome -
+    platformIncome;
+
+
+  const netProfit =
+    sales -
+    expenses;
+
+
+  $("reportStats").innerHTML = `
+
+    <div class="card statbox">
+
+      <div class="small muted">
+        Sales
+      </div>
+
+      <div class="stat-big">
+        ${money(sales)}
+      </div>
+
+    </div>
+
+
+    <div class="card statbox">
+
+      <div class="small muted">
+        Orders
+      </div>
+
+      <div class="stat-big">
+        ${orders.length}
+      </div>
+
+    </div>
+
+
+    <div class="card statbox">
+
+      <div class="small muted">
+        Delivered
+      </div>
+
+      <div class="stat-big">
+        ${delivered}
+      </div>
+
+    </div>
+
+
+    <div class="card statbox">
+
+      <div class="small muted">
+        Net Profit
+      </div>
+
+      <div class="stat-big">
+        ${money(netProfit)}
+      </div>
+
+    </div>
+
+  `;
+
+
+  $("revenueReport").innerHTML = `
+
+    <div class="metric">
+      Sales
+      <b>${money(sales)}</b>
+    </div>
+
+    <div class="metric">
+      Delivery Income
+      <b>${money(deliveryIncome)}</b>
+    </div>
+
+    <div class="metric">
+      Platform Income
+      <b>${money(platformIncome)}</b>
+    </div>
+
+    <div class="metric">
+      Expenses
+      <b>${money(expenses)}</b>
+    </div>
+
+    <div class="metric">
+      Gross Profit
+      <b>${money(grossProfit)}</b>
+    </div>
+
+    <div class="metric">
+      Net Profit
+      <b>${money(netProfit)}</b>
+    </div>
+
+  `;
+
+
+  $("deliveryReport").innerHTML = `
+
+    <div class="metric">
+      Delivered
+      <b>${delivered}</b>
+    </div>
+
+    <div class="metric">
+      Cancelled
+      <b>${cancelled}</b>
+    </div>
+
+    <div class="metric">
+      Delivery Rate
+      <b>
+        ${
+          orders.length
+          ?
+          Math.round(
+            delivered /
+            orders.length *
+            100
+          )
+          :
+          0
+        }%
+      </b>
+    </div>
+
+  `;
+
+
+  const productMap = {};
+
+
+  orders.forEach(o=>{
+
+    getOrderItems(o)
+      .forEach(item=>{
+
+        const name =
+          item.productName ||
+          item.name ||
+          item.product ||
+          "Unknown";
+
+        const qty =
+          Number(
+            item.quantity ||
+            item.qty ||
+            1
+          );
+
+        const price =
+          Number(
+            item.price ||
+            0
+          );
+
+
+        if(!productMap[name]){
+
+          productMap[name] = {
+            qty:0,
+            sales:0
+          };
+
+        }
+
+
+        productMap[name].qty +=
+          qty;
+
+        productMap[name].sales +=
+          qty * price;
+
+      });
+
+  });
+
+
+  const productRows =
+    Object.entries(productMap)
+      .sort(
+        (a,b)=>
+          b[1].sales -
+          a[1].sales
+      )
+      .map(([name,data])=>`
+
+        <tr>
+
+          <td>
+            ${esc(name)}
+          </td>
+
+          <td>
+            ${data.qty}
+          </td>
+
+          <td>
+            ${money(data.sales)}
+          </td>
+
+        </tr>
+
+      `)
+      .join("");
+
+
+  $("productSalesReport").innerHTML = `
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>PRODUCT</th>
+          <th>QTY</th>
+          <th>SALES</th>
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        ${
+          productRows ||
+
+          `<tr>
+            <td colspan="3">
+              <div class="empty">
+                No product sales data.
+              </div>
+            </td>
+          </tr>`
+        }
+
+      </tbody>
+
+    </table>
+
+  `;
+
+}
+
+
+/* ==========================================
+   PRINT REPORT
+========================================== */
+
+function printReport(){
+
+  const range =
+    getDateRange();
+
+
+  const orders =
+    ordersInRange();
+
+
+  if(!range){
+
+    toast(
+      "Select report dates first."
+    );
+
+    return;
+
+  }
+
+
+  const sales =
+    orders.reduce(
+      (s,o)=>
+        s + orderTotal(o),
+      0
+    );
+
+
+  const delivered =
+    orders.filter(
+      o=>o.status === "Delivered"
+    ).length;
+
+
+  const cancelled =
+    orders.filter(
+      o=>o.status === "Cancelled"
+    ).length;
+
+
+  const w =
+    window.open(
+      "",
+      "_blank"
+    );
+
+
+  if(!w){
+
+    toast(
+      "Allow pop-ups to print."
+    );
+
+    return;
+
+  }
+
+
+  w.document.write(`
+
+    <html>
+
+    <head>
+
+      <title>
+        NatureBite Report
+      </title>
+
+      <style>
+
+        body{
+          font-family:Arial;
+          padding:30px;
+        }
+
+        h1{
+          color:#246b38;
+        }
+
+        table{
+          width:100%;
+          border-collapse:collapse;
+          margin-top:20px;
+        }
+
+        th,td{
+          border:1px solid #ddd;
+          padding:8px;
+          font-size:11px;
+          text-align:left;
+        }
+
+        th{
+          background:#f0f3ec;
+        }
+
+      </style>
+
+    </head>
+
+    <body>
+
+      <h1>
+        🌿 NatureBite
+      </h1>
+
+      <h2>
+        Business Report
+      </h2>
+
+      <p>
+        ${range.start.toLocaleDateString()}
+        —
+        ${range.end.toLocaleDateString()}
+      </p>
+
+      <hr>
+
+      <p>
+        <b>Total Sales:</b>
+        ${money(sales)}
+      </p>
+
+      <p>
+        <b>Total Orders:</b>
+        ${orders.length}
+      </p>
+
+      <p>
+        <b>Delivered:</b>
+        ${delivered}
+      </p>
+
+      <p>
+        <b>Cancelled:</b>
+        ${cancelled}
+      </p>
+
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>Order</th>
+            <th>Customer</th>
+            <th>Status</th>
+            <th>Total</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          ${orders.map(o=>`
+
+            <tr>
+
+              <td>
+                ${esc(orderCode(o))}
+              </td>
+
+              <td>
+                ${esc(
+                  o.customerName ||
+                  o.customer ||
+                  ""
+                )}
+              </td>
+
+              <td>
+                ${esc(o.status || "")}
+              </td>
+
+              <td>
+                ${money(orderTotal(o))}
+              </td>
+
+            </tr>
+
+          `).join("")}
+
+        </tbody>
+
+      </table>
+
+
+      <script>
+
+        window.onload=function(){
+
+          window.print();
+
+        };
+
+      <\/script>
+
+    </body>
+
+    </html>
+
+  `);
+
+
+  w.document.close();
+
+}
+
+
+window.printReport =
+  printReport;
+
+
+/* ==========================================
+   COUPONS
+========================================== */
+
+function renderCoupons(){
+
+  const rows =
+    state.coupons.map(c=>`
+
+      <tr>
+
+        <td>
+          <b>
+            ${esc(
+              c.code ||
+              c.id
+            )}
+          </b>
+        </td>
+
+        <td>
+          ${esc(
+            c.type ||
+            "Fixed"
+          )}
+        </td>
+
+        <td>
+          ${
+            c.type === "Percentage"
+            ?
+            esc(c.value) + "%"
+            :
+            money(c.value)
+          }
+        </td>
+
+        <td>
+          ${money(
+            c.minOrder ||
+            c.min ||
+            0
+          )}
+        </td>
+
+        <td>
+          ${statusBadge(
+            c.active === false
+              ? "Inactive"
+              : "Active"
+          )}
+        </td>
+
+      </tr>
+
+    `).join("");
+
+
+  simpleTable(
+    "couponTable",
+    [
+      "CODE",
+      "TYPE",
+      "VALUE",
+      "MIN ORDER",
+      "STATUS"
+    ],
+    rows
+  );
+
+}
+
+
+function openCouponModal(){
+
+  openModal(
+    "Add Coupon",
+
+    `
+
+    <div class="form-grid">
+
+      <div class="field">
+
+        <label>Coupon Code</label>
+
+        <input
+          id="couponCode"
+          class="input"
+          style="width:100%"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Type</label>
+
+        <select
+          id="couponType"
+          class="select"
+          style="width:100%"
+        >
+          <option value="Fixed">
+            Fixed
+          </option>
+
+          <option value="Percentage">
+            Percentage
+          </option>
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Value</label>
+
+        <input
+          id="couponValue"
+          class="input"
+          style="width:100%"
+          type="number"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Minimum Order</label>
+
+        <input
+          id="couponMin"
+          class="input"
+          style="width:100%"
+          type="number"
+        >
+
+      </div>
+
+    </div>
+
+
+    <button
+      class="primary-btn"
+      style="margin-top:15px"
+      onclick="saveCoupon()"
+    >
+      Save Coupon
+    </button>
+
+    `
+  );
+
+}
+
+
+window.openCouponModal =
+  openCouponModal;
+
+
+async function saveCoupon(){
+
+  const code =
+    $("couponCode")
+      .value
+      .trim()
+      .toUpperCase();
+
+
+  if(!code){
+
+    toast("Coupon code required.");
+
+    return;
+
+  }
+
+
+  try{
+
+    await setDoc(
+      doc(db,"coupons",code),
+      {
+
+        code,
+
+        type:
+          $("couponType").value,
+
+        value:
+          Number(
+            $("couponValue").value || 0
+          ),
+
+        minOrder:
+          Number(
+            $("couponMin").value || 0
+          ),
+
+        active:true,
+
+        createdAt:
+          serverTimestamp(),
+
+        createdBy:
+          currentUser.uid
+
+      }
+    );
+
+
+    await audit(
+      "Created coupon " + code
+    );
+
+
+    closeModal();
+
+    await loadAllData();
+
+    toast("Coupon created.");
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+window.saveCoupon =
+  saveCoupon;
+
+
+/* ==========================================
+   WHEEL
+========================================== */
+
+function renderWheel(){
+
+  $("spinCount").textContent =
+    state.spins;
+
+
+  const rows =
+    state.wheelRewards.map(r=>`
+
+      <tr>
+
+        <td>
+          ${esc(r.name || r.id)}
+        </td>
+
+        <td>
+          ${esc(
+            r.type ||
+            "Reward"
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            r.value ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${statusBadge(
+            r.active === false
+              ? "Inactive"
+              : "Active"
+          )}
+        </td>
+
+      </tr>
+
+    `).join("");
+
+
+  simpleTable(
+    "wheelRewardsTable",
+    [
+      "REWARD",
+      "TYPE",
+      "VALUE",
+      "STATUS"
+    ],
+    rows
+  );
+
+}
+
+
+/* ==========================================
+   DRAW
+========================================== */
+
+function renderDraws(){
+
+  const rows =
+    state.draws.map(d=>`
+
+      <tr>
+
+        <td>
+          ${esc(d.id)}
+        </td>
+
+        <td>
+          ${esc(
+            d.name ||
+            d.title ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${Number(
+            d.entries ||
+            0
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            d.date ||
+            dateText(d.createdAt)
+          )}
+        </td>
+
+        <td>
+          ${statusBadge(
+            d.status ||
+            "Active"
+          )}
+        </td>
+
+      </tr>
+
+    `).join("");
+
+
+  simpleTable(
+    "drawTable",
+    [
+      "ID",
+      "CAMPAIGN",
+      "ENTRIES",
+      "DATE",
+      "STATUS"
+    ],
+    rows
+  );
+
+}
+
+
+function openDrawModal(){
+
+  openModal(
+    "New Lucky Draw",
+
+    `
+
+    <div class="form-grid">
+
+      <div class="field">
+
+        <label>Campaign Name</label>
+
+        <input
+          id="drawName"
+          class="input"
+          style="width:100%"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Date</label>
+
+        <input
+          id="drawDate"
+          class="input"
+          style="width:100%"
+          type="date"
+        >
+
+      </div>
+
+    </div>
+
+
+    <button
+      class="primary-btn"
+      style="margin-top:15px"
+      onclick="saveDraw()"
+    >
+      Create Draw
+    </button>
+
+    `
+  );
+
+}
+
+
+window.openDrawModal =
+  openDrawModal;
+
+
+async function saveDraw(){
+
+  try{
+
+    await addDoc(
+      collection(db,"luckyDraws"),
+      {
+
+        name:
+          $("drawName").value.trim(),
+
+        date:
+          $("drawDate").value,
+
+        status:"Active",
+
+        entries:0,
+
+        createdAt:
+          serverTimestamp(),
+
+        createdBy:
+          currentUser.uid
+
+      }
+    );
+
+
+    await audit(
+      "Created lucky draw"
+    );
+
+
+    closeModal();
+
+    await loadAllData();
+
+    toast("Lucky Draw created.");
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+window.saveDraw =
+  saveDraw;
+
+
+/* ==========================================
+   REVIEWS
+========================================== */
+
+function renderReviews(){
+
+  const rows =
+    state.reviews.map(r=>`
+
+      <tr>
+
+        <td>
+          ${esc(r.id)}
+        </td>
+
+        <td>
+          ${esc(
+            r.customerName ||
+            r.customerId ||
+            r.customer ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            r.productName ||
+            r.productId ||
+            r.product ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ⭐ ${Number(r.rating || 0)}
+        </td>
+
+        <td>
+          ${statusBadge(
+            r.status ||
+            "Pending"
+          )}
+        </td>
+
+      </tr>
+
+    `).join("");
+
+
+  simpleTable(
+    "reviewsTable",
+    [
+      "ID",
+      "CUSTOMER",
+      "PRODUCT",
+      "RATING",
+      "STATUS"
+    ],
+    rows
+  );
+
+}
+
+
+/* ==========================================
+   SUPPORT
+========================================== */
+
+function renderSupport(){
+
+  const rows =
+    state.support.map(t=>`
+
+      <tr>
+
+        <td>
+          ${esc(t.id)}
+        </td>
+
+        <td>
+          ${esc(
+            t.customerName ||
+            t.customerId ||
+            t.customer ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            t.subject ||
+            t.type ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${statusBadge(
+            t.status ||
+            "Open"
+          )}
+        </td>
+
+        <td>
+          ${dateText(t.createdAt)}
+        </td>
+
+      </tr>
+
+    `).join("");
+
+
+  simpleTable(
+    "supportTable",
+    [
+      "TICKET",
+      "CUSTOMER",
+      "SUBJECT",
+      "STATUS",
+      "DATE"
+    ],
+    rows
+  );
+
+}
+
+
+/* ==========================================
+   NOTIFICATIONS
+========================================== */
+
+function renderNotifications(){
+
+  const rows =
+    state.notifications.map(n=>`
+
+      <tr>
+
+        <td>
+          <b>
+            ${esc(
+              n.type ||
+              n.title ||
+              "System"
+            )}
+          </b>
+        </td>
+
+        <td>
+          ${esc(
+            n.message ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            n.targetRole ||
+            "Admin"
+          )}
+        </td>
+
+        <td>
+          ${dateText(
+            n.createdAt ||
+            n.time
+          )}
+        </td>
+
+      </tr>
+
+    `).join("");
+
+
+  simpleTable(
+    "notificationsTable",
+    [
+      "TYPE",
+      "MESSAGE",
+      "TARGET",
+      "TIME"
+    ],
+    rows
+  );
+
+}
+
+
+/* ==========================================
+   STAFF
+========================================== */
+
+function renderStaff(){
+
+  const rows =
+    state.staff.map(s=>`
+
+      <tr>
+
+        <td>
+          <b>
+            ${esc(
+              s.name ||
+              s.displayName ||
+              s.id
+            )}
+          </b>
+        </td>
+
+        <td>
+          ${esc(
+            s.email ||
+            ""
+          )}
+        </td>
+
+        <td>
+          ${esc(
+            s.role ||
+            "Staff"
+          )}
+        </td>
+
+        <td>
+          ${statusBadge(
+            s.status ||
+            "Active"
+          )}
+        </td>
+
+        <td>
+          ${dateText(s.createdAt)}
+        </td>
+
+      </tr>
+
+    `).join("");
+
+
+  simpleTable(
+    "staffTable",
+    [
+      "STAFF",
+      "EMAIL",
+      "ROLE",
+      "STATUS",
+      "CREATED"
+    ],
+    rows
+  );
+
+}
+
+
+function openStaffModal(){
+
+  const roles = [
+
+    "Order Manager",
+    "Product Manager",
+    "Inventory Manager",
+    "Accountant / Finance",
+    "Delivery Manager",
+    "Customer Support",
+    "Marketing Manager"
+
+  ];
+
+
+  const permissions = [
+
+    "orders",
+    "products",
+    "inventory",
+    "customers",
+    "riders",
+    "deliveryPartners",
+    "payments",
+    "refunds",
+    "cancellations",
+    "expenses",
+    "reports",
+    "offers",
+    "luckyWheel",
+    "luckyDraw",
+    "reviews",
+    "banners",
+    "support",
+    "notifications",
+    "staff",
+    "permissions",
+    "aiAssistant",
+    "settings",
+    "auditLogs"
+
+  ];
+
+
+  openModal(
+    "Add Staff",
+
+    `
+
+    <div class="form-grid">
+
+      <div class="field">
+
+        <label>Name</label>
+
+        <input
+          id="staffName"
+          class="input"
+          style="width:100%"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Email</label>
+
+        <input
+          id="staffEmail"
+          class="input"
+          style="width:100%"
+          type="email"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>Role</label>
+
+        <select
+          id="staffRole"
+          class="select"
+          style="width:100%"
+        >
+
+          ${roles.map(r=>
+            `<option>${esc(r)}</option>`
+          ).join("")}
+
+        </select>
+
+      </div>
+
+    </div>
+
+
+    <div
+      style="margin-top:15px"
+    >
+
+      <b style="font-size:12px">
+        Permissions
+      </b>
+
+      <div
+        class="grid grid-3"
+        style="margin-top:10px"
+      >
+
+        ${permissions.map(p=>`
+
+          <label
+            class="card"
+            style="
+              padding:10px;
+              font-size:10px;
+              display:flex;
+              gap:7px;
+              align-items:center;
+            "
+          >
+
+            <input
+              class="staff-permission"
+              type="checkbox"
+              value="${esc(p)}"
+              checked
+            >
+
+            ${esc(p)}
+
+          </label>
+
+        `).join("")}
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="alert"
+      style="margin-top:15px"
+    >
+
+      <b>Important</b>
+
+      <p>
+        Creating an actual Firebase Authentication
+        staff account securely requires a trusted
+        backend/Cloud Function. This panel records
+        staff metadata and permissions; do not rely
+        on hidden UI as the security boundary.
+      </p>
+
+    </div>
+
+
+    <button
+      class="primary-btn"
+      onclick="saveStaffMetadata()"
+    >
+      Save Staff Profile
+    </button>
+
+    `
+  );
+
+}
+
+
+window.openStaffModal =
+  openStaffModal;
+
+
+async function saveStaffMetadata(){
+
+  const permissions = {};
+
+
+  document
+    .querySelectorAll(".staff-permission")
+    .forEach(c=>{
+
+      permissions[c.value] =
+        c.checked;
+
+    });
+
+
+  try{
+
+    await addDoc(
+      collection(db,"staff"),
+      {
+
+        name:
+          $("staffName").value.trim(),
+
+        email:
+          $("staffEmail").value.trim(),
+
+        role:
+          $("staffRole").value,
+
+        permissions,
+
+        status:"Active",
+
+        createdAt:
+          serverTimestamp(),
+
+        createdBy:
+          currentUser.uid
+
+      }
+    );
+
+
+    await audit(
+      "Created staff profile"
+    );
+
+
+    closeModal();
+
+    await loadAllData();
+
+    toast(
+      "Staff profile saved."
+    );
+
+  }catch(error){
+
+    toast(error.message);
+
+  }
+
+}
+
+
+window.saveStaffMetadata =
+  saveStaffMetadata;
+
+
+/* ==========================================
+   PERMISSIONS PAGE
+========================================== */
+
+function renderPermissions(){
+
+  const modules = [
+
+    ["Orders","orders"],
+    ["Products","products"],
+    ["Inventory","inventory"],
+    ["Customers","customers"],
+    ["Riders","riders"],
+    ["Delivery Partners","deliveryPartners"],
+    ["Payments","payments"],
+    ["Refunds","refunds"],
+    ["Cancellations","cancellations"],
+    ["Expenses","expenses"],
+    ["Reports","reports"],
+    ["Offers & Coupons","offers"],
+    ["Lucky Wheel","luckyWheel"],
+    ["Lucky Draw","luckyDraw"],
+    ["Reviews","reviews"],
+    ["Banners","banners"],
+    ["Support","support"],
+    ["Notifications","notifications"],
+    ["Staff","staff"],
+    ["Permissions","permissions"],
+    ["AI Assistant","aiAssistant"],
+    ["Settings","settings"],
+    ["Audit Logs","auditLogs"]
+
+  ];
+
+
+  $("permissionsTable").innerHTML = `
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>MODULE</th>
+          <th>ACCESS</th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        ${modules.map(m=>`
+
+          <tr>
+
+            <td>
+              <b>${esc(m[0])}</b>
+            </td>
+
+            <td>
+
+              ${
+                currentRole === "super_admin" ||
+                currentPermissions[m[1]] === true
+
+                ?
+
+                `<span class="badge">
+                  Allowed
+                </span>`
+
+                :
+
+                `<span class="badge red">
+                  Restricted
+                </span>`
+              }
+
+            </td>
+
+          </tr>
+
+        `).join("")}
+
+      </tbody>
+
+    </table>
+
+  `;
+
+}
+
+
+/* ==========================================
+   AI
+========================================== */
+
+function renderAI(){
+
+  const low =
+    state.variants.filter(
+      v=>Number(v.stock || 0) <= 10
+    );
+
+
+  const pending =
+    state.orders.filter(
+      o=>
+        o.status !== "Delivered" &&
+        o.status !== "Cancelled"
+    ).length;
+
+
+  $("aiRecommendations").innerHTML = `
+
+    <div class="reco">
+
+      <b>Inventory Recommendation</b>
+
+      <p class="small muted">
+
+        ${low.length}
+        variant(s) are at or below
+        the low-stock threshold.
+
+      </p>
+
+    </div>
+
+
+    <div class="reco">
+
+      <b>Operations Recommendation</b>
+
+      <p class="small muted">
+
+        ${pending}
+        order(s) are currently active.
+
+      </p>
+
+    </div>
+
+
+    <div class="reco">
+
+      <b>Delivery Recommendation</b>
+
+      <p class="small muted">
+
+        Review orders without assigned riders
+        before the pickup stage.
+
+      </p>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ==========================================
+   AUDIT
+========================================== */
+
+async function audit(action){
+
+  try{
+
+    await addDoc(
+      collection(db,"audit_logs"),
+      {
+
+        action,
+
+        user:
+          currentUser?.email ||
+          "Admin",
+
+        actorUid:
+          currentUser?.uid ||
+          null,
+
+        role:
+          currentRole,
+
+        createdAt:
+          serverTimestamp(),
+
+        time:
+          new Date().toLocaleString("en-BD")
+
+      }
+    );
+
+  }catch(error){
+
+    console.warn(
+      "Audit failed",
+      error.message
+    );
+
+  }
+
+}
+
+
+function renderAudit(){
+
+  const rows =
+    state.audit
+      .sort(
+        (a,b)=>
+          (dateValue(b.createdAt)?.getTime() || 0) -
+          (dateValue(a.createdAt)?.getTime() || 0)
+      )
+      .slice(0,200)
+      .map(a=>`
+
+        <tr>
+
+          <td>
+            ${esc(
+              a.time ||
+              dateText(a.createdAt)
+            )}
+          </td>
+
+          <td>
+            ${esc(
+              a.user ||
+              a.actorEmail ||
+              ""
+            )}
+          </td>
+
+          <td>
+            ${esc(a.role || "")}
+          </td>
+
+          <td>
+            ${esc(a.action || "")}
+          </td>
+
+        </tr>
+
+      `).join("");
+
+
+  simpleTable(
+    "auditTable",
+    [
+      "TIME",
+      "USER",
+      "ROLE",
+      "ACTION"
+    ],
+    rows
+  );
+
+}
+
+
+/* ==========================================
+   GLOBAL SEARCH
+========================================== */
+
+function globalSearch(){
+
+  const q =
+    $("globalSearch")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  if(!q)
+    return;
+
+
+  const order =
+    state.orders.find(
+      o=>
+        JSON.stringify(o)
+          .toLowerCase()
+          .includes(q)
+    );
+
+
+  if(order){
+
+    showPage("orders");
+
+    $("orderSearch").value =
+      q;
+
+    renderOrders();
+
+    return;
+
+  }
+
+
+  const product =
+    state.products.find(
+      p=>
+        `${p.name || ""}
+         ${p.category || ""}`
+        .toLowerCase()
+        .includes(q)
+    );
+
+
+  if(product){
+
+    showPage("products");
+
+    $("productSearch").value =
+      q;
+
+    renderProducts();
+
+    return;
+
+  }
+
+
+  const customer =
+    state.customers.find(
+      c=>
+        `${c.name || ""}
+         ${c.phone || ""}
+         ${c.email || ""}`
+        .toLowerCase()
+        .includes(q)
+    );
+
+
+  if(customer){
+
+    showPage("customers");
+
+    $("customerSearch").value =
+      q;
+
+    renderCustomers();
+
+  }
+
+}
+
+
+window.globalSearch =
+  globalSearch;
+
+
+/* ==========================================
+   NEW ACTION
+========================================== */
+
+function openNewAction(){
+
+  openModal(
+    "New Action",
+
+    `
+
+    <div class="grid grid-3">
+
+      <button
+        class="primary-btn"
+        onclick="closeModal();showPage('orders')"
+      >
+        Orders
+      </button>
+
+      <button
+        class="primary-btn"
+        onclick="closeModal();showPage('products')"
+      >
+        Products
+      </button>
+
+      <button
+        class="primary-btn"
+        onclick="closeModal();showPage('inventory')"
+      >
+        Inventory
+      </button>
+
+      <button
+        class="primary-btn"
+        onclick="closeModal();openExpenseModal()"
+      >
+        Expense
+      </button>
+
+      <button
+        class="primary-btn"
+        onclick="closeModal();openCouponModal()"
+      >
+        Coupon
+      </button>
+
+      <button
+        class="primary-btn"
+        onclick="closeModal();showPage('reports')"
+      >
+        Report
+      </button>
+
+    </div>
+
+    `
+  );
+
+}
+
+
+window.openNewAction =
+  openNewAction;
+
+
+/* ==========================================
+   EXPORT CSV
+========================================== */
+
+function exportOrdersCSV(){
+
+  const rows = [
+
+    [
+      "Order ID",
+      "Order Code",
+      "Customer",
+      "Phone",
+      "Status",
+      "Payment",
+      "Total",
+      "Delivery Charge",
+      "Platform Charge",
+      "Rider",
+      "Address",
+      "Date"
+    ]
+
+  ];
+
+
+  state.orders.forEach(o=>{
+
+    rows.push([
+
+      o.id,
+
+      orderCode(o),
+
+      o.customerName ||
+      o.customer ||
+      o.customerId ||
+      "",
+
+      o.phone ||
+      o.customerPhone ||
+      "",
+
+      o.status ||
+      "",
+
+      o.paymentStatus ||
+      o.payment ||
+      "",
+
+      orderTotal(o),
+
+      Number(
+        o.deliveryCharge ||
+        o.deliveryFee ||
+        0
+      ),
+
+      Number(
+        o.platformCharge ||
+        0
+      ),
+
+      o.riderId ||
+      o.riderName ||
+      "",
+
+      o.deliveryAddress ||
+      o.address ||
+      "",
+
+      dateText(o.createdAt)
+
+    ]);
+
+  });
+
+
+  const csv =
+    rows
+      .map(row=>
+        row.map(cell=>
+          `"${String(cell ?? "")
+            .replace(/"/g,'""')}"`
+        ).join(",")
+      )
+      .join("\n");
+
+
+  const blob =
+    new Blob(
+      [csv],
+      {
+        type:"text/csv;charset=utf-8"
+      }
+    );
+
+
+  const url =
+    URL.createObjectURL(blob);
+
+
+  const a =
+    document.createElement("a");
+
+
+  a.href = url;
+
+  a.download =
+    "naturebite-orders.csv";
+
+  a.click();
+
+
+  URL.revokeObjectURL(url);
+
+}
+
+
+window.exportOrdersCSV =
+  exportOrdersCSV;
+
+
+/* ==========================================
+   RENDER EVERYTHING
+========================================== */
+
+function renderEverything(){
+
+  renderDashboard();
+
+  renderOrders();
+
+  renderProducts();
+
+  renderInventory();
+
+  renderCustomers();
+
+  renderRiders();
+
+  renderPartners();
+
+  renderPayments();
+
+  renderRefunds();
+
+  renderCancellations();
+
+  renderExpenses();
+
+  renderReports();
+
+  renderCoupons();
+
+  renderWheel();
+
+  renderDraws();
+
+  renderReviews();
+
+  renderSupport();
+
+  renderNotifications();
+
+  renderStaff();
+
+  renderPermissions();
+
+  renderAI();
+
+  renderSettings();
+
+  renderAudit();
+
+}
+
+
+/* ==========================================
+   START
+========================================== */
+
+window.showPage =
+  showPage;
+
+window.viewOrder =
+  viewOrder;
+
+window.printOrder =
+  printOrder;
+
+window.renderOrders =
+  renderOrders;
+
+window.renderProducts =
+  renderProducts;
+
+window.renderCustomers =
+  renderCustomers;
+
+window.renderEverything =
+  renderEverything;
+
 </script>
+
 </body>
 </html>
