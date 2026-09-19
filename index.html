@@ -1,3520 +1,4754 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>NatureBite Admin Panel</title>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
-
 <style>
 *{box-sizing:border-box}
-:root{
-  --green:#164d32;
-  --green2:#236b47;
-  --light:#f5f3ea;
-  --cream:#faf9f4;
-  --white:#fff;
-  --text:#17251d;
-  --muted:#718077;
-  --border:#e4e8e3;
-  --danger:#c62828;
-  --warning:#d98b00;
-  --success:#1c7c46;
-  --shadow:0 5px 25px rgba(0,0,0,.06)
-}
 body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:var(--light);
-  color:var(--text)
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f5f7f3;
+    color:#1f2937
 }
 button,input,select,textarea{font:inherit}
-button{cursor:pointer}
+button{cursor:pointer;border:0}
 .hidden{display:none!important}
 
-/* LOGIN */
-#loginScreen{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:
-    radial-gradient(circle at top right,#dbe8d8,transparent 35%),
-    var(--light);
-  padding:20px
-}
-.login-box{
-  width:100%;
-  max-width:430px;
-  background:#fff;
-  padding:35px;
-  border-radius:20px;
-  box-shadow:0 20px 60px rgba(0,0,0,.1)
-}
-.logo{
-  color:var(--green);
-  font-size:30px;
-  font-weight:800;
-  text-align:center;
-  margin-bottom:5px
-}
-.login-sub{
-  text-align:center;
-  color:var(--muted);
-  margin-bottom:28px
-}
-.form-group{margin-bottom:15px}
-.form-group label{
-  display:block;
-  font-size:13px;
-  font-weight:bold;
-  margin-bottom:7px
-}
-input,select,textarea{
-  width:100%;
-  border:1px solid var(--border);
-  background:#fff;
-  padding:11px 13px;
-  border-radius:9px;
-  outline:none
-}
-input:focus,select:focus,textarea:focus{
-  border-color:var(--green2)
-}
-.primary{
-  background:var(--green);
-  color:white;
-  border:0;
-  padding:11px 18px;
-  border-radius:9px;
-  font-weight:bold
-}
-.primary:hover{background:var(--green2)}
-.full{width:100%}
-.login-error{
-  background:#ffe9e9;
-  color:#a51f1f;
-  padding:10px;
-  border-radius:8px;
-  margin-bottom:15px;
-  font-size:13px
+:root{
+    --green:#123d2b;
+    --green2:#1f6848;
+    --light:#eef5ef;
+    --cream:#faf8f1;
+    --border:#dfe6df;
+    --danger:#b42318;
+    --warning:#a15c00;
+    --blue:#175cd3;
 }
 
-/* APP */
-#app{display:none;min-height:100vh}
 .sidebar{
-  position:fixed;
-  left:0;
-  top:0;
-  bottom:0;
-  width:250px;
-  background:var(--green);
-  color:#fff;
-  overflow:auto;
-  z-index:20
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    width:250px;
+    background:var(--green);
+    color:white;
+    overflow-y:auto;
+    z-index:50;
 }
-.side-logo{
-  padding:25px 22px;
-  font-size:25px;
-  font-weight:800;
-  border-bottom:1px solid rgba(255,255,255,.12)
+.brand{
+    padding:25px 20px;
+    font-size:25px;
+    font-weight:800;
+    border-bottom:1px solid rgba(255,255,255,.12)
 }
-.side-section{
-  padding:18px 18px 5px;
-  font-size:10px;
-  opacity:.55;
-  letter-spacing:1.3px;
-  font-weight:bold
+.brand small{
+    display:block;
+    font-size:11px;
+    opacity:.7;
+    margin-top:4px
 }
-.nav-btn{
-  width:100%;
-  background:transparent;
-  color:#fff;
-  border:0;
-  text-align:left;
-  padding:11px 20px;
-  font-size:14px;
-  opacity:.88
+.menu-title{
+    padding:18px 20px 7px;
+    font-size:10px;
+    color:#9fc4ae;
+    letter-spacing:1px;
+    font-weight:bold
 }
-.nav-btn:hover,.nav-btn.active{
-  background:rgba(255,255,255,.12);
-  opacity:1
+.nav{
+    padding:0 10px
 }
+.nav button{
+    width:100%;
+    background:transparent;
+    color:#dcebe2;
+    padding:11px 12px;
+    text-align:left;
+    border-radius:8px;
+    margin-bottom:3px
+}
+.nav button:hover,
+.nav button.active{
+    background:#1d5940;
+    color:white
+}
+
 .main{
-  margin-left:250px;
-  min-height:100vh
+    margin-left:250px;
+    min-height:100vh
 }
 .topbar{
-  background:#fff;
-  height:68px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 25px;
-  border-bottom:1px solid var(--border);
-  position:sticky;
-  top:0;
-  z-index:10
+    height:70px;
+    background:white;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 25px;
+    position:sticky;
+    top:0;
+    z-index:30
 }
-.top-title{font-weight:800;font-size:20px}
-.user-info{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  font-size:13px
+.topbar h2{
+    margin:0;
+    font-size:20px
 }
-.role-badge{
-  padding:5px 9px;
-  border-radius:20px;
-  background:#e7f2eb;
-  color:var(--green);
-  font-weight:bold
+.admin-user{
+    display:flex;
+    align-items:center;
+    gap:10px
 }
-.logout{
-  border:0;
-  background:#f6e9e9;
-  color:#a52b2b;
-  padding:7px 11px;
-  border-radius:7px
+.avatar{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:var(--green);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold
 }
-.content{padding:25px}
 
-/* CARDS */
+.content{
+    padding:25px
+}
+
+.page{display:none}
+.page.active{display:block}
+
 .cards{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:14px;
-  margin-bottom:25px
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:20px
 }
 .card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:13px;
-  padding:17px;
-  box-shadow:var(--shadow)
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px
 }
-.card-label{font-size:12px;color:var(--muted)}
-.card-value{font-size:25px;font-weight:800;margin-top:8px}
-.card-small{font-size:11px;color:var(--muted);margin-top:5px}
+.card .label{
+    font-size:13px;
+    color:#667085
+}
+.card .value{
+    font-size:26px;
+    font-weight:800;
+    margin-top:8px
+}
 
-/* PAGE */
-.page-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  margin-bottom:18px
+.panel{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    margin-bottom:20px;
+    overflow:hidden
 }
-.page-head h2{margin:0;font-size:21px}
-.actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap
+.panel-head{
+    padding:16px 18px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap
 }
+.panel-head h3{
+    margin:0;
+    font-size:17px
+}
+.panel-body{
+    padding:18px
+}
+
+.toolbar{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap
+}
+
 .btn{
-  border:1px solid var(--border);
-  background:#fff;
-  padding:9px 13px;
-  border-radius:8px
+    padding:9px 13px;
+    border-radius:7px;
+    background:#e9eee9;
+    color:#24372c;
+    font-weight:600
 }
-.btn:hover{background:#f5f7f4}
-.btn.green{
-  background:var(--green);
-  color:#fff;
-  border-color:var(--green)
+.btn:hover{opacity:.9}
+.btn-primary{
+    background:var(--green2);
+    color:white
 }
-.btn.red{
-  background:#fff0f0;
-  color:#a72222;
-  border-color:#ffd1d1
+.btn-danger{
+    background:#fee4e2;
+    color:#b42318
 }
-.btn.orange{
-  background:#fff5dc;
-  color:#9a6500;
-  border-color:#f2dda9
+.btn-warning{
+    background:#fff1d6;
+    color:#8a4b00
 }
-.table-wrap{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:13px;
-  overflow:auto;
-  box-shadow:var(--shadow)
+.btn-blue{
+    background:#e8f0ff;
+    color:#175cd3
 }
+.btn-dark{
+    background:#172b20;
+    color:white
+}
+
 table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:900px
+    width:100%;
+    border-collapse:collapse
 }
 th,td{
-  padding:12px;
-  border-bottom:1px solid var(--border);
-  text-align:left;
-  font-size:13px
+    padding:11px 12px;
+    border-bottom:1px solid #edf0ed;
+    text-align:left;
+    font-size:13px;
+    vertical-align:middle
 }
 th{
-  background:#f8faf7;
-  color:#526258;
-  font-size:11px;
-  text-transform:uppercase
+    background:#f8faf8;
+    font-size:12px;
+    color:#475467
 }
-.status{
-  display:inline-block;
-  padding:5px 8px;
-  border-radius:20px;
-  font-size:11px;
-  font-weight:bold
-}
-.status.green{background:#e6f5eb;color:#19723e}
-.status.yellow{background:#fff4d8;color:#996700}
-.status.red{background:#ffe7e7;color:#a92323}
-.status.gray{background:#edf0ee;color:#59645e}
+tr:hover td{background:#fbfdfb}
 
-/* DASHBOARD */
-.grid2{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px
+.thumb{
+    width:50px;
+    height:50px;
+    object-fit:cover;
+    border-radius:8px;
+    background:#eef2ee;
+    border:1px solid var(--border)
 }
-.panel{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:13px;
-  padding:18px;
-  box-shadow:var(--shadow)
-}
-.panel h3{margin:0 0 15px;font-size:16px}
-.alert{
-  padding:11px;
-  border-radius:8px;
-  margin-bottom:8px;
-  background:#f7f9f7;
-  font-size:13px
+.no-image{
+    width:50px;
+    height:50px;
+    border-radius:8px;
+    background:#eef2ee;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px
 }
 
-/* SETTINGS */
-.settings-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px
+.badge{
+    display:inline-block;
+    padding:4px 8px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:bold
 }
-.setting-box{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:13px;
-  padding:20px;
-  box-shadow:var(--shadow)
+.badge-green{background:#dcfae6;color:#067647}
+.badge-red{background:#fee4e2;color:#b42318}
+.badge-yellow{background:#fff1d6;color:#8a4b00}
+.badge-blue{background:#e8f0ff;color:#175cd3}
+
+.search{
+    padding:9px 11px;
+    border:1px solid #ccd5ce;
+    border-radius:7px;
+    min-width:220px;
+    outline:none
 }
-.setting-box h3{
-  margin:0 0 17px;
-  color:var(--green)
-}
-.switch-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  padding:12px 0;
-  border-bottom:1px solid #edf0ed
-}
-.switch{
-  width:46px;
-  height:24px;
-  position:relative
-}
-.switch input{display:none}
-.slider{
-  position:absolute;
-  inset:0;
-  background:#ccc;
-  border-radius:20px
-}
-.slider:before{
-  content:"";
-  position:absolute;
-  width:18px;
-  height:18px;
-  left:3px;
-  top:3px;
-  background:#fff;
-  border-radius:50%;
-  transition:.2s
-}
-.switch input:checked + .slider{background:var(--green)}
-.switch input:checked + .slider:before{
-  transform:translateX(22px)
-}
-.setting-actions{
-  margin-top:20px;
-  display:flex;
-  justify-content:flex-end
+.search:focus,
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:var(--green2);
+    outline:none
 }
 
-/* MODAL */
+.modal-bg{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:20px
+}
+.modal-bg.show{display:flex}
 .modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.55);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  z-index:100
-}
-.modal-box{
-  width:100%;
-  max-width:850px;
-  max-height:90vh;
-  overflow:auto;
-  background:#fff;
-  border-radius:15px;
-  padding:22px
+    width:min(900px,100%);
+    max-height:92vh;
+    overflow:auto;
+    background:white;
+    border-radius:14px
 }
 .modal-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px
+    padding:17px 20px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center
 }
+.modal-head h3{margin:0}
 .close{
-  border:0;
-  background:#f1f3f1;
-  width:34px;
-  height:34px;
-  border-radius:50%
+    background:#f1f3f1;
+    width:35px;
+    height:35px;
+    border-radius:50%
 }
-.detail-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px
-}
-.detail-item{
-  background:#f8faf8;
-  padding:10px;
-  border-radius:8px
-}
-.detail-item small{
-  display:block;
-  color:var(--muted);
-  margin-bottom:4px
-}
-
-/* PRINT AREA */
-#printArea{display:none}
-
-@media(max-width:1200px){
-  .cards{grid-template-columns:repeat(4,1fr)}
-}
-@media(max-width:900px){
-  .sidebar{width:210px}
-  .main{margin-left:210px}
-  .settings-grid,.grid2{grid-template-columns:1fr}
-  .cards{grid-template-columns:repeat(2,1fr)}
-}
-@media(max-width:650px){
-  .sidebar{
-    position:relative;
-    width:100%;
-    height:auto
-  }
-  .main{margin-left:0}
-  .topbar{position:relative}
-  .content{padding:14px}
-  .cards{grid-template-columns:1fr 1fr}
-  .detail-grid{grid-template-columns:1fr}
-}
-
-/* PRINT */
-@media print{
-  body>*{display:none!important}
-  #printArea{
-    display:block!important;
-    background:white
-  }
-  .print-page{
-    width:100%;
-    min-height:100vh;
-    padding:25px;
-    page-break-after:always;
-    font-family:Arial,sans-serif;
-    color:#111
-  }
-  .print-header{
+.modal-body{padding:20px}
+.modal-foot{
+    padding:15px 20px;
+    border-top:1px solid var(--border);
     display:flex;
-    justify-content:space-between;
-    border-bottom:2px solid #164d32;
-    padding-bottom:10px;
-    margin-bottom:15px
-  }
-  .print-brand{
-    font-size:25px;
+    justify-content:flex-end;
+    gap:8px
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px
+}
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px
+}
+.form-group.full{grid-column:1/-1}
+.form-group label{
+    font-size:12px;
     font-weight:bold;
-    color:#164d32
-  }
-  .print-table{
+    color:#475467
+}
+.form-group input,
+.form-group select,
+.form-group textarea{
     width:100%;
-    border-collapse:collapse;
-    margin-top:15px
-  }
-  .print-table th,.print-table td{
-    border:1px solid #bbb;
-    padding:7px;
-    font-size:12px
-  }
-  .print-flex{
+    padding:10px 11px;
+    border:1px solid #ccd5ce;
+    border-radius:7px;
+    background:white
+}
+.form-group textarea{
+    min-height:90px;
+    resize:vertical
+}
+
+.checks{
     display:flex;
-    justify-content:space-between;
-    gap:20px
-  }
-  .print-qr{text-align:center}
-  .print-qr img{max-width:120px}
+    gap:18px;
+    flex-wrap:wrap
+}
+.check{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:13px
+}
+
+.image-preview{
+    margin-top:8px;
+    width:110px;
+    height:110px;
+    border:1px dashed #b7c6bb;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:#f7faf7
+}
+.image-preview img{
+    width:100%;
+    height:100%;
+    object-fit:cover
+}
+
+.variant-row{
+    display:grid;
+    grid-template-columns:1.2fr 1fr 1fr 1fr 1.5fr auto;
+    gap:7px;
+    margin-bottom:8px
+}
+.variant-row input{
+    min-width:0;
+    padding:8px;
+    border:1px solid #ccd5ce;
+    border-radius:6px
+}
+
+.stat-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px
+}
+.stat-box{
+    background:#f7faf7;
+    padding:15px;
+    border-radius:9px;
+    border:1px solid var(--border)
+}
+
+.empty{
+    padding:35px;
+    text-align:center;
+    color:#667085
+}
+
+.login{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--green)
+}
+.login-box{
+    width:min(410px,92%);
+    background:white;
+    border-radius:15px;
+    padding:30px;
+    box-shadow:0 15px 50px rgba(0,0,0,.2)
+}
+.login-box h1{
+    margin:0 0 5px;
+    color:var(--green)
+}
+.login-box p{
+    color:#667085;
+    font-size:13px
+}
+.login-box input{
+    width:100%;
+    padding:12px;
+    margin:7px 0;
+    border:1px solid #ccd5ce;
+    border-radius:8px
+}
+.login-box button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border-radius:8px
+}
+
+.mobile-menu{
+    display:none;
+}
+
+@media(max-width:1100px){
+    .cards{grid-template-columns:repeat(2,1fr)}
+    .sidebar{width:220px}
+    .main{margin-left:220px}
+}
+@media(max-width:800px){
+    .sidebar{
+        transform:translateX(-100%);
+        transition:.2s
+    }
+    .sidebar.open{transform:translateX(0)}
+    .main{margin-left:0}
+    .mobile-menu{display:block}
+    .form-grid{grid-template-columns:1fr}
+    .cards{grid-template-columns:1fr 1fr}
+    .variant-row{
+        grid-template-columns:1fr 1fr;
+        padding:10px;
+        background:#f7faf7
+    }
+    .content{padding:15px}
+    .topbar{padding:0 15px}
+}
+@media(max-width:500px){
+    .cards{grid-template-columns:1fr}
+    table{min-width:850px}
+    .panel-body{overflow-x:auto}
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<section id="loginScreen">
-  <div class="login-box">
-    <div class="logo">NatureBite</div>
-    <div class="login-sub">Admin Control Panel</div>
+<!-- ================= LOGIN ================= -->
 
-    <div id="loginError" class="login-error hidden"></div>
+<div id="loginScreen" class="login">
+    <div class="login-box">
+        <h1>NatureBite</h1>
+        <p>Admin Panel Login</p>
 
-    <form id="loginForm">
-      <div class="form-group">
-        <label>Email</label>
-        <input id="loginEmail" type="email" placeholder="admin@example.com" required>
-      </div>
+        <input id="loginEmail" type="email" placeholder="Admin Email">
+        <input id="loginPassword" type="password" placeholder="Password">
 
-      <div class="form-group">
-        <label>Password</label>
-        <input id="loginPassword" type="password" placeholder="Password" required>
-      </div>
+        <button class="btn btn-primary" onclick="login()">
+            Login
+        </button>
 
-      <button id="loginBtn" class="primary full" type="submit">
-        Login to Admin Panel
-      </button>
-    </form>
-  </div>
-</section>
-
-<!-- APP -->
-<section id="app">
-
-  <aside class="sidebar">
-
-    <div class="side-logo">NatureBite</div>
-
-    <div class="side-section">DASHBOARD</div>
-    <button class="nav-btn active" data-page="dashboard">Dashboard</button>
-
-    <div class="side-section">OPERATIONS</div>
-    <button class="nav-btn" data-page="orders">Orders</button>
-    <button class="nav-btn" data-page="products">Products</button>
-    <button class="nav-btn" data-page="inventory">Inventory</button>
-    <button class="nav-btn" data-page="customers">Customers</button>
-    <button class="nav-btn" data-page="riders">Riders</button>
-    <button class="nav-btn" data-page="deliveryPartners">Delivery Partners</button>
-
-    <div class="side-section">FINANCE</div>
-    <button class="nav-btn" data-page="payments">Payments</button>
-    <button class="nav-btn" data-page="refunds">Refunds</button>
-    <button class="nav-btn" data-page="cancellations">Cancellations</button>
-    <button class="nav-btn" data-page="expenses">Expenses</button>
-    <button class="nav-btn" data-page="reports">Reports</button>
-
-    <div class="side-section">MARKETING</div>
-    <button class="nav-btn" data-page="offers">Offers & Coupons</button>
-    <button class="nav-btn" data-page="wheel">Lucky Wheel</button>
-    <button class="nav-btn" data-page="draw">Lucky Draw</button>
-    <button class="nav-btn" data-page="reviews">Reviews</button>
-    <button class="nav-btn" data-page="banners">Banners</button>
-
-    <div class="side-section">CUSTOMER</div>
-    <button class="nav-btn" data-page="support">Support</button>
-    <button class="nav-btn" data-page="notifications">Notifications</button>
-
-    <div class="side-section">MANAGEMENT</div>
-    <button class="nav-btn" data-page="staff">Staff</button>
-    <button class="nav-btn" data-page="permissions">Permissions</button>
-
-    <div class="side-section">INTELLIGENCE</div>
-    <button class="nav-btn" data-page="ai">AI Assistant</button>
-
-    <div class="side-section">SYSTEM</div>
-    <button class="nav-btn" data-page="settings">Settings</button>
-    <button class="nav-btn" data-page="auditLogs">Audit Logs</button>
-
-  </aside>
-
-  <main class="main">
-
-    <header class="topbar">
-      <div id="pageTitle" class="top-title">Dashboard</div>
-
-      <div class="user-info">
-        <span id="adminEmail"></span>
-        <span id="adminRole" class="role-badge"></span>
-        <button id="logoutBtn" class="logout">Logout</button>
-      </div>
-    </header>
-
-    <div id="content" class="content"></div>
-
-  </main>
-</section>
-
-<!-- MODAL -->
-<div id="modal" class="modal hidden">
-  <div class="modal-box">
-    <div class="modal-head">
-      <h3 id="modalTitle">Details</h3>
-      <button class="close" onclick="closeModal()">×</button>
+        <p id="loginError" style="color:#b42318"></p>
     </div>
-    <div id="modalBody"></div>
-  </div>
 </div>
 
-<!-- PRINT -->
-<div id="printArea"></div>
+<!-- ================= ADMIN ================= -->
+
+<div id="adminScreen" class="hidden">
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+        NatureBite
+        <small>Administration System</small>
+    </div>
+
+    <div class="menu-title">DASHBOARD</div>
+    <div class="nav">
+        <button onclick="showPage('dashboard',this)">📊 Dashboard</button>
+    </div>
+
+    <div class="menu-title">OPERATIONS</div>
+    <div class="nav">
+        <button onclick="showPage('orders',this)">🛒 Orders</button>
+        <button onclick="showPage('products',this)">📦 Products</button>
+        <button onclick="showPage('inventory',this)">📊 Inventory</button>
+        <button onclick="showPage('customers',this)">👥 Customers</button>
+        <button onclick="showPage('riders',this)">🏍️ Riders</button>
+        <button onclick="showPage('deliveryPartners',this)">🚚 Delivery Partners</button>
+    </div>
+
+    <div class="menu-title">FINANCE</div>
+    <div class="nav">
+        <button onclick="showPage('payments',this)">💳 Payments</button>
+        <button onclick="showPage('refunds',this)">↩️ Refunds</button>
+        <button onclick="showPage('cancellations',this)">❌ Cancellations</button>
+        <button onclick="showPage('expenses',this)">💰 Expenses</button>
+        <button onclick="showPage('reports',this)">📈 Reports</button>
+    </div>
+
+    <div class="menu-title">MARKETING</div>
+    <div class="nav">
+        <button onclick="showPage('offers',this)">🎁 Offers & Coupons</button>
+        <button onclick="showPage('wheel',this)">🎡 Lucky Wheel</button>
+        <button onclick="showPage('draw',this)">🎟️ Lucky Draw</button>
+        <button onclick="showPage('reviews',this)">⭐ Reviews</button>
+        <button onclick="showPage('banners',this)">🖼️ Banners</button>
+    </div>
+
+    <div class="menu-title">CUSTOMER</div>
+    <div class="nav">
+        <button onclick="showPage('support',this)">💬 Support</button>
+        <button onclick="showPage('notifications',this)">🔔 Notifications</button>
+    </div>
+
+    <div class="menu-title">MANAGEMENT</div>
+    <div class="nav">
+        <button onclick="showPage('staff',this)">👨‍💼 Staff</button>
+        <button onclick="showPage('permissions',this)">🔐 Permissions</button>
+    </div>
+
+    <div class="menu-title">SECURITY</div>
+    <div class="nav">
+        <button onclick="showPage('security',this)">🛡️ Security</button>
+        <button onclick="showPage('blockedIPs',this)">🚫 Blocked IPs</button>
+    </div>
+
+    <div class="menu-title">SYSTEM</div>
+    <div class="nav">
+        <button onclick="showPage('ai',this)">🤖 AI Assistant</button>
+        <button onclick="showPage('settings',this)">⚙️ Settings</button>
+        <button onclick="showPage('audit',this)">📋 Audit Logs</button>
+        <button onclick="logout()">🚪 Logout</button>
+    </div>
+
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+        <button class="mobile-menu btn" onclick="toggleSidebar()">☰</button>
+        <h2 id="pageTitle">Dashboard</h2>
+    </div>
+
+    <div class="admin-user">
+        <span id="adminEmail"></span>
+        <div class="avatar">A</div>
+    </div>
+</header>
+
+<div class="content">
+
+<!-- ================= DASHBOARD ================= -->
+
+<section id="page-dashboard" class="page active">
+
+    <div class="cards">
+
+        <div class="card">
+            <div class="label">Total Sales</div>
+            <div class="value" id="dashSales">৳0</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Total Orders</div>
+            <div class="value" id="dashOrders">0</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Delivered</div>
+            <div class="value" id="dashDelivered">0</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Pending</div>
+            <div class="value" id="dashPending">0</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Cancelled</div>
+            <div class="value" id="dashCancelled">0</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Products</div>
+            <div class="value" id="dashProducts">0</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Customers</div>
+            <div class="value" id="dashCustomers">0</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Low Stock</div>
+            <div class="value" id="dashLowStock">0</div>
+        </div>
+
+    </div>
+
+    <div class="panel">
+        <div class="panel-head">
+            <h3>Quick Actions</h3>
+        </div>
+
+        <div class="panel-body">
+            <div class="toolbar">
+                <button class="btn btn-primary" onclick="openProductModal()">➕ Add Product</button>
+                <button class="btn btn-primary" onclick="openStaffModal()">➕ Add Staff</button>
+                <button class="btn btn-primary" onclick="openRiderModal()">➕ Add Rider</button>
+                <button class="btn btn-primary" onclick="showPage('orders')">🛒 Orders</button>
+                <button class="btn btn-dark" onclick="printAllOrders()">🖨️ Print Orders</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-head">
+            <h3>Low Stock Alerts</h3>
+            <button class="btn btn-warning" onclick="showPage('inventory')">View Inventory</button>
+        </div>
+        <div class="panel-body" id="dashboardLowStock"></div>
+    </div>
+
+</section>
+
+<!-- ================= PRODUCTS ================= -->
+
+<section id="page-products" class="page">
+
+    <div class="panel">
+
+        <div class="panel-head">
+            <h3>Product Management</h3>
+
+            <div class="toolbar">
+                <input class="search"
+                       id="productSearch"
+                       placeholder="Search product..."
+                       oninput="renderProducts()">
+
+                <button class="btn btn-primary"
+                        onclick="openProductModal()">
+                    ➕ Add Product
+                </button>
+
+                <button class="btn"
+                        onclick="loadAllData()">
+                    🔄 Refresh
+                </button>
+
+                <button class="btn btn-dark"
+                        onclick="printProducts()">
+                    🖨️ Print
+                </button>
+            </div>
+        </div>
+
+        <div class="panel-body">
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Variants</th>
+                    <th>Status</th>
+                    <th>Featured</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody id="productsTable"></tbody>
+            </table>
+
+        </div>
+    </div>
+
+</section>
+
+<!-- ================= INVENTORY ================= -->
+
+<section id="page-inventory" class="page">
+
+    <div class="panel">
+
+        <div class="panel-head">
+            <h3>Inventory Management</h3>
+
+            <div class="toolbar">
+                <input class="search"
+                       id="inventorySearch"
+                       placeholder="Search inventory..."
+                       oninput="renderInventory()">
+
+                <button class="btn btn-primary"
+                        onclick="openStockModal()">
+                    ➕ Update Stock
+                </button>
+
+                <button class="btn"
+                        onclick="loadAllData()">
+                    🔄 Refresh
+                </button>
+
+                <button class="btn btn-dark"
+                        onclick="printInventory()">
+                    🖨️ Print
+                </button>
+            </div>
+        </div>
+
+        <div class="panel-body">
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Variant</th>
+                    <th>SKU</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Low Limit</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+
+                <tbody id="inventoryTable"></tbody>
+            </table>
+
+        </div>
+    </div>
+
+</section>
+
+<!-- ================= STAFF ================= -->
+
+<section id="page-staff" class="page">
+
+    <div class="panel">
+
+        <div class="panel-head">
+            <h3>Staff Management</h3>
+
+            <div class="toolbar">
+                <input class="search"
+                       id="staffSearch"
+                       placeholder="Search staff..."
+                       oninput="renderStaff()">
+
+                <button class="btn btn-primary"
+                        onclick="openStaffModal()">
+                    ➕ Add Staff
+                </button>
+
+                <button class="btn btn-dark"
+                        onclick="printStaff()">
+                    🖨️ Print
+                </button>
+            </div>
+        </div>
+
+        <div class="panel-body">
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody id="staffTable"></tbody>
+            </table>
+
+        </div>
+    </div>
+
+</section>
+
+<!-- ================= RIDERS ================= -->
+
+<section id="page-riders" class="page">
+
+    <div class="panel">
+
+        <div class="panel-head">
+
+            <h3>Rider Management</h3>
+
+            <div class="toolbar">
+
+                <input class="search"
+                       id="riderSearch"
+                       placeholder="Search rider..."
+                       oninput="renderRiders()">
+
+                <button class="btn btn-primary"
+                        onclick="openRiderModal()">
+                    ➕ Add Rider
+                </button>
+
+                <button class="btn btn-dark"
+                        onclick="printRiders()">
+                    🖨️ Print
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="panel-body">
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Rider ID</th>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>Vehicle</th>
+                    <th>Zone</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody id="ridersTable"></tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= CUSTOMERS ================= -->
+
+<section id="page-customers" class="page">
+
+    <div class="panel">
+
+        <div class="panel-head">
+            <h3>Customers</h3>
+
+            <div class="toolbar">
+                <input class="search"
+                       id="customerSearch"
+                       placeholder="Search customer..."
+                       oninput="renderCustomers()">
+
+                <button class="btn btn-dark"
+                        onclick="printCustomers()">
+                    🖨️ Print
+                </button>
+            </div>
+        </div>
+
+        <div class="panel-body">
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Mobile</th>
+                    <th>Email</th>
+                    <th>Orders</th>
+                    <th>Status</th>
+                    <th>Security</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+
+                <tbody id="customersTable"></tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= ORDERS ================= -->
+
+<section id="page-orders" class="page">
+
+    <div class="panel">
+
+        <div class="panel-head">
+
+            <h3>Orders</h3>
+
+            <div class="toolbar">
+
+                <button class="btn"
+                        onclick="loadAllData()">
+                    🔄 Refresh
+                </button>
+
+                <button class="btn btn-dark"
+                        onclick="printAllOrders()">
+                    🖨️ Print All Orders
+                </button>
+
+                <button class="btn btn-primary"
+                        onclick="printSelectedOrders()">
+                    🖨️ Print Selected
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="panel-body">
+
+            <table>
+                <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox"
+                               onchange="toggleAllOrders(this.checked)">
+                    </th>
+                    <th>Order</th>
+                    <th>Customer</th>
+                    <th>Total</th>
+                    <th>Payment</th>
+                    <th>Status</th>
+                    <th>Rider</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+
+                <tbody id="ordersTable"></tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= PAYMENTS ================= -->
+
+<section id="page-payments" class="page">
+    <div class="panel">
+        <div class="panel-head">
+            <h3>Payment Management</h3>
+            <button class="btn btn-dark" onclick="printTable('paymentsTable')">🖨️ Print</button>
+        </div>
+        <div class="panel-body">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Customer</th>
+                        <th>Method</th>
+                        <th>Transaction ID</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="paymentsTable"></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ================= OTHER MODULES ================= -->
+
+<section id="page-refunds" class="page">
+    <div class="panel">
+        <div class="panel-head"><h3>Refund Management</h3><button class="btn btn-primary" onclick="simpleAdd('refunds')">➕ Add Refund</button></div>
+        <div class="panel-body"><div id="refundsBox" class="empty">Refund requests will appear here.</div></div>
+    </div>
+</section>
+
+<section id="page-cancellations" class="page">
+    <div class="panel">
+        <div class="panel-head"><h3>Cancellation Management</h3><button class="btn btn-primary" onclick="simpleAdd('cancellations')">➕ Add Record</button></div>
+        <div class="panel-body"><div id="cancellationsBox" class="empty">Cancellation requests will appear here.</div></div>
+    </div>
+</section>
+
+<section id="page-expenses" class="page">
+    <div class="panel">
+        <div class="panel-head"><h3>Expenses</h3><button class="btn btn-primary" onclick="simpleAdd('expenses')">➕ Add Expense</button></div>
+        <div class="panel-body"><div id="expensesBox" class="empty">Expense management.</div></div>
+    </div>
+</section>
+
+<section id="page-reports" class="page">
+    <div class="panel">
+        <div class="panel-head">
+            <h3>Reports</h3>
+            <div class="toolbar">
+                <button class="btn btn-dark" onclick="generateReport('today')">Today</button>
+                <button class="btn" onclick="generateReport('week')">This Week</button>
+                <button class="btn" onclick="generateReport('month')">This Month</button>
+                <button class="btn btn-primary" onclick="printReport()">🖨️ Print Report</button>
+            </div>
+        </div>
+        <div class="panel-body" id="reportBox"></div>
+    </div>
+</section>
+
+<section id="page-offers" class="page">
+    <div class="panel">
+        <div class="panel-head"><h3>Offers & Coupons</h3><button class="btn btn-primary" onclick="simpleAdd('offers')">➕ Add Offer</button></div>
+        <div class="panel-body"><div class="empty">Offer & coupon management.</div></div>
+    </div>
+</section>
+
+<section id="page-wheel" class="page">
+    <div class="panel">
+        <div class="panel-head"><h3>Lucky Wheel</h3><button class="btn btn-primary" onclick="simpleAdd('wheelRewards')">➕ Add Reward</button></div>
+        <div class="panel-body"><div class="empty">Lucky Wheel configuration.</div></div>
+    </div>
+</section>
+
+<section id="page-draw" class="page">
+    <div class="panel">
+        <div class="panel-head"><h3>Lucky Draw</h3><button class="btn btn-primary" onclick="simpleAdd('luckyDraws')">➕ Add Draw</button></div>
+        <div class="panel-body"><div class="empty">Lucky Draw management.</div></div>
+    </div>
+</section>
+
+<section id="page-reviews" class="page">
+    <div class="panel">
+        <div class="panel-head"><h3>Reviews</h3></div>
+        <div class="panel-body"><div class="empty">Customer reviews.</div></div>
+    </div>
+</section>
+
+<section id="page-banners" class="page">
+    <div class="panel">
+        <div class="panel-head"><h3>Banners</h3><button class="btn btn-primary" onclick="simpleAdd('banners')">➕ Add Banner</button></div>
+        <div class="panel-body"><div class="empty">Banner management.</div></div>
+    </div>
+</section>
+
+<section id="page-support" class="page">
+    <div class="panel">
+        <div class="panel-head"><h3>Customer Support</h3></div>
+        <div class="panel-body"><div class="empty">Support tickets.</div></div>
+    </div>
+</section>
+
+<section id="page-notifications" class="page">
+    <div class="panel">
+        <div class="panel-head"><h3>Notifications</h3><button class="btn btn-primary" onclick="simpleAdd('notifications')">➕ Create Notification</button></div>
+        <div class="panel-body"><div class="empty">Notification center.</div></div>
+    </div>
+</section>
+
+<section id="page-deliveryPartners" class="page">
+    <div class="panel">
+        <div class="panel-head"><h3>Delivery Partners</h3><button class="btn btn-primary" onclick="simpleAdd('deliveryPartners')">➕ Add Partner</button></div>
+        <div class="panel-body"><div class="empty">Delivery partner management.</div></div>
+    </div>
+</section>
+
+<section id="page-permissions" class="page">
+    <div class="panel">
+        <div class="panel-head"><h3>Staff Permissions</h3></div>
+        <div class="panel-body">
+            <div class="stat-grid">
+                <div class="stat-box"><b>Orders</b><br>View / Add / Edit / Approve / Print</div>
+                <div class="stat-box"><b>Products</b><br>View / Add / Edit / Delete</div>
+                <div class="stat-box"><b>Inventory</b><br>View / Stock Update</div>
+                <div class="stat-box"><b>Finance</b><br>View / Approve / Export</div>
+                <div class="stat-box"><b>Riders</b><br>View / Add / Edit / Disable</div>
+                <div class="stat-box"><b>Staff</b><br>Super Admin only</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= SECURITY ================= -->
+
+<section id="page-security" class="page">
+
+    <div class="cards">
+
+        <div class="card">
+            <div class="label">Suspicious Customers</div>
+            <div class="value" id="suspiciousCount">0</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Blocked Customers</div>
+            <div class="value" id="blockedCustomerCount">0</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Blocked IPs</div>
+            <div class="value" id="blockedIPCount">0</div>
+        </div>
+
+    </div>
+
+    <div class="panel">
+        <div class="panel-head">
+            <h3>Security Monitoring</h3>
+        </div>
+        <div class="panel-body">
+            <p>
+                IP address, device/session and suspicious activity information
+                should be collected through a trusted server-side mechanism.
+            </p>
+
+            <div class="stat-grid">
+                <div class="stat-box">
+                    <b>Normal</b><br>
+                    Regular activity
+                </div>
+
+                <div class="stat-box">
+                    <b>Suspicious</b><br>
+                    Requires review
+                </div>
+
+                <div class="stat-box">
+                    <b>Restricted</b><br>
+                    Limited account
+                </div>
+
+                <div class="stat-box">
+                    <b>Blocked</b><br>
+                    Access denied
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<section id="page-blockedIPs" class="page">
+
+    <div class="panel">
+
+        <div class="panel-head">
+            <h3>Blocked IP Addresses</h3>
+
+            <button class="btn btn-danger"
+                    onclick="openBlockIPModal()">
+                🚫 Block IP
+            </button>
+        </div>
+
+        <div class="panel-body">
+
+            <table>
+                <thead>
+                <tr>
+                    <th>IP</th>
+                    <th>Reason</th>
+                    <th>Type</th>
+                    <th>Blocked By</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+
+                <tbody id="blockedIPsTable"></tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= AI ================= -->
+
+<section id="page-ai" class="page">
+    <div class="panel">
+        <div class="panel-head"><h3>AI Assistant</h3></div>
+        <div class="panel-body">
+            <div class="stat-grid">
+                <div class="stat-box"><b>Sales Analysis</b><br>Analyse product sales.</div>
+                <div class="stat-box"><b>Inventory Alert</b><br>Detect low stock.</div>
+                <div class="stat-box"><b>Customer Insight</b><br>Identify unusual activity.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= SETTINGS ================= -->
+
+<section id="page-settings" class="page">
+
+    <div class="panel">
+
+        <div class="panel-head">
+            <h3>NatureBite Settings</h3>
+
+            <button class="btn btn-primary"
+                    onclick="saveSettings()">
+                💾 Save Settings
+            </button>
+        </div>
+
+        <div class="panel-body">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>bKash Number</label>
+                    <input id="setBkashNumber">
+                </div>
+
+                <div class="form-group">
+                    <label>Nagad Number</label>
+                    <input id="setNagadNumber">
+                </div>
+
+                <div class="form-group">
+                    <label>Standard Delivery</label>
+                    <input id="setStandardDelivery" type="number">
+                </div>
+
+                <div class="form-group">
+                    <label>Express Delivery</label>
+                    <input id="setExpressDelivery" type="number">
+                </div>
+
+                <div class="form-group">
+                    <label>Platform Charge</label>
+                    <input id="setPlatformCharge" type="number">
+                </div>
+
+                <div class="form-group">
+                    <label>Order Prefix</label>
+                    <input id="setOrderPrefix" value="NB">
+                </div>
+
+                <div class="form-group">
+                    <label>Customer Service Phone</label>
+                    <input id="setCustomerServicePhone">
+                </div>
+
+                <div class="form-group">
+                    <label>Business Name</label>
+                    <input id="setBusinessName" value="NatureBite">
+                </div>
+
+                <div class="form-group full">
+                    <label>Business Address</label>
+                    <textarea id="setBusinessAddress"></textarea>
+                </div>
+
+                <div class="form-group full">
+                    <label>Payment & Delivery Controls</label>
+
+                    <div class="checks">
+
+                        <label class="check">
+                            <input id="setBkashEnabled" type="checkbox">
+                            bKash
+                        </label>
+
+                        <label class="check">
+                            <input id="setNagadEnabled" type="checkbox">
+                            Nagad
+                        </label>
+
+                        <label class="check">
+                            <input id="setCodEnabled" type="checkbox">
+                            COD
+                        </label>
+
+                        <label class="check">
+                            <input id="setDeliveryOnline" type="checkbox">
+                            Pay Delivery Charge Online
+                        </label>
+
+                        <label class="check">
+                            <input id="setFullPaymentOnline" type="checkbox">
+                            Pay Full Order Online
+                        </label>
+
+                        <label class="check">
+                            <input id="setPaymentVerification" type="checkbox">
+                            Payment Verification Required
+                        </label>
+
+                        <label class="check">
+                            <input id="setFreeDelivery" type="checkbox">
+                            Free Delivery
+                        </label>
+
+                        <label class="check">
+                            <input id="setDeliveryPrepaid" type="checkbox">
+                            Delivery Prepaid Required
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= AUDIT ================= -->
+
+<section id="page-audit" class="page">
+
+    <div class="panel">
+        <div class="panel-head">
+            <h3>Audit Logs</h3>
+            <button class="btn btn-dark" onclick="printAudit()">🖨️ Print</button>
+        </div>
+
+        <div class="panel-body">
+            <table>
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Collection</th>
+                    <th>Document</th>
+                </tr>
+                </thead>
+
+                <tbody id="auditTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+
+</div>
+</main>
+</div>
+
+<!-- =====================================================
+     PRODUCT MODAL
+===================================================== -->
+
+<div id="productModal" class="modal-bg">
+
+<div class="modal">
+
+<div class="modal-head">
+    <h3 id="productModalTitle">Add Product</h3>
+    <button class="close" onclick="closeModal('productModal')">×</button>
+</div>
+
+<div class="modal-body">
+
+<input type="hidden" id="productEditId">
+
+<div class="form-grid">
+
+    <div class="form-group">
+        <label>Product Name *</label>
+        <input id="productName">
+    </div>
+
+    <div class="form-group">
+        <label>Category *</label>
+
+        <select id="productCategory">
+            <option value="Healthy Snacks">Healthy Snacks</option>
+            <option value="Kids Special Foods">Kids Special Foods</option>
+            <option value="Diabetic/Keto-Friendly Products">
+                Diabetic/Keto-Friendly Products
+            </option>
+            <option value="Instant Mix Items">Instant Mix Items</option>
+        </select>
+
+    </div>
+
+    <div class="form-group full">
+        <label>Description</label>
+        <textarea id="productDescription"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Product Image URL</label>
+
+        <input id="productImage"
+               placeholder="https://example.com/product.jpg"
+               oninput="previewImage('productImage','productPreview')">
+
+        <div class="image-preview" id="productPreview">
+            🖼️
+        </div>
+    </div>
+
+    <div class="form-group">
+
+        <label>Product Settings</label>
+
+        <div class="checks">
+
+            <label class="check">
+                <input id="productActive" type="checkbox" checked>
+                Active
+            </label>
+
+            <label class="check">
+                <input id="productFeatured" type="checkbox">
+                Featured
+            </label>
+
+        </div>
+
+    </div>
+
+</div>
+
+<hr style="margin:22px 0;border:0;border-top:1px solid #e5e9e5">
+
+<h3>Product Variants</h3>
+
+<div id="variantRows"></div>
+
+<button class="btn btn-primary"
+        onclick="addVariantRow()">
+    ➕ Add Variant
+</button>
+
+</div>
+
+<div class="modal-foot">
+
+<button class="btn"
+        onclick="closeModal('productModal')">
+    Cancel
+</button>
+
+<button class="btn btn-primary"
+        onclick="saveProduct()">
+    💾 Save Product
+</button>
+
+</div>
+
+</div>
+</div>
+
+<!-- =====================================================
+     STOCK MODAL
+===================================================== -->
+
+<div id="stockModal" class="modal-bg">
+
+<div class="modal">
+
+<div class="modal-head">
+    <h3>Update Inventory</h3>
+    <button class="close" onclick="closeModal('stockModal')">×</button>
+</div>
+
+<div class="modal-body">
+
+<div class="form-grid">
+
+<div class="form-group full">
+<label>Variant</label>
+
+<select id="stockVariant"></select>
+</div>
+
+<div class="form-group">
+<label>New Stock Quantity</label>
+<input id="stockNew" type="number" min="0">
+</div>
+
+<div class="form-group">
+<label>New Price</label>
+<input id="stockPrice" type="number" min="0">
+</div>
+
+<div class="form-group">
+<label>Low Stock Limit</label>
+<input id="stockLowLimit" type="number" min="0">
+</div>
+
+</div>
+
+</div>
+
+<div class="modal-foot">
+
+<button class="btn"
+        onclick="closeModal('stockModal')">
+    Cancel
+</button>
+
+<button class="btn btn-primary"
+        onclick="saveStock()">
+    💾 Update
+</button>
+
+</div>
+
+</div>
+</div>
+
+<!-- =====================================================
+     STAFF MODAL
+===================================================== -->
+
+<div id="staffModal" class="modal-bg">
+
+<div class="modal">
+
+<div class="modal-head">
+    <h3>Add / Edit Staff</h3>
+    <button class="close" onclick="closeModal('staffModal')">×</button>
+</div>
+
+<div class="modal-body">
+
+<input type="hidden" id="staffEditId">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Staff Name *</label>
+<input id="staffName">
+</div>
+
+<div class="form-group">
+<label>Mobile</label>
+<input id="staffMobile">
+</div>
+
+<div class="form-group">
+<label>Email *</label>
+<input id="staffEmail" type="email">
+</div>
+
+<div class="form-group">
+<label>Password *</label>
+<input id="staffPassword" type="password">
+</div>
+
+<div class="form-group">
+<label>Role</label>
+
+<select id="staffRole">
+
+<option>Order Manager</option>
+<option>Product Manager</option>
+<option>Inventory Manager</option>
+<option>Accountant/Finance</option>
+<option>Delivery Manager</option>
+<option>Customer Support</option>
+<option>Marketing Manager</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+<label>Status</label>
+
+<select id="staffStatus">
+<option value="active">Active</option>
+<option value="inactive">Inactive</option>
+</select>
+
+</div>
+
+<div class="form-group full">
+
+<label>Permissions</label>
+
+<div class="checks">
+
+<label class="check"><input type="checkbox" class="staffPerm" value="orders"> Orders</label>
+<label class="check"><input type="checkbox" class="staffPerm" value="products"> Products</label>
+<label class="check"><input type="checkbox" class="staffPerm" value="inventory"> Inventory</label>
+<label class="check"><input type="checkbox" class="staffPerm" value="customers"> Customers</label>
+<label class="check"><input type="checkbox" class="staffPerm" value="payments"> Payments</label>
+<label class="check"><input type="checkbox" class="staffPerm" value="refunds"> Refunds</label>
+<label class="check"><input type="checkbox" class="staffPerm" value="reports"> Reports</label>
+<label class="check"><input type="checkbox" class="staffPerm" value="riders"> Riders</label>
+<label class="check"><input type="checkbox" class="staffPerm" value="expenses"> Expenses</label>
+<label class="check"><input type="checkbox" class="staffPerm" value="support"> Support</label>
+<label class="check"><input type="checkbox" class="staffPerm" value="marketing"> Marketing</label>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="modal-foot">
+
+<button class="btn"
+        onclick="closeModal('staffModal')">
+    Cancel
+</button>
+
+<button class="btn btn-primary"
+        onclick="saveStaff()">
+    💾 Save Staff
+</button>
+
+</div>
+
+</div>
+</div>
+
+<!-- =====================================================
+     RIDER MODAL
+===================================================== -->
+
+<div id="riderModal" class="modal-bg">
+
+<div class="modal">
+
+<div class="modal-head">
+    <h3>Add / Edit Rider</h3>
+    <button class="close" onclick="closeModal('riderModal')">×</button>
+</div>
+
+<div class="modal-body">
+
+<input type="hidden" id="riderEditId">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Rider Name *</label>
+<input id="riderName">
+</div>
+
+<div class="form-group">
+<label>Mobile *</label>
+<input id="riderMobile">
+</div>
+
+<div class="form-group">
+<label>Email</label>
+<input id="riderEmail">
+</div>
+
+<div class="form-group">
+<label>Rider ID</label>
+<input id="riderCode">
+</div>
+
+<div class="form-group">
+<label>Vehicle Type</label>
+
+<select id="riderVehicle">
+<option>Motorcycle</option>
+<option>Bicycle</option>
+<option>Cycle</option>
+<option>Car</option>
+<option>Other</option>
+</select>
+
+</div>
+
+<div class="form-group">
+<label>Vehicle Number</label>
+<input id="riderVehicleNumber">
+</div>
+
+<div class="form-group">
+<label>Delivery Zone</label>
+<input id="riderZone">
+</div>
+
+<div class="form-group">
+<label>Status</label>
+
+<select id="riderStatus">
+<option value="active">Active</option>
+<option value="inactive">Inactive</option>
+<option value="suspended">Suspended</option>
+</select>
+
+</div>
+
+<div class="form-group">
+<label>Photo URL</label>
+
+<input id="riderPhoto"
+       oninput="previewImage('riderPhoto','riderPreview')">
+
+<div class="image-preview" id="riderPreview">🏍️</div>
+
+</div>
+
+<div class="form-group">
+<label>Address</label>
+<textarea id="riderAddress"></textarea>
+</div>
+
+<div class="form-group">
+<label>Emergency Contact</label>
+<input id="riderEmergency">
+</div>
+
+</div>
+
+</div>
+
+<div class="modal-foot">
+
+<button class="btn"
+        onclick="closeModal('riderModal')">
+    Cancel
+</button>
+
+<button class="btn btn-primary"
+        onclick="saveRider()">
+    💾 Save Rider
+</button>
+
+</div>
+
+</div>
+</div>
+
+<!-- =====================================================
+     BLOCK IP MODAL
+===================================================== -->
+
+<div id="blockIPModal" class="modal-bg">
+
+<div class="modal">
+
+<div class="modal-head">
+    <h3>Block IP Address</h3>
+    <button class="close" onclick="closeModal('blockIPModal')">×</button>
+</div>
+
+<div class="modal-body">
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>IP Address</label>
+<input id="blockIP">
+</div>
+
+<div class="form-group">
+<label>Block Type</label>
+
+<select id="blockIPType">
+<option value="permanent">Permanent</option>
+<option value="temporary">Temporary</option>
+</select>
+
+</div>
+
+<div class="form-group full">
+<label>Reason</label>
+<textarea id="blockIPReason"></textarea>
+</div>
+
+</div>
+
+</div>
+
+<div class="modal-foot">
+
+<button class="btn"
+        onclick="closeModal('blockIPModal')">
+    Cancel
+</button>
+
+<button class="btn btn-danger"
+        onclick="blockIP()">
+    🚫 Block IP
+</button>
+
+</div>
+
+</div>
+</div>
+
+<!-- =====================================================
+     FIREBASE
+===================================================== -->
 
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import {
+    initializeApp,
+    getApps,
+    getApp
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 
 import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut
+    getAuth,
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
 import {
-  getFirestore,
-  collection,
-  getDocs,
-  getDoc,
-  doc,
-  setDoc,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  orderBy,
-  serverTimestamp
+    getFirestore,
+    collection,
+    doc,
+    addDoc,
+    setDoc,
+    updateDoc,
+    deleteDoc,
+    getDoc,
+    getDocs,
+    query,
+    orderBy,
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-
-/* ================================
-   FIREBASE CONFIG
-================================ */
-
 const firebaseConfig = {
-  apiKey: "AIzaSyCBaUWZflbj0RVfdyl1vZCB3SYD42vkI_0",
-  authDomain: "naturebite-c5d88.firebaseapp.com",
-  projectId: "naturebite-c5d88",
-  storageBucket: "naturebite-c5d88.firebasestorage.app",
-  messagingSenderId: "467003957826",
-  appId: "1:467003957826:web:483a261d12ac396dca43db"
+    apiKey: "AIzaSyCBaUWZflbj0RVfdyl1vZCB3SYD42vkI_0",
+    authDomain: "naturebite-c5d88.firebaseapp.com",
+    projectId: "naturebite-c5d88",
+    storageBucket: "naturebite-c5d88.firebasestorage.app",
+    messagingSenderId: "467003957826",
+    appId: "1:467003957826:web:483a261d12ac396dca43db"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-
-/* ================================
-   GLOBAL STATE
-================================ */
+window.nb = {
+    app,
+    auth,
+    db
+};
 
 let currentUser = null;
-let currentProfile = null;
-let currentPage = "dashboard";
 
-let orders = [];
 let products = [];
 let variants = [];
-let customers = [];
-let payments = [];
-let refunds = [];
-let cancellations = [];
-let expenses = [];
+let staff = [];
 let riders = [];
-let deliveryPartners = [];
-let supportTickets = [];
-let reviews = [];
-let notifications = [];
-let offers = [];
-let coupons = [];
-let auditLogs = [];
+let customers = [];
+let orders = [];
+let payments = [];
+let blockedIPs = [];
 
-let platformSettings = {
-  platformCharge: 5,
-  platformChargeType: "fixed",
+window.products = products;
+window.variants = variants;
+window.staff = staff;
+window.riders = riders;
+window.customers = customers;
+window.orders = orders;
 
-  standardDelivery: 60,
-  expressDelivery: 80,
-  freeDelivery: 0,
+onAuthStateChanged(auth, async user => {
 
-  freeDeliveryEnabled: false,
-  freeDeliveryCampaignName: "",
+    if(!user){
 
-  deliveryPrepaidRequired: true,
+        document.getElementById("loginScreen")
+            .classList.remove("hidden");
 
-  bkashEnabled: true,
-  bkashNumber: "",
+        document.getElementById("adminScreen")
+            .classList.add("hidden");
 
-  nagadEnabled: true,
-  nagadNumber: "",
-
-  codEnabled: true,
-
-  deliveryChargeOnlineEnabled: true,
-  fullPaymentOnlineEnabled: true,
-
-  onlinePaymentVerification: true,
-
-  customerServicePhone: "",
-
-  businessName: "NatureBite",
-  businessAddress: "",
-  businessEmail: "",
-  businessPhone: "",
-
-  orderPrefix: "NB"
-};
-
-
-/* ================================
-   HELPERS
-================================ */
-
-const $ = id => document.getElementById(id);
-
-function escapeHtml(value){
-  if(value === null || value === undefined) return "";
-  return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-function money(value){
-  return "৳" + Number(value || 0).toLocaleString("en-BD");
-}
-
-function normalizeRole(role){
-  return String(role || "")
-    .trim()
-    .toLowerCase()
-    .replaceAll(" ","_");
-}
-
-function hasPermission(permission){
-  if(!currentProfile) return false;
-
-  const role = normalizeRole(currentProfile.role);
-
-  if(role === "super_admin" || role === "superadmin"){
-    return true;
-  }
-
-  return currentProfile.permissions &&
-         currentProfile.permissions[permission] === true;
-}
-
-function canChangeSettings(){
-  const role = normalizeRole(currentProfile?.role);
-  return role === "super_admin" || role === "superadmin";
-}
-
-function timestampValue(value){
-  if(!value) return 0;
-
-  if(typeof value === "number") return value;
-
-  if(value?.seconds){
-    return value.seconds * 1000;
-  }
-
-  if(value instanceof Date){
-    return value.getTime();
-  }
-
-  const parsed = new Date(value).getTime();
-  return isNaN(parsed) ? 0 : parsed;
-}
-
-function formatDate(value){
-  const t = timestampValue(value);
-  if(!t) return "-";
-
-  return new Date(t).toLocaleString("en-BD",{
-    dateStyle:"medium",
-    timeStyle:"short"
-  });
-}
-
-function statusClass(status){
-  const s = String(status || "").toLowerCase();
-
-  if(
-    s.includes("deliver") ||
-    s.includes("confirm") ||
-    s.includes("paid") ||
-    s.includes("complete")
-  ) return "green";
-
-  if(
-    s.includes("pending") ||
-    s.includes("packing") ||
-    s.includes("new") ||
-    s.includes("verification")
-  ) return "yellow";
-
-  if(
-    s.includes("cancel") ||
-    s.includes("refund") ||
-    s.includes("reject")
-  ) return "red";
-
-  return "gray";
-}
-
-function showModal(title,html){
-  $("modalTitle").textContent = title;
-  $("modalBody").innerHTML = html;
-  $("modal").classList.remove("hidden");
-}
-
-window.closeModal = function(){
-  $("modal").classList.add("hidden");
-};
-
-function showPageMessage(message){
-  $("content").innerHTML = `
-    <div class="panel">
-      <h3>${escapeHtml(message)}</h3>
-    </div>
-  `;
-}
-
-async function audit(action,details=""){
-  try{
-    await addDoc(collection(db,"auditLogs"),{
-      action,
-      details,
-      userUid: currentUser?.uid || "",
-      userEmail: currentUser?.email || "",
-      createdAt: serverTimestamp()
-    });
-  }catch(e){
-    console.warn("Audit log failed:",e);
-  }
-}
-
-
-/* ================================
-   LOGIN
-================================ */
-
-$("loginForm").addEventListener("submit",async(e)=>{
-  e.preventDefault();
-
-  const email = $("loginEmail").value.trim();
-  const password = $("loginPassword").value;
-
-  if(!email || !password){
-    showLoginError("Email এবং password দিন।");
-    return;
-  }
-
-  const btn = $("loginBtn");
-
-  btn.disabled = true;
-  btn.textContent = "Logging in...";
-  $("loginError").classList.add("hidden");
-
-  try{
-
-    await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-
-  }catch(error){
-
-    console.error(error);
-
-    let msg = "Login failed.";
-
-    if(error.code === "auth/invalid-credential"){
-      msg = "Email অথবা password সঠিক নয়।";
-    }
-    else if(error.code === "auth/user-not-found"){
-      msg = "এই email-এর কোনো account পাওয়া যায়নি।";
-    }
-    else if(error.code === "auth/wrong-password"){
-      msg = "Password সঠিক নয়।";
-    }
-    else if(error.code === "auth/too-many-requests"){
-      msg = "অনেকবার চেষ্টা করা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।";
-    }
-
-    showLoginError(msg);
-
-  }finally{
-
-    btn.disabled = false;
-    btn.textContent = "Login to Admin Panel";
-
-  }
-});
-
-function showLoginError(msg){
-  $("loginError").textContent = msg;
-  $("loginError").classList.remove("hidden");
-}
-
-
-/* ================================
-   AUTH STATE
-================================ */
-
-onAuthStateChanged(auth,async(user)=>{
-
-  if(!user){
-
-    currentUser = null;
-    currentProfile = null;
-
-    $("loginScreen").style.display = "flex";
-    $("app").style.display = "none";
-
-    return;
-  }
-
-  try{
-
-    const profileRef = doc(db,"users",user.uid);
-    const profileSnap = await getDoc(profileRef);
-
-    if(!profileSnap.exists()){
-
-      await signOut(auth);
-
-      showLoginError(
-        "এই account-এর Admin profile পাওয়া যায়নি। Firestore users/{UID} profile তৈরি করুন।"
-      );
-
-      return;
-    }
-
-    const profile = profileSnap.data();
-
-    const role = normalizeRole(profile.role);
-
-    const allowedRoles = [
-      "super_admin",
-      "superadmin",
-      "order_manager",
-      "product_manager",
-      "inventory_manager",
-      "accountant_finance",
-      "delivery_manager",
-      "customer_support",
-      "marketing_manager"
-    ];
-
-    if(!allowedRoles.includes(role)){
-
-      await signOut(auth);
-
-      showLoginError(
-        "এই account-এর Admin Panel access নেই।"
-      );
-
-      return;
+        return;
     }
 
     currentUser = user;
-    currentProfile = profile;
 
-    $("loginScreen").style.display = "none";
-    $("app").style.display = "block";
+    document.getElementById("loginScreen")
+        .classList.add("hidden");
 
-    $("adminEmail").textContent = user.email || "";
-    $("adminRole").textContent =
-      String(profile.role || "Staff").replaceAll("_"," ");
+    document.getElementById("adminScreen")
+        .classList.remove("hidden");
+
+    document.getElementById("adminEmail").textContent =
+        user.email || "Admin";
 
     await loadAllData();
-    showPage("dashboard");
 
-  }catch(error){
+});
 
-    console.error(error);
+window.login = async function(){
 
+    const email =
+        document.getElementById("loginEmail").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    const error =
+        document.getElementById("loginError");
+
+    error.textContent="";
+
+    if(!email || !password){
+
+        error.textContent="Email ও Password দিন।";
+        return;
+    }
+
+    try{
+
+        await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+
+    }catch(e){
+
+        console.error(e);
+
+        error.textContent =
+            "Login failed: " + e.message;
+    }
+};
+
+window.logout = async function(){
     await signOut(auth);
+};
 
-    showLoginError(
-      "Admin profile load করা যায়নি। Firestore Rules এবং users profile check করুন।"
+window.showPage = function(name, button){
+
+    document.querySelectorAll(".page")
+        .forEach(x => x.classList.remove("active"));
+
+    const page =
+        document.getElementById("page-" + name);
+
+    if(page)
+        page.classList.add("active");
+
+    document.querySelectorAll(".nav button")
+        .forEach(x => x.classList.remove("active"));
+
+    if(button)
+        button.classList.add("active");
+
+    const titles = {
+        dashboard:"Dashboard",
+        products:"Products",
+        inventory:"Inventory",
+        staff:"Staff",
+        riders:"Riders",
+        customers:"Customers",
+        orders:"Orders",
+        payments:"Payments",
+        refunds:"Refunds",
+        cancellations:"Cancellations",
+        expenses:"Expenses",
+        reports:"Reports",
+        offers:"Offers & Coupons",
+        wheel:"Lucky Wheel",
+        draw:"Lucky Draw",
+        reviews:"Reviews",
+        banners:"Banners",
+        support:"Support",
+        notifications:"Notifications",
+        deliveryPartners:"Delivery Partners",
+        permissions:"Permissions",
+        security:"Security",
+        blockedIPs:"Blocked IPs",
+        ai:"AI Assistant",
+        settings:"Settings",
+        audit:"Audit Logs"
+    };
+
+    document.getElementById("pageTitle").textContent =
+        titles[name] || name;
+
+    document.getElementById("sidebar")
+        .classList.remove("open");
+};
+
+window.toggleSidebar = function(){
+    document.getElementById("sidebar")
+        .classList.toggle("open");
+};
+
+async function readCollection(name){
+
+    try{
+
+        const snap =
+            await getDocs(collection(db,name));
+
+        return snap.docs.map(d => ({
+            id:d.id,
+            ...d.data()
+        }));
+
+    }catch(e){
+
+        console.error(name,e);
+        return [];
+    }
+}
+
+window.loadAllData = async function(){
+
+    products = await readCollection("products");
+    variants = await readCollection("product_variants");
+    staff = await readCollection("users");
+    riders = await readCollection("riders");
+    customers = staff.filter(x =>
+        x.role === "customer"
     );
-  }
-});
+    orders = await readCollection("orders");
+    payments = await readCollection("payments");
+    blockedIPs = await readCollection("blockedIPs");
 
+    window.products=products;
+    window.variants=variants;
+    window.staff=staff;
+    window.riders=riders;
+    window.customers=customers;
+    window.orders=orders;
 
-$("logoutBtn").addEventListener("click",async()=>{
-  await audit("Admin Logout");
-  await signOut(auth);
-});
+    renderProducts();
+    renderInventory();
+    renderStaff();
+    renderRiders();
+    renderCustomers();
+    renderOrders();
+    renderPayments();
+    renderBlockedIPs();
+    renderDashboard();
+    loadSettings();
 
+};
 
-/* ================================
-   NAVIGATION
-================================ */
+function money(v){
+    return "৳" + Number(v || 0).toLocaleString("en-BD");
+}
 
-document.querySelectorAll(".nav-btn").forEach(btn=>{
+function escapeHTML(value){
 
-  btn.addEventListener("click",()=>{
+    return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
 
-    const page = btn.dataset.page;
+function productById(id){
+    return products.find(x => x.id===id);
+}
 
-    showPage(page);
+function variantsByProduct(id){
+    return variants.filter(x =>
+        x.productId === id
+    );
+}
 
-  });
+function imageHTML(url){
 
-});
+    if(!url)
+        return `<div class="no-image">🖼️</div>`;
 
+    return `
+        <img class="thumb"
+             src="${escapeHTML(url)}"
+             onerror="this.style.display='none'">
+    `;
+}
 
-async function showPage(page){
+/* ================= PRODUCTS ================= */
 
-  currentPage = page;
+window.renderProducts = function(){
 
-  document.querySelectorAll(".nav-btn")
-    .forEach(btn=>{
-      btn.classList.toggle(
-        "active",
-        btn.dataset.page === page
-      );
+    const search =
+        (document.getElementById("productSearch")?.value || "")
+        .toLowerCase();
+
+    const rows = products.filter(p => {
+
+        return (
+            String(p.name || "")
+                .toLowerCase()
+                .includes(search) ||
+
+            String(p.category || "")
+                .toLowerCase()
+                .includes(search)
+        );
+
     });
 
-  const titleMap = {
-    dashboard:"Dashboard",
-    orders:"Orders",
-    products:"Products",
-    inventory:"Inventory",
-    customers:"Customers",
-    riders:"Riders",
-    deliveryPartners:"Delivery Partners",
-    payments:"Payments",
-    refunds:"Refunds",
-    cancellations:"Cancellations",
-    expenses:"Expenses",
-    reports:"Reports",
-    offers:"Offers & Coupons",
-    wheel:"Lucky Wheel",
-    draw:"Lucky Draw",
-    reviews:"Reviews",
-    banners:"Banners",
-    support:"Support",
-    notifications:"Notifications",
-    staff:"Staff",
-    permissions:"Permissions",
-    ai:"AI Assistant",
-    settings:"Settings",
-    auditLogs:"Audit Logs"
-  };
+    const table =
+        document.getElementById("productsTable");
 
-  $("pageTitle").textContent = titleMap[page] || page;
+    if(!rows.length){
 
-  switch(page){
+        table.innerHTML =
+            `<tr><td colspan="7" class="empty">
+                No products found.
+            </td></tr>`;
 
-    case "dashboard":
-      renderDashboard();
-      break;
-
-    case "orders":
-      renderOrders();
-      break;
-
-    case "products":
-      renderProducts();
-      break;
-
-    case "inventory":
-      renderInventory();
-      break;
-
-    case "customers":
-      renderCustomers();
-      break;
-
-    case "riders":
-      renderRiders();
-      break;
-
-    case "deliveryPartners":
-      renderDeliveryPartners();
-      break;
-
-    case "payments":
-      renderPayments();
-      break;
-
-    case "refunds":
-      renderRefunds();
-      break;
-
-    case "cancellations":
-      renderCancellations();
-      break;
-
-    case "expenses":
-      renderExpenses();
-      break;
-
-    case "reports":
-      renderReports();
-      break;
-
-    case "offers":
-      renderSimpleCollection("offers","Offers & Coupons",offers);
-      break;
-
-    case "wheel":
-      renderSimpleCollection("wheelRewards","Lucky Wheel",[]);
-      break;
-
-    case "draw":
-      renderSimpleCollection("luckyDraws","Lucky Draw",[]);
-      break;
-
-    case "reviews":
-      renderSimpleCollection("reviews","Reviews",reviews);
-      break;
-
-    case "banners":
-      renderSimpleCollection("banners","Banners",[]);
-      break;
-
-    case "support":
-      renderSimpleCollection("supportTickets","Support Tickets",supportTickets);
-      break;
-
-    case "notifications":
-      renderSimpleCollection("notifications","Notifications",notifications);
-      break;
-
-    case "staff":
-      renderStaff();
-      break;
-
-    case "permissions":
-      renderPermissions();
-      break;
-
-    case "ai":
-      renderAI();
-      break;
-
-    case "settings":
-      renderSettings();
-      break;
-
-    case "auditLogs":
-      renderSimpleCollection("auditLogs","Audit Logs",auditLogs);
-      break;
-
-    default:
-      showPageMessage("Page not found.");
-  }
-}
-
-
-/* ================================
-   LOAD DATA
-================================ */
-
-async function safeGet(collectionName){
-
-  try{
-
-    const snap = await getDocs(
-      collection(db,collectionName)
-    );
-
-    return snap.docs.map(d=>({
-      id:d.id,
-      ...d.data()
-    }));
-
-  }catch(error){
-
-    console.warn(
-      "Cannot load",
-      collectionName,
-      error.message
-    );
-
-    return [];
-  }
-}
-
-
-async function loadAllData(){
-
-  orders = await safeGet("orders");
-  products = await safeGet("products");
-  variants = await safeGet("product_variants");
-  customers = await safeGet("users");
-  payments = await safeGet("payments");
-  refunds = await safeGet("refunds");
-  cancellations = await safeGet("cancellations");
-  expenses = await safeGet("expenses");
-  riders = await safeGet("riders");
-  deliveryPartners = await safeGet("deliveryPartners");
-  supportTickets = await safeGet("supportTickets");
-  reviews = await safeGet("reviews");
-  notifications = await safeGet("notifications");
-  offers = await safeGet("offers");
-  coupons = await safeGet("coupons");
-  auditLogs = await safeGet("auditLogs");
-
-  await loadSettings();
-}
-
-
-async function loadSettings(){
-
-  try{
-
-    const snap = await getDoc(
-      doc(db,"settings","platform")
-    );
-
-    if(snap.exists()){
-      platformSettings = {
-        ...platformSettings,
-        ...snap.data()
-      };
+        return;
     }
 
-  }catch(error){
+    table.innerHTML = rows.map(p => {
 
-    console.warn(
-      "Settings load failed",
-      error
-    );
+        const pv =
+            variantsByProduct(p.id);
 
-  }
-}
+        return `
+        <tr>
 
+            <td>${imageHTML(p.imageUrl)}</td>
 
-/* ================================
-   DASHBOARD
-================================ */
+            <td>
+                <b>${escapeHTML(p.name)}</b>
+                <br>
+                <small>${escapeHTML(p.description || "")}</small>
+            </td>
 
-function renderDashboard(){
+            <td>${escapeHTML(p.category || "")}</td>
 
-  const totalSales = orders.reduce(
-    (sum,o)=>sum + Number(
-      o.total ??
-      o.grandTotal ??
-      0
-    ),
-    0
-  );
+            <td>${pv.length}</td>
 
-  const delivered = orders.filter(o=>
-    String(o.orderStatus || o.status || "")
-      .toLowerCase()
-      .includes("deliver")
-  ).length;
+            <td>
+                ${p.active !== false
+                    ? '<span class="badge badge-green">Active</span>'
+                    : '<span class="badge badge-red">Inactive</span>'
+                }
+            </td>
 
-  const cancelled = orders.filter(o=>
-    String(o.orderStatus || o.status || "")
-      .toLowerCase()
-      .includes("cancel")
-  ).length;
+            <td>
+                ${p.featured
+                    ? '<span class="badge badge-blue">Featured</span>'
+                    : '-'
+                }
+            </td>
 
-  const pending = orders.length - delivered - cancelled;
+            <td>
 
-  const deliveryIncome = orders.reduce(
-    (sum,o)=>sum + Number(o.deliveryCharge || 0),
-    0
-  );
+                <button class="btn btn-blue"
+                        onclick="editProduct('${p.id}')">
+                    ✏️ Edit
+                </button>
 
-  const platformIncome = orders.reduce(
-    (sum,o)=>sum + Number(o.platformCharge || 0),
-    0
-  );
+                <button class="btn btn-danger"
+                        onclick="deleteProduct('${p.id}')">
+                    🗑️ Delete
+                </button>
 
-  const expenseTotal = expenses.reduce(
-    (sum,e)=>sum + Number(
-      e.amount || e.total || 0
-    ),
-    0
-  );
+            </td>
 
-  const netProfit =
-    totalSales -
-    expenseTotal -
-    orders.reduce(
-      (sum,o)=>sum + Number(
-        o.productCost || o.cost || 0
-      ),
-      0
-    );
+        </tr>
+        `;
 
-  const lowStock = variants.filter(v=>
-    Number(v.stock || 0) <= Number(v.lowStockLimit || 5)
-  ).length;
+    }).join("");
+};
 
-  $("content").innerHTML = `
+window.openProductModal = function(productId=null){
 
-    <div class="cards">
+    document.getElementById("productEditId").value =
+        productId || "";
 
-      ${statCard("Total Sales",money(totalSales))}
-      ${statCard("Total Orders",orders.length)}
-      ${statCard("Delivered",delivered)}
-      ${statCard("Pending",pending)}
-      ${statCard("Cancelled",cancelled)}
-      ${statCard("Net Profit",money(netProfit))}
-      ${statCard("Low Stock",lowStock)}
+    document.getElementById("productModalTitle").textContent =
+        productId ? "Edit Product" : "Add Product";
 
-    </div>
+    document.getElementById("productName").value="";
+    document.getElementById("productDescription").value="";
+    document.getElementById("productImage").value="";
+    document.getElementById("productActive").checked=true;
+    document.getElementById("productFeatured").checked=false;
 
-    <div class="grid2">
+    document.getElementById("variantRows").innerHTML="";
 
-      <div class="panel">
-        <h3>Recent Orders</h3>
+    if(productId){
 
-        ${orders
-          .slice()
-          .sort((a,b)=>
-            timestampValue(b.createdAt || b.date) -
-            timestampValue(a.createdAt || a.date)
-          )
-          .slice(0,8)
-          .map(o=>`
+        const p = productById(productId);
 
-            <div class="alert">
+        if(p){
 
-              <b>${escapeHtml(getOrderCode(o))}</b>
-              —
-              ${escapeHtml(
-                o.customerName ||
-                o.name ||
-                "Customer"
-              )}
+            document.getElementById("productName").value =
+                p.name || "";
 
-              <span style="float:right">
-                ${money(o.total || 0)}
-              </span>
+            document.getElementById("productCategory").value =
+                p.category || "Healthy Snacks";
 
-            </div>
+            document.getElementById("productDescription").value =
+                p.description || "";
 
-          `).join("") || "No orders."}
+            document.getElementById("productImage").value =
+                p.imageUrl || "";
 
-      </div>
+            document.getElementById("productActive").checked =
+                p.active !== false;
 
-      <div class="panel">
-        <h3>Business Summary</h3>
+            document.getElementById("productFeatured").checked =
+                !!p.featured;
 
-        <div class="alert">
-          Delivery Income:
-          <b>${money(deliveryIncome)}</b>
-        </div>
+            previewImage(
+                "productImage",
+                "productPreview"
+            );
 
-        <div class="alert">
-          Platform Income:
-          <b>${money(platformIncome)}</b>
-        </div>
+            variantsByProduct(productId)
+                .forEach(v => addVariantRow(v));
 
-        <div class="alert">
-          Expenses:
-          <b>${money(expenseTotal)}</b>
-        </div>
-
-        <div class="alert">
-          Gross Sales:
-          <b>${money(totalSales)}</b>
-        </div>
-
-      </div>
-
-    </div>
-
-    <br>
-
-    <div class="grid2">
-
-      <div class="panel">
-        <h3>Low Stock Alerts</h3>
-
-        ${
-          variants
-          .filter(v=>
-            Number(v.stock || 0) <=
-            Number(v.lowStockLimit || 5)
-          )
-          .slice(0,10)
-          .map(v=>`
-
-            <div class="alert">
-              ${escapeHtml(v.name || v.title || v.id)}
-              —
-              <b>${Number(v.stock || 0)} left</b>
-            </div>
-
-          `).join("") || "No low stock alerts."
         }
 
-      </div>
+    }
 
-      <div class="panel">
-        <h3>AI Recommendations</h3>
+    if(!productId)
+        addVariantRow();
 
-        <div class="alert">
-          ${
-            lowStock > 0
-            ? "কিছু product-এর stock কমে গেছে। Inventory check করুন।"
-            : "বর্তমানে বড় low-stock alert নেই।"
-          }
-        </div>
+    document.getElementById("productModal")
+        .classList.add("show");
+};
 
-        <div class="alert">
-          ${
-            cancelled > 0
-            ? `${cancelled}টি cancelled order review করুন।`
-            : "বর্তমানে cancellation alert নেই।"
-          }
-        </div>
+window.editProduct = function(id){
+    openProductModal(id);
+};
 
-      </div>
+window.addVariantRow = function(v={}){
 
-    </div>
-  `;
+    const box =
+        document.getElementById("variantRows");
+
+    const id =
+        v.id || "";
+
+    const row =
+        document.createElement("div");
+
+    row.className="variant-row";
+
+    row.dataset.id=id;
+
+    row.innerHTML=`
+
+        <input class="v-name"
+               placeholder="Variant / Size"
+               value="${escapeHTML(v.name || v.size || "")}">
+
+        <input class="v-price"
+               type="number"
+               placeholder="Price"
+               value="${v.price ?? ""}">
+
+        <input class="v-stock"
+               type="number"
+               min="0"
+               placeholder="Stock"
+               value="${v.stock ?? 0}">
+
+        <input class="v-sku"
+               placeholder="SKU"
+               value="${escapeHTML(v.sku || "")}">
+
+        <input class="v-image"
+               placeholder="Variant image URL"
+               value="${escapeHTML(v.imageUrl || "")}">
+
+        <button class="btn btn-danger"
+                onclick="this.parentElement.remove()">
+            ×
+        </button>
+    `;
+
+    box.appendChild(row);
+};
+
+window.saveProduct = async function(){
+
+    const id =
+        document.getElementById("productEditId").value;
+
+    const name =
+        document.getElementById("productName")
+            .value.trim();
+
+    if(!name){
+
+        alert("Product name দিন।");
+        return;
+    }
+
+    const data = {
+
+        name,
+
+        category:
+            document.getElementById("productCategory")
+                .value,
+
+        description:
+            document.getElementById("productDescription")
+                .value.trim(),
+
+        imageUrl:
+            document.getElementById("productImage")
+                .value.trim(),
+
+        active:
+            document.getElementById("productActive")
+                .checked,
+
+        featured:
+            document.getElementById("productFeatured")
+                .checked,
+
+        updatedAt:
+            serverTimestamp()
+
+    };
+
+    try{
+
+        let productId=id;
+
+        if(id){
+
+            await updateDoc(
+                doc(db,"products",id),
+                data
+            );
+
+        }else{
+
+            data.createdAt =
+                serverTimestamp();
+
+            const ref =
+                await addDoc(
+                    collection(db,"products"),
+                    data
+                );
+
+            productId=ref.id;
+        }
+
+        const rows =
+            [...document.querySelectorAll(
+                "#variantRows .variant-row"
+            )];
+
+        for(const row of rows){
+
+            const variantId =
+                row.dataset.id;
+
+            const variantData={
+
+                productId,
+
+                name:
+                    row.querySelector(".v-name")
+                        .value.trim(),
+
+                price:
+                    Number(
+                        row.querySelector(".v-price")
+                            .value || 0
+                    ),
+
+                stock:
+                    Number(
+                        row.querySelector(".v-stock")
+                            .value || 0
+                    ),
+
+                sku:
+                    row.querySelector(".v-sku")
+                        .value.trim(),
+
+                imageUrl:
+                    row.querySelector(".v-image")
+                        .value.trim(),
+
+                status:"available",
+
+                updatedAt:
+                    serverTimestamp()
+
+            };
+
+            if(variantId){
+
+                await updateDoc(
+                    doc(
+                        db,
+                        "product_variants",
+                        variantId
+                    ),
+                    variantData
+                );
+
+            }else{
+
+                variantData.createdAt =
+                    serverTimestamp();
+
+                await addDoc(
+                    collection(
+                        db,
+                        "product_variants"
+                    ),
+                    variantData
+                );
+
+            }
+
+        }
+
+        await audit(
+            id ? "EDIT_PRODUCT" : "ADD_PRODUCT",
+            "products",
+            productId
+        );
+
+        closeModal("productModal");
+
+        await loadAllData();
+
+        alert("Product সফলভাবে save হয়েছে।");
+
+    }catch(e){
+
+        console.error(e);
+
+        alert(
+            "Product save error:\n" +
+            e.message
+        );
+    }
+};
+
+window.deleteProduct = async function(id){
+
+    const p=productById(id);
+
+    if(!p) return;
+
+    if(!confirm(
+        `"${p.name}" delete করবেন?\n\nএর সাথে থাকা variants-ও delete হবে।`
+    ))
+        return;
+
+    try{
+
+        const pv =
+            variantsByProduct(id);
+
+        for(const v of pv){
+
+            await deleteDoc(
+                doc(
+                    db,
+                    "product_variants",
+                    v.id
+                )
+            );
+
+        }
+
+        await deleteDoc(
+            doc(db,"products",id)
+        );
+
+        await audit(
+            "DELETE_PRODUCT",
+            "products",
+            id
+        );
+
+        await loadAllData();
+
+    }catch(e){
+
+        alert(e.message);
+    }
+};
+
+/* ================= INVENTORY ================= */
+
+window.renderInventory = function(){
+
+    const search =
+        (document.getElementById("inventorySearch")?.value || "")
+        .toLowerCase();
+
+    const table =
+        document.getElementById("inventoryTable");
+
+    const rows =
+        variants.filter(v => {
+
+            const p =
+                productById(v.productId);
+
+            const text =
+                `${p?.name || ""} ${v.name || ""} ${v.sku || ""}`
+                .toLowerCase();
+
+            return text.includes(search);
+        });
+
+    if(!rows.length){
+
+        table.innerHTML =
+            `<tr><td colspan="9" class="empty">
+                No inventory found.
+            </td></tr>`;
+
+        return;
+    }
+
+    table.innerHTML =
+        rows.map(v => {
+
+            const p =
+                productById(v.productId);
+
+            const low =
+                Number(v.stock || 0) <=
+                Number(v.lowStockLimit ?? 5);
+
+            return `
+
+            <tr>
+
+                <td>${imageHTML(v.imageUrl || p?.imageUrl)}</td>
+
+                <td>${escapeHTML(p?.name || "-")}</td>
+
+                <td>${escapeHTML(v.name || "-")}</td>
+
+                <td>${escapeHTML(v.sku || "-")}</td>
+
+                <td>${money(v.price)}</td>
+
+                <td>
+                    <b>${Number(v.stock || 0)}</b>
+                </td>
+
+                <td>${Number(v.lowStockLimit ?? 5)}</td>
+
+                <td>
+                    ${
+                        low
+                        ? '<span class="badge badge-yellow">Low Stock</span>'
+                        : '<span class="badge badge-green">Available</span>'
+                    }
+                </td>
+
+                <td>
+
+                    <button class="btn btn-blue"
+                            onclick="openStockModal('${v.id}')">
+                        ✏️ Update
+                    </button>
+
+                </td>
+
+            </tr>
+
+            `;
+
+        }).join("");
+};
+
+window.openStockModal = function(id=null){
+
+    const select =
+        document.getElementById("stockVariant");
+
+    select.innerHTML =
+        variants.map(v => {
+
+            const p =
+                productById(v.productId);
+
+            return `
+                <option value="${v.id}">
+                    ${escapeHTML(p?.name || "")}
+                    - ${escapeHTML(v.name || "")}
+                </option>
+            `;
+
+        }).join("");
+
+    if(id)
+        select.value=id;
+
+    loadStockFields();
+
+    select.onchange =
+        loadStockFields;
+
+    document.getElementById("stockModal")
+        .classList.add("show");
+};
+
+function loadStockFields(){
+
+    const id =
+        document.getElementById("stockVariant").value;
+
+    const v =
+        variants.find(x => x.id===id);
+
+    if(!v) return;
+
+    document.getElementById("stockNew").value =
+        v.stock ?? 0;
+
+    document.getElementById("stockPrice").value =
+        v.price ?? 0;
+
+    document.getElementById("stockLowLimit").value =
+        v.lowStockLimit ?? 5;
 }
 
-function statCard(label,value){
-  return `
-    <div class="card">
-      <div class="card-label">${label}</div>
-      <div class="card-value">${value}</div>
-    </div>
-  `;
-}
+window.saveStock = async function(){
 
+    const id =
+        document.getElementById("stockVariant")
+            .value;
 
-/* ================================
-   ORDERS
-================================ */
+    if(!id) return;
 
-function getOrderCode(o,index=0){
-
-  if(o.orderCode) return o.orderCode;
-  if(o.code) return o.code;
-  if(o.orderNumber) return o.orderNumber;
-
-  const date = new Date(
-    timestampValue(o.createdAt || o.date) || Date.now()
-  );
-
-  const y = date.getFullYear();
-  const m = String(date.getMonth()+1).padStart(2,"0");
-  const d = String(date.getDate()).padStart(2,"0");
-
-  return `${platformSettings.orderPrefix || "NB"}-${y}${m}${d}-${String(index+1).padStart(4,"0")}`;
-}
-
-
-function renderOrders(){
-
-  if(!hasPermission("orders")){
-    showPageMessage("আপনার Orders permission নেই।");
-    return;
-  }
-
-  const sorted = orders
-    .slice()
-    .sort((a,b)=>
-      timestampValue(a.createdAt || a.date) -
-      timestampValue(b.createdAt || b.date)
+    await updateDoc(
+        doc(db,"product_variants",id),
+        {
+            stock:Number(
+                document.getElementById("stockNew").value
+            ),
+            price:Number(
+                document.getElementById("stockPrice").value
+            ),
+            lowStockLimit:Number(
+                document.getElementById("stockLowLimit").value
+            ),
+            updatedAt:serverTimestamp()
+        }
     );
 
-  $("content").innerHTML = `
+    await audit(
+        "UPDATE_INVENTORY",
+        "product_variants",
+        id
+    );
 
-    <div class="page-head">
-
-      <div>
-        <h2>Orders</h2>
-        <div style="color:#718077;font-size:12px">
-          Total ${sorted.length} orders
-        </div>
-      </div>
-
-      <div class="actions">
-
-        <button class="btn" id="refreshOrders">
-          🔄 Refresh
-        </button>
-
-        <button class="btn green" id="printAll">
-          🖨️ Print All Orders
-        </button>
-
-        <button class="btn green" id="printSelected">
-          🖨️ Print Selected
-        </button>
-
-      </div>
-
-    </div>
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-          <tr>
-            <th>
-              <input type="checkbox" id="selectAllOrders">
-            </th>
-            <th>Serial</th>
-            <th>Order Code</th>
-            <th>Customer</th>
-            <th>Mobile</th>
-            <th>Total</th>
-            <th>Payment</th>
-            <th>Status</th>
-            <th>Date</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-          ${
-            sorted.map((o,i)=>{
-
-              const status =
-                o.orderStatus ||
-                o.status ||
-                "New";
-
-              return `
-
-                <tr>
-
-                  <td>
-                    <input
-                      class="order-check"
-                      type="checkbox"
-                      value="${escapeHtml(o.id)}"
-                    >
-                  </td>
-
-                  <td>${i+1}</td>
-
-                  <td>
-                    <b>${escapeHtml(getOrderCode(o,i))}</b>
-                  </td>
-
-                  <td>
-                    ${escapeHtml(
-                      o.customerName ||
-                      o.name ||
-                      "Customer"
-                    )}
-                  </td>
-
-                  <td>
-                    ${escapeHtml(
-                      o.customerMobile ||
-                      o.mobile ||
-                      o.phone ||
-                      "-"
-                    )}
-                  </td>
-
-                  <td>
-                    <b>${money(o.total || o.grandTotal || 0)}</b>
-                  </td>
-
-                  <td>
-                    ${escapeHtml(
-                      o.paymentStatus ||
-                      o.paymentMethod ||
-                      "-"
-                    )}
-                  </td>
-
-                  <td>
-                    <span class="status ${statusClass(status)}">
-                      ${escapeHtml(status)}
-                    </span>
-                  </td>
-
-                  <td>
-                    ${formatDate(o.createdAt || o.date)}
-                  </td>
-
-                  <td>
-                    <button
-                      class="btn"
-                      onclick="viewOrder('${o.id}')">
-                      View
-                    </button>
-                  </td>
-
-                </tr>
-              `;
-
-            }).join("") || `
-              <tr>
-                <td colspan="10" style="text-align:center">
-                  No orders found.
-                </td>
-              </tr>
-            `
-          }
-
-        </tbody>
-
-      </table>
-
-    </div>
-  `;
-
-
-  $("refreshOrders").onclick = async()=>{
-
-    $("refreshOrders").disabled = true;
-    $("refreshOrders").textContent = "Refreshing...";
+    closeModal("stockModal");
 
     await loadAllData();
-    renderOrders();
+};
 
-  };
+/* ================= STAFF ================= */
 
+window.renderStaff = function(){
 
-  $("printAll").onclick = ()=>{
+    const search =
+        (document.getElementById("staffSearch")?.value || "")
+        .toLowerCase();
 
-    if(sorted.length === 0){
-      alert("কোনো order নেই।");
-      return;
+    const rows =
+        staff.filter(s => {
+
+            if(s.role === "customer")
+                return false;
+
+            const text =
+                `${s.name || ""} ${s.email || ""} ${s.mobile || ""} ${s.role || ""}`
+                .toLowerCase();
+
+            return text.includes(search);
+
+        });
+
+    const table =
+        document.getElementById("staffTable");
+
+    if(!rows.length){
+
+        table.innerHTML =
+            `<tr><td colspan="6" class="empty">
+                No staff found.
+            </td></tr>`;
+
+        return;
     }
 
-    printOrders(sorted);
+    table.innerHTML =
+        rows.map(s => `
 
-  };
+        <tr>
 
+            <td>${escapeHTML(s.name || "-")}</td>
 
-  $("printSelected").onclick = ()=>{
+            <td>${escapeHTML(s.email || "-")}</td>
 
-    const ids = [...document.querySelectorAll(".order-check:checked")]
-      .map(x=>x.value);
+            <td>${escapeHTML(s.mobile || "-")}</td>
 
-    if(ids.length === 0){
-      alert("আগে order select করুন।");
-      return;
+            <td>
+                <span class="badge badge-blue">
+                    ${escapeHTML(s.role || "-")}
+                </span>
+            </td>
+
+            <td>
+                ${
+                    s.status !== "inactive"
+                    ? '<span class="badge badge-green">Active</span>'
+                    : '<span class="badge badge-red">Inactive</span>'
+                }
+            </td>
+
+            <td>
+
+                <button class="btn btn-blue"
+                        onclick="editStaff('${s.id}')">
+                    ✏️ Edit
+                </button>
+
+                <button class="btn btn-danger"
+                        onclick="disableStaff('${s.id}')">
+                    🚫 Disable
+                </button>
+
+            </td>
+
+        </tr>
+
+        `).join("");
+};
+
+window.openStaffModal = function(id=null){
+
+    document.getElementById("staffEditId").value =
+        id || "";
+
+    document.getElementById("staffName").value="";
+    document.getElementById("staffMobile").value="";
+    document.getElementById("staffEmail").value="";
+    document.getElementById("staffPassword").value="";
+    document.getElementById("staffStatus").value="active";
+
+    document.querySelectorAll(".staffPerm")
+        .forEach(x => x.checked=false);
+
+    if(id){
+
+        const s =
+            staff.find(x => x.id===id);
+
+        if(s){
+
+            document.getElementById("staffName").value =
+                s.name || "";
+
+            document.getElementById("staffMobile").value =
+                s.mobile || "";
+
+            document.getElementById("staffEmail").value =
+                s.email || "";
+
+            document.getElementById("staffRole").value =
+                s.role || "Order Manager";
+
+            document.getElementById("staffStatus").value =
+                s.status || "active";
+
+            const perms =
+                s.permissions || {};
+
+            document.querySelectorAll(".staffPerm")
+                .forEach(x => {
+                    x.checked = perms[x.value] === true;
+                });
+        }
     }
 
-    const selected = sorted.filter(o=>ids.includes(o.id));
+    document.getElementById("staffModal")
+        .classList.add("show");
+};
+
+window.editStaff=function(id){
+    openStaffModal(id);
+};
+
+window.saveStaff = async function(){
+
+    const id =
+        document.getElementById("staffEditId").value;
+
+    const name =
+        document.getElementById("staffName")
+            .value.trim();
+
+    const email =
+        document.getElementById("staffEmail")
+            .value.trim();
+
+    if(!name || !email){
+
+        alert("Staff name এবং email দিন।");
+        return;
+    }
+
+    const permissions={};
+
+    document.querySelectorAll(".staffPerm")
+        .forEach(x => {
+            permissions[x.value] =
+                x.checked;
+        });
+
+    const data={
+
+        name,
+
+        email,
+
+        mobile:
+            document.getElementById("staffMobile")
+                .value.trim(),
+
+        role:
+            document.getElementById("staffRole")
+                .value,
+
+        status:
+            document.getElementById("staffStatus")
+                .value,
+
+        permissions,
+
+        updatedAt:
+            serverTimestamp()
+
+    };
+
+    try{
+
+        /*
+         * Existing staff edit:
+         * Firestore profile update.
+         *
+         * New staff:
+         * Production version should create the
+         * Firebase Auth account through a secondary
+         * Firebase app so current admin stays logged in.
+         */
+
+        if(id){
+
+            await updateDoc(
+                doc(db,"users",id),
+                data
+            );
+
+        }else{
+
+            /*
+             * IMPORTANT:
+             * This intentionally does NOT create a
+             * fake Firestore-only login.
+             *
+             * New Staff Auth account should be created
+             * through Firebase Authentication.
+             */
+
+            const password =
+                document.getElementById("staffPassword")
+                    .value;
+
+            if(password.length < 6){
+
+                alert(
+                    "নতুন Staff-এর password কমপক্ষে 6 characters দিন।"
+                );
+
+                return;
+            }
+
+            /*
+             * Auth account creation is handled separately
+             * below by createStaffAuth().
+             */
+
+            await createStaffAuth(
+                data,
+                password
+            );
+
+            closeModal("staffModal");
+            await loadAllData();
+
+            alert("Staff account তৈরি হয়েছে।");
+            return;
+        }
+
+        await audit(
+            id ? "EDIT_STAFF" : "ADD_STAFF",
+            "users",
+            id || ""
+        );
+
+        closeModal("staffModal");
+
+        await loadAllData();
+
+    }catch(e){
+
+        console.error(e);
+
+        alert(e.message);
+    }
+};
+
+/*
+ * Creates staff authentication using a SECONDARY
+ * Firebase app instance.
+ *
+ * This prevents the current Super Admin from being
+ * logged out during staff creation.
+ */
+
+async function createStaffAuth(profile,password){
+
+    const secondaryName =
+        "NatureBiteStaffCreator";
+
+    const secondary =
+        getApps().find(
+            x => x.name === secondaryName
+        ) ||
+        initializeApp(
+            firebaseConfig,
+            secondaryName
+        );
+
+    const secondaryAuth =
+        getAuth(secondary);
+
+    const {
+        createUserWithEmailAndPassword
+    } = await import(
+        "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js"
+    );
+
+    const credential =
+        await createUserWithEmailAndPassword(
+            secondaryAuth,
+            profile.email,
+            password
+        );
+
+    await setDoc(
+        doc(
+            db,
+            "users",
+            credential.user.uid
+        ),
+        {
+            ...profile,
+            role:profile.role,
+            createdAt:serverTimestamp()
+        }
+    );
+
+    await signOut(secondaryAuth);
+}
+
+window.disableStaff = async function(id){
+
+    if(!confirm("এই Staff disable করবেন?"))
+        return;
+
+    await updateDoc(
+        doc(db,"users",id),
+        {
+            status:"inactive",
+            updatedAt:serverTimestamp()
+        }
+    );
+
+    await audit(
+        "DISABLE_STAFF",
+        "users",
+        id
+    );
+
+    await loadAllData();
+};
+
+/* ================= RIDERS ================= */
+
+window.renderRiders = function(){
+
+    const search =
+        (document.getElementById("riderSearch")?.value || "")
+        .toLowerCase();
+
+    const rows =
+        riders.filter(r => {
+
+            const text =
+                `${r.name || ""} ${r.mobile || ""} ${r.riderCode || ""} ${r.zone || ""}`
+                .toLowerCase();
+
+            return text.includes(search);
+
+        });
+
+    const table =
+        document.getElementById("ridersTable");
+
+    if(!rows.length){
+
+        table.innerHTML =
+            `<tr><td colspan="8" class="empty">
+                No riders found.
+            </td></tr>`;
+
+        return;
+    }
+
+    table.innerHTML =
+        rows.map(r => `
+
+        <tr>
+
+            <td>${imageHTML(r.photoUrl)}</td>
+
+            <td>${escapeHTML(r.riderCode || r.id)}</td>
+
+            <td>${escapeHTML(r.name || "-")}</td>
+
+            <td>${escapeHTML(r.mobile || "-")}</td>
+
+            <td>
+                ${escapeHTML(r.vehicleType || "-")}
+                <br>
+                <small>${escapeHTML(r.vehicleNumber || "")}</small>
+            </td>
+
+            <td>${escapeHTML(r.zone || "-")}</td>
+
+            <td>
+                ${
+                    r.status === "active"
+                    ? '<span class="badge badge-green">Active</span>'
+                    : r.status === "suspended"
+                    ? '<span class="badge badge-red">Suspended</span>'
+                    : '<span class="badge badge-yellow">Inactive</span>'
+                }
+            </td>
+
+            <td>
+
+                <button class="btn btn-blue"
+                        onclick="editRider('${r.id}')">
+                    ✏️ Edit
+                </button>
+
+                <button class="btn btn-danger"
+                        onclick="disableRider('${r.id}')">
+                    🚫 Disable
+                </button>
+
+            </td>
+
+        </tr>
+
+        `).join("");
+};
+
+window.openRiderModal = function(id=null){
+
+    document.getElementById("riderEditId").value =
+        id || "";
+
+    [
+        "riderName",
+        "riderMobile",
+        "riderEmail",
+        "riderCode",
+        "riderVehicleNumber",
+        "riderZone",
+        "riderPhoto",
+        "riderAddress",
+        "riderEmergency"
+    ].forEach(x => {
+        document.getElementById(x).value="";
+    });
+
+    document.getElementById("riderVehicle").value =
+        "Motorcycle";
+
+    document.getElementById("riderStatus").value =
+        "active";
+
+    if(id){
+
+        const r =
+            riders.find(x => x.id===id);
+
+        if(r){
+
+            document.getElementById("riderName").value =
+                r.name || "";
+
+            document.getElementById("riderMobile").value =
+                r.mobile || "";
+
+            document.getElementById("riderEmail").value =
+                r.email || "";
+
+            document.getElementById("riderCode").value =
+                r.riderCode || "";
+
+            document.getElementById("riderVehicle").value =
+                r.vehicleType || "Motorcycle";
+
+            document.getElementById("riderVehicleNumber").value =
+                r.vehicleNumber || "";
+
+            document.getElementById("riderZone").value =
+                r.zone || "";
+
+            document.getElementById("riderStatus").value =
+                r.status || "active";
+
+            document.getElementById("riderPhoto").value =
+                r.photoUrl || "";
+
+            document.getElementById("riderAddress").value =
+                r.address || "";
+
+            document.getElementById("riderEmergency").value =
+                r.emergencyContact || "";
+
+            previewImage(
+                "riderPhoto",
+                "riderPreview"
+            );
+        }
+
+    }
+
+    document.getElementById("riderModal")
+        .classList.add("show");
+};
+
+window.editRider=function(id){
+    openRiderModal(id);
+};
+
+window.saveRider = async function(){
+
+    const id =
+        document.getElementById("riderEditId")
+            .value;
+
+    const name =
+        document.getElementById("riderName")
+            .value.trim();
+
+    const mobile =
+        document.getElementById("riderMobile")
+            .value.trim();
+
+    if(!name || !mobile){
+
+        alert("Rider name এবং mobile দিন।");
+        return;
+    }
+
+    const data={
+
+        name,
+
+        mobile,
+
+        email:
+            document.getElementById("riderEmail")
+                .value.trim(),
+
+        riderCode:
+            document.getElementById("riderCode")
+                .value.trim() ||
+            "RDR-" +
+            Date.now().toString().slice(-6),
+
+        vehicleType:
+            document.getElementById("riderVehicle")
+                .value,
+
+        vehicleNumber:
+            document.getElementById("riderVehicleNumber")
+                .value.trim(),
+
+        zone:
+            document.getElementById("riderZone")
+                .value.trim(),
+
+        status:
+            document.getElementById("riderStatus")
+                .value,
+
+        photoUrl:
+            document.getElementById("riderPhoto")
+                .value.trim(),
+
+        address:
+            document.getElementById("riderAddress")
+                .value.trim(),
+
+        emergencyContact:
+            document.getElementById("riderEmergency")
+                .value.trim(),
+
+        updatedAt:
+            serverTimestamp()
+
+    };
+
+    if(id){
+
+        await updateDoc(
+            doc(db,"riders",id),
+            data
+        );
+
+    }else{
+
+        data.createdAt =
+            serverTimestamp();
+
+        await addDoc(
+            collection(db,"riders"),
+            data
+        );
+    }
+
+    await audit(
+        id ? "EDIT_RIDER" : "ADD_RIDER",
+        "riders",
+        id || ""
+    );
+
+    closeModal("riderModal");
+
+    await loadAllData();
+
+};
+
+window.disableRider = async function(id){
+
+    if(!confirm("এই Rider disable করবেন?"))
+        return;
+
+    await updateDoc(
+        doc(db,"riders",id),
+        {
+            status:"inactive",
+            updatedAt:serverTimestamp()
+        }
+    );
+
+    await audit(
+        "DISABLE_RIDER",
+        "riders",
+        id
+    );
+
+    await loadAllData();
+};
+
+/* ================= CUSTOMERS ================= */
+
+window.renderCustomers = function(){
+
+    const search =
+        (document.getElementById("customerSearch")?.value || "")
+        .toLowerCase();
+
+    const rows =
+        customers.filter(c => {
+
+            const text =
+                `${c.name || ""} ${c.mobile || ""} ${c.email || ""}`
+                .toLowerCase();
+
+            return text.includes(search);
+
+        });
+
+    const table =
+        document.getElementById("customersTable");
+
+    if(!rows.length){
+
+        table.innerHTML =
+            `<tr><td colspan="7" class="empty">
+                No customers found.
+            </td></tr>`;
+
+        return;
+    }
+
+    table.innerHTML =
+        rows.map(c => `
+
+        <tr>
+
+            <td>${escapeHTML(c.name || "-")}</td>
+
+            <td>${escapeHTML(c.mobile || "-")}</td>
+
+            <td>${escapeHTML(c.email || "-")}</td>
+
+            <td>
+                ${
+                    orders.filter(o =>
+                        o.customerId === c.id
+                    ).length
+                }
+            </td>
+
+            <td>
+                ${
+                    c.status === "blocked"
+                    ? '<span class="badge badge-red">Blocked</span>'
+                    : '<span class="badge badge-green">Normal</span>'
+                }
+            </td>
+
+            <td>
+                ${
+                    c.securityStatus === "suspicious"
+                    ? '<span class="badge badge-yellow">Suspicious</span>'
+                    : c.securityStatus === "blocked"
+                    ? '<span class="badge badge-red">Blocked</span>'
+                    : '<span class="badge badge-green">Normal</span>'
+                }
+            </td>
+
+            <td>
+
+                <button class="btn btn-blue"
+                        onclick="viewCustomer('${c.id}')">
+                    👁 View
+                </button>
+
+                <button class="btn btn-danger"
+                        onclick="blockCustomer('${c.id}')">
+                    🚫 Block
+                </button>
+
+            </td>
+
+        </tr>
+
+        `).join("");
+};
+
+window.blockCustomer = async function(id){
+
+    if(!confirm(
+        "এই customer account block করবেন?"
+    ))
+        return;
+
+    await updateDoc(
+        doc(db,"users",id),
+        {
+            status:"blocked",
+            securityStatus:"blocked",
+            blockedAt:serverTimestamp(),
+            blockedBy:currentUser?.uid || ""
+        }
+    );
+
+    await audit(
+        "BLOCK_CUSTOMER",
+        "users",
+        id
+    );
+
+    await loadAllData();
+};
+
+window.viewCustomer=function(id){
+
+    const c =
+        customers.find(x => x.id===id);
+
+    if(!c) return;
+
+    const customerOrders =
+        orders.filter(
+            o => o.customerId === id
+        );
+
+    alert(
+        "Customer: " +
+        (c.name || "") +
+        "\nMobile: " +
+        (c.mobile || "") +
+        "\nEmail: " +
+        (c.email || "") +
+        "\nOrders: " +
+        customerOrders.length +
+        "\nSecurity: " +
+        (c.securityStatus || "normal")
+    );
+};
+
+/* ================= ORDERS ================= */
+
+window.renderOrders = function(){
+
+    const table =
+        document.getElementById("ordersTable");
+
+    if(!orders.length){
+
+        table.innerHTML =
+            `<tr><td colspan="9" class="empty">
+                No orders found.
+            </td></tr>`;
+
+        return;
+    }
+
+    table.innerHTML =
+        orders.map(o => `
+
+        <tr>
+
+            <td>
+                <input type="checkbox"
+                       class="orderSelect"
+                       value="${o.id}">
+            </td>
+
+            <td>
+                <b>${escapeHTML(
+                    o.orderCode ||
+                    o.orderId ||
+                    o.id
+                )}</b>
+            </td>
+
+            <td>
+                ${escapeHTML(
+                    o.customerName ||
+                    o.customer?.name ||
+                    "-"
+                )}
+                <br>
+                <small>
+                    ${escapeHTML(
+                        o.customerPhone ||
+                        o.customer?.mobile ||
+                        ""
+                    )}
+                </small>
+            </td>
+
+            <td>${money(o.total)}</td>
+
+            <td>
+                ${escapeHTML(
+                    o.paymentMethod ||
+                    o.payment?.method ||
+                    "-"
+                )}
+            </td>
+
+            <td>
+                <span class="badge badge-blue">
+                    ${escapeHTML(o.status || "New")}
+                </span>
+            </td>
+
+            <td>
+                ${escapeHTML(
+                    o.riderName ||
+                    o.assignedRiderName ||
+                    "-"
+                )}
+            </td>
+
+            <td>
+                ${formatDate(o.createdAt)}
+            </td>
+
+            <td>
+
+                <button class="btn btn-blue"
+                        onclick="printSingleOrder('${o.id}')">
+                    🖨️
+                </button>
+
+            </td>
+
+        </tr>
+
+        `).join("");
+};
+
+window.toggleAllOrders=function(checked){
+
+    document.querySelectorAll(".orderSelect")
+        .forEach(x => x.checked=checked);
+};
+
+/* ================= PRINT ================= */
+
+window.printAllOrders=function(){
+
+    printOrders(orders);
+};
+
+window.printSelectedOrders=function(){
+
+    const ids =
+        [...document.querySelectorAll(
+            ".orderSelect:checked"
+        )].map(x => x.value);
+
+    const selected =
+        orders.filter(o =>
+            ids.includes(o.id)
+        );
+
+    if(!selected.length){
+
+        alert("আগে order select করুন।");
+        return;
+    }
 
     printOrders(selected);
-
-  };
-
-
-  $("selectAllOrders").onchange = (e)=>{
-
-    document.querySelectorAll(".order-check")
-      .forEach(cb=>{
-        cb.checked = e.target.checked;
-      });
-
-  };
-
-}
-
-
-/* ================================
-   VIEW ORDER
-================================ */
-
-window.viewOrder = function(id){
-
-  const o = orders.find(x=>x.id === id);
-
-  if(!o) return;
-
-  const code = getOrderCode(o);
-
-  let items =
-    o.items ||
-    o.products ||
-    o.orderItems ||
-    [];
-
-  if(!Array.isArray(items)){
-    items = [];
-  }
-
-  showModal(
-    "Order " + code,
-    `
-
-    <div class="detail-grid">
-
-      ${detail("Customer",
-        o.customerName || o.name || "-")}
-
-      ${detail("Mobile",
-        o.customerMobile ||
-        o.mobile ||
-        o.phone ||
-        "-")}
-
-      ${detail("Address",
-        o.deliveryAddress ||
-        o.address ||
-        "-")}
-
-      ${detail("Payment Status",
-        o.paymentStatus || "-")}
-
-      ${detail("Payment Method",
-        o.paymentMethod || "-")}
-
-      ${detail("Payment Choice",
-        o.paymentChoice || "-")}
-
-      ${detail("Transaction ID",
-        o.transactionId || "-")}
-
-      ${detail("Delivery Charge",
-        money(o.deliveryCharge || 0))}
-
-      ${detail("Platform Charge",
-        money(o.platformCharge || 0))}
-
-      ${detail("Subtotal",
-        money(o.subtotal || 0))}
-
-      ${detail("Discount",
-        money(o.discount || 0))}
-
-      ${detail("Total",
-        money(o.total || o.grandTotal || 0))}
-
-      ${detail("Order Status",
-        o.orderStatus || o.status || "-")}
-
-      ${detail("Assigned Rider",
-        o.assignedRider ||
-        o.riderName ||
-        o.riderId ||
-        "-")}
-
-      ${detail("Order Date",
-        formatDate(o.createdAt || o.date))}
-
-      ${detail("Special Note",
-        o.specialNote || o.note || "-")}
-
-    </div>
-
-    <br>
-
-    <h3>Products</h3>
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Variant</th>
-            <th>Qty</th>
-            <th>Price</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-          ${
-            items.map(item=>{
-
-              const qty =
-                Number(
-                  item.quantity ||
-                  item.qty ||
-                  1
-                );
-
-              const price =
-                Number(
-                  item.price ||
-                  item.unitPrice ||
-                  0
-                );
-
-              return `
-                <tr>
-                  <td>${escapeHtml(
-                    item.name ||
-                    item.productName ||
-                    "-"
-                  )}</td>
-
-                  <td>${escapeHtml(
-                    item.variantName ||
-                    item.variant ||
-                    item.size ||
-                    "-"
-                  )}</td>
-
-                  <td>${qty}</td>
-
-                  <td>${money(price)}</td>
-
-                  <td>${money(price*qty)}</td>
-                </tr>
-              `;
-
-            }).join("") || `
-              <tr>
-                <td colspan="5">No product information.</td>
-              </tr>
-            `
-          }
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-    <br>
-
-    <div class="actions">
-
-      <button
-        class="btn green"
-        onclick="printOrdersByIds(['${o.id}'])">
-        🖨️ Print This Order
-      </button>
-
-    </div>
-    `
-  );
-
 };
 
+window.printSingleOrder=function(id){
 
-function detail(label,value){
-  return `
-    <div class="detail-item">
-      <small>${escapeHtml(label)}</small>
-      <b>${escapeHtml(value)}</b>
-    </div>
-  `;
-}
+    const o =
+        orders.find(x => x.id===id);
 
-
-/* ================================
-   BULK PRINT
-================================ */
-
-window.printOrdersByIds = function(ids){
-
-  const selected =
-    orders.filter(o=>ids.includes(o.id));
-
-  printOrders(selected);
-
+    if(o)
+        printOrders([o]);
 };
-
 
 function printOrders(list){
 
-  if(!list.length){
-    alert("No orders selected.");
-    return;
-  }
+    const pages =
+        list.map((o,index) => {
 
-  const sorted = list
-    .slice()
-    .sort((a,b)=>
-      timestampValue(a.createdAt || a.date) -
-      timestampValue(b.createdAt || b.date)
-    );
+            const code =
+                o.orderCode ||
+                o.orderId ||
+                o.id;
 
-  $("printArea").innerHTML = sorted
-    .map((o,i)=>buildPrintPage(o,i+1))
-    .join("");
+            const items =
+                Array.isArray(o.items)
+                ? o.items
+                : [];
 
-  /*
-   * Give QR/barcode time to render.
-   * Then open ONE browser print dialog.
-   */
-  setTimeout(()=>{
+            return `
 
-    sorted.forEach((o,i)=>{
+            <div class="print-page">
 
-      const code =
-        getOrderCode(o);
+                <h1>NatureBite</h1>
 
-      const qrElement =
-        document.getElementById(
-          `qr-${i}`
+                <h2>Delivery Order</h2>
+
+                <p>
+                    <b>Serial:</b> ${index+1}
+                </p>
+
+                <p>
+                    <b>Order Code:</b> ${escapeHTML(code)}
+                </p>
+
+                <hr>
+
+                <p>
+                    <b>Customer:</b>
+                    ${escapeHTML(
+                        o.customerName ||
+                        o.customer?.name ||
+                        "-"
+                    )}
+                </p>
+
+                <p>
+                    <b>Mobile:</b>
+                    ${escapeHTML(
+                        o.customerPhone ||
+                        o.customer?.mobile ||
+                        "-"
+                    )}
+                </p>
+
+                <p>
+                    <b>Address:</b>
+                    ${escapeHTML(
+                        o.address ||
+                        o.deliveryAddress ||
+                        "-"
+                    )}
+                </p>
+
+                <hr>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Variant</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    ${items.map(i => `
+
+                        <tr>
+                            <td>${escapeHTML(
+                                i.name ||
+                                i.productName ||
+                                "-"
+                            )}</td>
+
+                            <td>${escapeHTML(
+                                i.variantName ||
+                                i.variant ||
+                                "-"
+                            )}</td>
+
+                            <td>${Number(i.quantity || i.qty || 1)}</td>
+
+                            <td>${money(
+                                i.price
+                            )}</td>
+                        </tr>
+
+                    `).join("")}
+
+                    </tbody>
+                </table>
+
+                <hr>
+
+                <p>Subtotal: ${money(o.subtotal)}</p>
+                <p>Discount: ${money(o.discount)}</p>
+                <p>Delivery: ${money(o.deliveryCharge)}</p>
+                <p>Platform Charge: ${money(o.platformCharge)}</p>
+                <h3>Total: ${money(o.total)}</h3>
+
+                <p>
+                    Payment:
+                    ${escapeHTML(
+                        o.paymentMethod ||
+                        "-"
+                    )}
+                </p>
+
+                <p>
+                    Transaction ID:
+                    ${escapeHTML(
+                        o.transactionId ||
+                        "-"
+                    )}
+                </p>
+
+                <p>
+                    Status:
+                    ${escapeHTML(
+                        o.status ||
+                        "-"
+                    )}
+                </p>
+
+                <p>
+                    Rider:
+                    ${escapeHTML(
+                        o.riderName ||
+                        "-"
+                    )}
+                </p>
+
+                <p>
+                    Note:
+                    ${escapeHTML(
+                        o.note ||
+                        o.specialNote ||
+                        "-"
+                    )}
+                </p>
+
+                <div style="margin-top:25px">
+                    <b>Order Code</b>
+                    <div style="font-size:28px;margin-top:10px">
+                        ${escapeHTML(code)}
+                    </div>
+                </div>
+
+            </div>
+
+            `;
+
+        }).join("");
+
+    const win =
+        window.open(
+            "",
+            "_blank",
+            "width=900,height=700"
         );
 
-      if(qrElement){
+    win.document.write(`
 
-        new QRCode(qrElement,{
-          text:code,
-          width:120,
-          height:120
-        });
+    <html>
 
-      }
+    <head>
 
-      const barcode =
-        document.getElementById(
-          `barcode-${i}`
-        );
+        <title>NatureBite Orders</title>
 
-      if(barcode){
+        <style>
 
-        try{
+        body{
+            font-family:Arial;
+            margin:0;
+        }
 
-          JsBarcode(
-            barcode,
-            code,
-            {
-              format:"CODE128",
-              displayValue:true,
-              width:1.6,
-              height:45,
-              margin:5
+        .print-page{
+            width:190mm;
+            min-height:270mm;
+            padding:12mm;
+            page-break-after:always;
+        }
+
+        h1{
+            color:#123d2b;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th,td{
+            border:1px solid #ddd;
+            padding:7px;
+        }
+
+        </style>
+
+    </head>
+
+    <body>
+
+        ${pages}
+
+        <script>
+            window.onload=function(){
+                window.print();
             }
-          );
+        <\/script>
 
-        }catch(e){
-          console.warn(e);
-        }
+    </body>
 
-      }
+    </html>
 
-    });
+    `);
 
-    window.print();
-
-  },500);
-
-}
-
-
-function buildPrintPage(o,serial){
-
-  const code = getOrderCode(o,serial-1);
-
-  let items =
-    o.items ||
-    o.products ||
-    o.orderItems ||
-    [];
-
-  if(!Array.isArray(items)){
-    items = [];
-  }
-
-  return `
-
-    <div class="print-page">
-
-      <div class="print-header">
-
-        <div>
-          <div class="print-brand">
-            NatureBite
-          </div>
-
-          <div>
-            Healthy choices. Better everyday.
-          </div>
-        </div>
-
-        <div style="text-align:right">
-
-          <b>Delivery Sheet</b><br>
-
-          Serial:
-          <b>${serial}</b><br>
-
-          Order:
-          <b>${escapeHtml(code)}</b>
-
-        </div>
-
-      </div>
-
-      <div class="print-flex">
-
-        <div style="flex:1">
-
-          <b>Customer Information</b>
-
-          <p>
-            <b>Name:</b>
-            ${escapeHtml(
-              o.customerName ||
-              o.name ||
-              "-"
-            )}
-          </p>
-
-          <p>
-            <b>Mobile:</b>
-            ${escapeHtml(
-              o.customerMobile ||
-              o.mobile ||
-              o.phone ||
-              "-"
-            )}
-          </p>
-
-          <p>
-            <b>Address:</b>
-            ${escapeHtml(
-              o.deliveryAddress ||
-              o.address ||
-              "-"
-            )}
-          </p>
-
-          <p>
-            <b>Special Note:</b>
-            ${escapeHtml(
-              o.specialNote ||
-              o.note ||
-              "-"
-            )}
-          </p>
-
-        </div>
-
-        <div class="print-qr">
-
-          <div id="qr-${serial-1}"></div>
-
-          <svg id="barcode-${serial-1}"></svg>
-
-        </div>
-
-      </div>
-
-      <h3>Order Items</h3>
-
-      <table class="print-table">
-
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Variant</th>
-            <th>Qty</th>
-            <th>Unit Price</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-          ${
-            items.map(item=>{
-
-              const qty =
-                Number(
-                  item.quantity ||
-                  item.qty ||
-                  1
-                );
-
-              const price =
-                Number(
-                  item.price ||
-                  item.unitPrice ||
-                  0
-                );
-
-              return `
-                <tr>
-
-                  <td>
-                    ${escapeHtml(
-                      item.name ||
-                      item.productName ||
-                      "-"
-                    )}
-                  </td>
-
-                  <td>
-                    ${escapeHtml(
-                      item.variantName ||
-                      item.variant ||
-                      item.size ||
-                      "-"
-                    )}
-                  </td>
-
-                  <td>${qty}</td>
-
-                  <td>${money(price)}</td>
-
-                  <td>${money(price*qty)}</td>
-
-                </tr>
-              `;
-
-            }).join("") || `
-              <tr>
-                <td colspan="5">
-                  Product information unavailable
-                </td>
-              </tr>
-            `
-          }
-
-        </tbody>
-
-      </table>
-
-      <br>
-
-      <table class="print-table">
-
-        <tr>
-          <th>Subtotal</th>
-          <td>${money(o.subtotal || 0)}</td>
-        </tr>
-
-        <tr>
-          <th>Discount</th>
-          <td>${money(o.discount || 0)}</td>
-        </tr>
-
-        <tr>
-          <th>Delivery Charge</th>
-          <td>${money(o.deliveryCharge || 0)}</td>
-        </tr>
-
-        <tr>
-          <th>Platform Charge</th>
-          <td>${money(o.platformCharge || 0)}</td>
-        </tr>
-
-        <tr>
-          <th>Total</th>
-          <td><b>${money(
-            o.total ||
-            o.grandTotal ||
-            0
-          )}</b></td>
-        </tr>
-
-        <tr>
-          <th>Payment Method</th>
-          <td>
-            ${escapeHtml(
-              o.paymentMethod || "-"
-            )}
-          </td>
-        </tr>
-
-        <tr>
-          <th>Payment Choice</th>
-          <td>
-            ${escapeHtml(
-              o.paymentChoice || "-"
-            )}
-          </td>
-        </tr>
-
-        <tr>
-          <th>Payment Status</th>
-          <td>
-            ${escapeHtml(
-              o.paymentStatus || "-"
-            )}
-          </td>
-        </tr>
-
-        <tr>
-          <th>Transaction ID</th>
-          <td>
-            ${escapeHtml(
-              o.transactionId || "-"
-            )}
-          </td>
-        </tr>
-
-        <tr>
-          <th>Assigned Rider</th>
-          <td>
-            ${escapeHtml(
-              o.assignedRider ||
-              o.riderName ||
-              o.riderId ||
-              "-"
-            )}
-          </td>
-        </tr>
-
-      </table>
-
-      <br>
-
-      <div style="text-align:center">
-        <b>Thank you for choosing NatureBite.</b>
-      </div>
-
-    </div>
-  `;
-}
-
-
-/* ================================
-   SETTINGS
-================================ */
-
-function renderSettings(){
-
-  if(!canChangeSettings()){
-
-    showPageMessage(
-      "শুধু Super Admin Settings পরিবর্তন করতে পারবেন।"
-    );
-
-    return;
-  }
-
-  $("content").innerHTML = `
-
-    <div class="page-head">
-
-      <div>
-        <h2>Settings</h2>
-        <div style="color:#718077;font-size:12px">
-          Business controls and payment settings
-        </div>
-      </div>
-
-    </div>
-
-    <div class="settings-grid">
-
-      <!-- PAYMENT -->
-      <div class="setting-box">
-
-        <h3>💳 Payment Settings</h3>
-
-        ${field(
-          "bKash Number",
-          "setBkash",
-          platformSettings.bkashNumber,
-          "text"
-        )}
-
-        <div class="switch-row">
-          <span>bKash Enabled</span>
-          ${toggle(
-            "setBkashEnabled",
-            platformSettings.bkashEnabled
-          )}
-        </div>
-
-        ${field(
-          "Nagad Number",
-          "setNagad",
-          platformSettings.nagadNumber,
-          "text"
-        )}
-
-        <div class="switch-row">
-          <span>Nagad Enabled</span>
-          ${toggle(
-            "setNagadEnabled",
-            platformSettings.nagadEnabled
-          )}
-        </div>
-
-        <div class="switch-row">
-          <span>Cash on Delivery</span>
-          ${toggle(
-            "setCod",
-            platformSettings.codEnabled
-          )}
-        </div>
-
-        <div class="switch-row">
-          <span>
-            Pay Delivery Charge Online
-          </span>
-
-          ${toggle(
-            "setDeliveryOnline",
-            platformSettings.deliveryChargeOnlineEnabled
-          )}
-        </div>
-
-        <div class="switch-row">
-          <span>
-            Pay Full Order Amount Online
-          </span>
-
-          ${toggle(
-            "setFullOnline",
-            platformSettings.fullPaymentOnlineEnabled
-          )}
-        </div>
-
-        <div class="switch-row">
-          <span>
-            Payment Verification Required
-          </span>
-
-          ${toggle(
-            "setPaymentVerification",
-            platformSettings.onlinePaymentVerification
-          )}
-        </div>
-
-      </div>
-
-
-      <!-- DELIVERY -->
-      <div class="setting-box">
-
-        <h3>🚚 Delivery Settings</h3>
-
-        ${field(
-          "Standard Delivery Charge",
-          "setStandardDelivery",
-          platformSettings.standardDelivery,
-          "number"
-        )}
-
-        ${field(
-          "Express Delivery Charge",
-          "setExpressDelivery",
-          platformSettings.expressDelivery,
-          "number"
-        )}
-
-        ${field(
-          "Free Delivery Charge",
-          "setFreeDelivery",
-          platformSettings.freeDelivery,
-          "number"
-        )}
-
-        <div class="switch-row">
-
-          <span>Free Delivery Campaign</span>
-
-          ${toggle(
-            "setFreeDeliveryEnabled",
-            platformSettings.freeDeliveryEnabled
-          )}
-
-        </div>
-
-        ${field(
-          "Free Delivery Campaign Name",
-          "setFreeCampaign",
-          platformSettings.freeDeliveryCampaignName,
-          "text"
-        )}
-
-        <div class="switch-row">
-
-          <span>
-            Delivery Charge Must Be Prepaid
-          </span>
-
-          ${toggle(
-            "setDeliveryPrepaid",
-            platformSettings.deliveryPrepaidRequired
-          )}
-
-        </div>
-
-      </div>
-
-
-      <!-- PLATFORM -->
-      <div class="setting-box">
-
-        <h3>⚙️ Platform Settings</h3>
-
-        ${field(
-          "Platform Charge",
-          "setPlatformCharge",
-          platformSettings.platformCharge,
-          "number"
-        )}
-
-        ${field(
-          "Charge Type",
-          "setPlatformType",
-          platformSettings.platformChargeType,
-          "select",
-          ["fixed","percentage"]
-        )}
-
-        ${field(
-          "Order Prefix",
-          "setOrderPrefix",
-          platformSettings.orderPrefix,
-          "text"
-        )}
-
-        ${field(
-          "Customer Service Phone",
-          "setCustomerPhone",
-          platformSettings.customerServicePhone,
-          "text"
-        )}
-
-      </div>
-
-
-      <!-- BUSINESS -->
-      <div class="setting-box">
-
-        <h3>🏢 Business Information</h3>
-
-        ${field(
-          "Business Name",
-          "setBusinessName",
-          platformSettings.businessName,
-          "text"
-        )}
-
-        ${field(
-          "Business Phone",
-          "setBusinessPhone",
-          platformSettings.businessPhone,
-          "text"
-        )}
-
-        ${field(
-          "Business Email",
-          "setBusinessEmail",
-          platformSettings.businessEmail,
-          "email"
-        )}
-
-        ${field(
-          "Business Address",
-          "setBusinessAddress",
-          platformSettings.businessAddress,
-          "textarea"
-        )}
-
-      </div>
-
-    </div>
-
-    <div class="setting-actions">
-
-      <button
-        id="saveSettings"
-        class="primary">
-        💾 Save All Settings
-      </button>
-
-    </div>
-  `;
-
-
-  $("saveSettings").onclick = saveSettings;
-
-}
-
-
-function field(label,id,value,type="text",options=[]){
-
-  let input = "";
-
-  if(type === "textarea"){
-
-    input = `
-      <textarea id="${id}" rows="3">
-${escapeHtml(value || "")}
-      </textarea>
-    `;
-
-  }else if(type === "select"){
-
-    input = `
-      <select id="${id}">
-        ${
-          options.map(o=>`
-            <option
-              value="${escapeHtml(o)}"
-              ${String(value)===String(o)?"selected":""}>
-              ${escapeHtml(o)}
-            </option>
-          `).join("")
-        }
-      </select>
-    `;
-
-  }else{
-
-    input = `
-      <input
-        id="${id}"
-        type="${type}"
-        value="${escapeHtml(value ?? "")}">
-    `;
-
-  }
-
-  return `
-    <div class="form-group">
-      <label>${escapeHtml(label)}</label>
-      ${input}
-    </div>
-  `;
-}
-
-
-function toggle(id,checked){
-
-  return `
-    <label class="switch">
-      <input
-        id="${id}"
-        type="checkbox"
-        ${checked ? "checked" : ""}>
-      <span class="slider"></span>
-    </label>
-  `;
-}
-
-
-async function saveSettings(){
-
-  const newSettings = {
-
-    ...platformSettings,
-
-    bkashNumber:
-      $("setBkash").value.trim(),
-
-    bkashEnabled:
-      $("setBkashEnabled").checked,
-
-    nagadNumber:
-      $("setNagad").value.trim(),
-
-    nagadEnabled:
-      $("setNagadEnabled").checked,
-
-    codEnabled:
-      $("setCod").checked,
-
-    deliveryChargeOnlineEnabled:
-      $("setDeliveryOnline").checked,
-
-    fullPaymentOnlineEnabled:
-      $("setFullOnline").checked,
-
-    onlinePaymentVerification:
-      $("setPaymentVerification").checked,
-
-    standardDelivery:
-      Number($("setStandardDelivery").value || 0),
-
-    expressDelivery:
-      Number($("setExpressDelivery").value || 0),
-
-    freeDelivery:
-      Number($("setFreeDelivery").value || 0),
-
-    freeDeliveryEnabled:
-      $("setFreeDeliveryEnabled").checked,
-
-    freeDeliveryCampaignName:
-      $("setFreeCampaign").value.trim(),
-
-    deliveryPrepaidRequired:
-      $("setDeliveryPrepaid").checked,
-
-    platformCharge:
-      Number($("setPlatformCharge").value || 0),
-
-    platformChargeType:
-      $("setPlatformType").value,
-
-    orderPrefix:
-      $("setOrderPrefix").value.trim() || "NB",
-
-    customerServicePhone:
-      $("setCustomerPhone").value.trim(),
-
-    businessName:
-      $("setBusinessName").value.trim(),
-
-    businessPhone:
-      $("setBusinessPhone").value.trim(),
-
-    businessEmail:
-      $("setBusinessEmail").value.trim(),
-
-    businessAddress:
-      $("setBusinessAddress").value.trim(),
-
-    updatedAt:
-      serverTimestamp(),
-
-    updatedBy:
-      currentUser.uid
-
-  };
-
-
-  try{
-
-    await setDoc(
-      doc(db,"settings","platform"),
-      newSettings,
-      {merge:true}
-    );
-
-    platformSettings = {
-      ...platformSettings,
-      ...newSettings
-    };
-
-    await audit(
-      "Platform Settings Updated",
-      "Payment, delivery and business settings changed."
-    );
-
-    alert("Settings successfully saved.");
-
-  }catch(error){
-
-    console.error(error);
-
-    alert(
-      "Settings save failed: " +
-      error.message
-    );
-
-  }
-
-}
-
-
-/* ================================
-   GENERIC MODULES
-================================ */
-
-function renderProducts(){
-
-  if(!hasPermission("products")){
-    showPageMessage("আপনার Products permission নেই।");
-    return;
-  }
-
-  $("content").innerHTML = `
-
-    <div class="page-head">
-
-      <h2>Products</h2>
-
-      <div class="actions">
-
-        <button class="btn" onclick="loadAndShowCurrent()">
-          🔄 Refresh
-        </button>
-
-      </div>
-
-    </div>
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Category</th>
-            <th>Status</th>
-            <th>Featured</th>
-            <th>ID</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-          ${
-            products.map(p=>`
-              <tr>
-
-                <td>
-                  <b>${escapeHtml(
-                    p.name ||
-                    p.title ||
-                    p.id
-                  )}</b>
-                </td>
-
-                <td>
-                  ${escapeHtml(
-                    p.category ||
-                    p.categoryName ||
-                    "-"
-                  )}
-                </td>
-
-                <td>
-                  ${escapeHtml(
-                    p.status ||
-                    (p.active ? "active":"inactive")
-                  )}
-                </td>
-
-                <td>
-                  ${p.featured ? "Yes":"No"}
-                </td>
-
-                <td>${escapeHtml(p.id)}</td>
-
-              </tr>
-            `).join("") || `
-              <tr>
-                <td colspan="5">No products.</td>
-              </tr>
-            `
-          }
-
-        </tbody>
-
-      </table>
-
-    </div>
-  `;
-}
-
-
-window.loadAndShowCurrent = async function(){
-  await loadAllData();
-  showPage(currentPage);
+    win.document.close();
 };
 
-
-function renderInventory(){
-
-  if(!hasPermission("inventory")){
-    showPageMessage("আপনার Inventory permission নেই।");
-    return;
-  }
-
-  $("content").innerHTML = `
-
-    <div class="page-head">
-
-      <h2>Inventory</h2>
-
-    </div>
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-          <tr>
-            <th>Variant</th>
-            <th>Size</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-          ${
-            variants.map(v=>{
-
-              const stock =
-                Number(v.stock || 0);
-
-              return `
-                <tr>
-
-                  <td>
-                    ${escapeHtml(
-                      v.name ||
-                      v.title ||
-                      v.id
-                    )}
-                  </td>
-
-                  <td>
-                    ${escapeHtml(
-                      v.size ||
-                      v.variant ||
-                      "-"
-                    )}
-                  </td>
-
-                  <td>
-                    ${money(v.price || 0)}
-                  </td>
-
-                  <td>
-                    <b>${stock}</b>
-                  </td>
-
-                  <td>
-                    <span class="status ${
-                      stock <= 5
-                      ? "red"
-                      : "green"
-                    }">
-                      ${
-                        stock <= 5
-                        ? "Low Stock"
-                        : "Available"
-                      }
-                    </span>
-                  </td>
-
-                </tr>
-              `;
-
-            }).join("") || `
-              <tr>
-                <td colspan="5">No inventory.</td>
-              </tr>
-            `
-          }
-
-        </tbody>
-
-      </table>
-
-    </div>
-  `;
-}
-
-
-function renderCustomers(){
-
-  if(!hasPermission("customers")){
-    showPageMessage("আপনার Customers permission নেই।");
-    return;
-  }
-
-  $("content").innerHTML = `
-
-    <div class="page-head">
-      <h2>Customers</h2>
-    </div>
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Mobile</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Created</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-          ${
-            customers.map(c=>`
-
-              <tr>
-
-                <td>
-                  ${escapeHtml(
-                    c.name ||
-                    c.displayName ||
-                    "-"
-                  )}
-                </td>
-
-                <td>
-                  ${escapeHtml(
-                    c.phone ||
-                    c.mobile ||
-                    "-"
-                  )}
-                </td>
-
-                <td>
-                  ${escapeHtml(
-                    c.email ||
-                    "-"
-                  )}
-                </td>
-
-                <td>
-                  ${escapeHtml(
-                    c.role ||
-                    "customer"
-                  )}
-                </td>
-
-                <td>
-                  ${formatDate(c.createdAt)}
-                </td>
-
-              </tr>
-
-            `).join("") || `
-              <tr>
-                <td colspan="5">
-                  No customers.
-                </td>
-              </tr>
-            `
-          }
-
-        </tbody>
-
-      </table>
-
-    </div>
-  `;
-}
-
-
-function renderRiders(){
-  renderBasicTable(
-    "Riders",
-    riders,
-    ["name","mobile","phone","status","zone"]
-  );
-}
-
-
-function renderDeliveryPartners(){
-  renderBasicTable(
-    "Delivery Partners",
-    deliveryPartners,
-    ["name","mobile","status","company"]
-  );
-}
-
-
-function renderPayments(){
-  renderBasicTable(
-    "Payments",
-    payments,
-    ["orderCode","amount","method","status","transactionId","createdAt"]
-  );
-}
-
-
-function renderRefunds(){
-  renderBasicTable(
-    "Refunds",
-    refunds,
-    ["orderCode","amount","status","reason","createdAt"]
-  );
-}
-
-
-function renderCancellations(){
-  renderBasicTable(
-    "Cancellations",
-    cancellations,
-    ["orderCode","reason","status","createdAt"]
-  );
-}
-
-
-function renderExpenses(){
-  renderBasicTable(
-    "Expenses",
-    expenses,
-    ["title","category","amount","createdAt"]
-  );
-}
-
-
-function renderBasicTable(title,data,fields){
-
-  $("content").innerHTML = `
-
-    <div class="page-head">
-      <h2>${escapeHtml(title)}</h2>
-    </div>
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-          <tr>
-            ${fields.map(f=>`
-              <th>${escapeHtml(f)}</th>
-            `).join("")}
-          </tr>
-        </thead>
-
-        <tbody>
-
-          ${
-            data.map(row=>`
-
-              <tr>
-
-                ${
-                  fields.map(f=>{
-
-                    let value =
-                      row[f] ?? "-";
-
-                    if(
-                      f.toLowerCase()
-                        .includes("amount")
-                    ){
-                      value = money(value);
-                    }
-
-                    if(
-                      f.toLowerCase()
-                        .includes("date") ||
-                      f === "createdAt"
-                    ){
-                      value = formatDate(value);
-                    }
-
-                    return `
-                      <td>
-                        ${escapeHtml(value)}
-                      </td>
-                    `;
-
-                  }).join("")
-                }
-
-              </tr>
-
-            `).join("") || `
-
-              <tr>
-                <td colspan="${fields.length}">
-                  No records.
-                </td>
-              </tr>
-
-            `
-          }
-
-        </tbody>
-
-      </table>
-
-    </div>
-  `;
-}
-
-
-/* ================================
-   REPORTS
-================================ */
-
-function renderReports(){
-
-  if(!hasPermission("reports")){
-    showPageMessage("আপনার Reports permission নেই।");
-    return;
-  }
-
-  $("content").innerHTML = `
-
-    <div class="page-head">
-
-      <h2>Reports</h2>
-
-      <div class="actions">
-
-        <button class="btn green" id="printReport">
-          🖨️ Print Report
-        </button>
-
-      </div>
-
-    </div>
-
-    <div class="panel">
-
-      <div class="settings-grid">
-
-        <div class="form-group">
-          <label>From</label>
-          <input id="reportFrom" type="date">
-        </div>
-
-        <div class="form-group">
-          <label>To</label>
-          <input id="reportTo" type="date">
-        </div>
-
-      </div>
-
-      <br>
-
-      <button
-        class="btn green"
-        id="generateReport">
-        Generate Report
-      </button>
-
-    </div>
-
-    <br>
-
-    <div id="reportResult"></div>
-  `;
-
-  $("generateReport").onclick =
-    generateReport;
-
-  $("printReport").onclick = ()=>{
-    window.print();
-  };
-
-}
-
-
-function generateReport(){
-
-  const from =
-    $("reportFrom").value
-    ? new Date(
-        $("reportFrom").value +
-        "T00:00:00"
-      ).getTime()
-    : 0;
-
-  const to =
-    $("reportTo").value
-    ? new Date(
-        $("reportTo").value +
-        "T23:59:59"
-      ).getTime()
-    : Date.now();
-
-  const filtered =
-    orders.filter(o=>{
-
-      const time =
-        timestampValue(
-          o.createdAt ||
-          o.date
+window.printProducts=function(){
+
+    const html =
+        products.map(p =>
+            `<tr>
+                <td>${escapeHTML(p.name)}</td>
+                <td>${escapeHTML(p.category)}</td>
+                <td>${p.active !== false ? "Active":"Inactive"}</td>
+            </tr>`
+        ).join("");
+
+    openPrintWindow(
+        "NatureBite Product Report",
+        `
+        <table>
+            <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Status</th>
+            </tr>
+            ${html}
+        </table>
+        `
+    );
+};
+
+window.printInventory=function(){
+
+    const html =
+        variants.map(v => {
+
+            const p =
+                productById(v.productId);
+
+            return `
+            <tr>
+                <td>${escapeHTML(p?.name || "")}</td>
+                <td>${escapeHTML(v.name || "")}</td>
+                <td>${escapeHTML(v.sku || "")}</td>
+                <td>${money(v.price)}</td>
+                <td>${v.stock || 0}</td>
+            </tr>
+            `;
+
+        }).join("");
+
+    openPrintWindow(
+        "NatureBite Inventory Report",
+        `
+        <table>
+            <tr>
+                <th>Product</th>
+                <th>Variant</th>
+                <th>SKU</th>
+                <th>Price</th>
+                <th>Stock</th>
+            </tr>
+            ${html}
+        </table>
+        `
+    );
+};
+
+window.printStaff=function(){
+
+    openPrintWindow(
+        "NatureBite Staff Report",
+        `
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Role</th>
+                <th>Status</th>
+            </tr>
+
+            ${
+                staff.filter(s=>s.role!=="customer")
+                .map(s=>`
+                    <tr>
+                        <td>${escapeHTML(s.name)}</td>
+                        <td>${escapeHTML(s.email)}</td>
+                        <td>${escapeHTML(s.mobile)}</td>
+                        <td>${escapeHTML(s.role)}</td>
+                        <td>${escapeHTML(s.status)}</td>
+                    </tr>
+                `).join("")
+            }
+
+        </table>
+        `
+    );
+};
+
+window.printRiders=function(){
+
+    openPrintWindow(
+        "NatureBite Rider Report",
+        `
+        <table>
+            <tr>
+                <th>Rider ID</th>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Vehicle</th>
+                <th>Zone</th>
+                <th>Status</th>
+            </tr>
+
+            ${
+                riders.map(r=>`
+                    <tr>
+                        <td>${escapeHTML(r.riderCode)}</td>
+                        <td>${escapeHTML(r.name)}</td>
+                        <td>${escapeHTML(r.mobile)}</td>
+                        <td>${escapeHTML(r.vehicleType)}</td>
+                        <td>${escapeHTML(r.zone)}</td>
+                        <td>${escapeHTML(r.status)}</td>
+                    </tr>
+                `).join("")
+            }
+
+        </table>
+        `
+    );
+};
+
+window.printCustomers=function(){
+
+    openPrintWindow(
+        "NatureBite Customer Report",
+        `
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Email</th>
+                <th>Status</th>
+            </tr>
+
+            ${
+                customers.map(c=>`
+                    <tr>
+                        <td>${escapeHTML(c.name)}</td>
+                        <td>${escapeHTML(c.mobile)}</td>
+                        <td>${escapeHTML(c.email)}</td>
+                        <td>${escapeHTML(c.status || "active")}</td>
+                    </tr>
+                `).join("")
+            }
+
+        </table>
+        `
+    );
+};
+
+window.printTable=function(id){
+
+    const table =
+        document.getElementById(id);
+
+    if(!table) return;
+
+    openPrintWindow(
+        "NatureBite Report",
+        table.closest("table")?.outerHTML || ""
+    );
+};
+
+function openPrintWindow(title,body){
+
+    const w =
+        window.open(
+            "",
+            "_blank",
+            "width=900,height=700"
         );
 
-      return time >= from &&
-             time <= to;
+    w.document.write(`
+    <html>
+    <head>
+        <title>${title}</title>
+        <style>
+            body{font-family:Arial;padding:30px}
+            h1{color:#123d2b}
+            table{width:100%;border-collapse:collapse}
+            th,td{border:1px solid #ccc;padding:8px}
+            th{background:#f2f5f2}
+        </style>
+    </head>
+    <body>
+        <h1>NatureBite</h1>
+        <h2>${title}</h2>
+        ${body}
+        <script>
+            window.onload=function(){
+                window.print();
+            }
+        <\/script>
+    </body>
+    </html>
+    `);
 
-    });
-
-  const sales =
-    filtered.reduce(
-      (s,o)=>s + Number(
-        o.total ||
-        o.grandTotal ||
-        0
-      ),0
-    );
-
-  const delivery =
-    filtered.reduce(
-      (s,o)=>s + Number(
-        o.deliveryCharge || 0
-      ),0
-    );
-
-  const platform =
-    filtered.reduce(
-      (s,o)=>s + Number(
-        o.platformCharge || 0
-      ),0
-    );
-
-  const cancelled =
-    filtered.filter(o=>
-      String(
-        o.status ||
-        o.orderStatus ||
-        ""
-      ).toLowerCase()
-      .includes("cancel")
-    ).length;
-
-  const delivered =
-    filtered.filter(o=>
-      String(
-        o.status ||
-        o.orderStatus ||
-        ""
-      ).toLowerCase()
-      .includes("deliver")
-    ).length;
-
-  $("reportResult").innerHTML = `
-
-    <div class="cards">
-
-      ${statCard(
-        "Orders",
-        filtered.length
-      )}
-
-      ${statCard(
-        "Sales",
-        money(sales)
-      )}
-
-      ${statCard(
-        "Delivered",
-        delivered
-      )}
-
-      ${statCard(
-        "Cancelled",
-        cancelled
-      )}
-
-      ${statCard(
-        "Delivery Income",
-        money(delivery)
-      )}
-
-      ${statCard(
-        "Platform Income",
-        money(platform)
-      )}
-
-    </div>
-
-  `;
-
+    w.document.close();
 }
 
+window.printReport=function(){
 
-/* ================================
-   STAFF
-================================ */
+    const box =
+        document.getElementById("reportBox");
 
-function renderStaff(){
+    openPrintWindow(
+        "NatureBite Financial Report",
+        box.innerHTML
+    );
+};
 
-  if(!hasPermission("staff")){
-    showPageMessage("আপনার Staff permission নেই।");
-    return;
-  }
+window.printAudit=function(){
 
-  const staff =
-    customers.filter(u=>{
-      const role =
-        normalizeRole(u.role);
+    openPrintWindow(
+        "NatureBite Audit Report",
+        document.getElementById("auditTable")
+            .closest("table").outerHTML
+    );
+};
 
-      return [
-        "super_admin",
-        "superadmin",
-        "order_manager",
-        "product_manager",
-        "inventory_manager",
-        "accountant_finance",
-        "delivery_manager",
-        "customer_support",
-        "marketing_manager"
-      ].includes(role);
-    });
+/* ================= DASHBOARD ================= */
 
-  $("content").innerHTML = `
+function renderDashboard(){
 
-    <div class="page-head">
+    const totalSales =
+        orders.reduce(
+            (sum,o)=>
+                sum + Number(o.total || 0),
+            0
+        );
 
-      <div>
-        <h2>Staff</h2>
-        <div style="color:#718077;font-size:12px">
-          Staff accounts and roles
-        </div>
-      </div>
+    const delivered =
+        orders.filter(
+            o => String(o.status || "")
+                .toLowerCase()
+                === "delivered"
+        ).length;
 
-    </div>
+    const cancelled =
+        orders.filter(
+            o => String(o.status || "")
+                .toLowerCase()
+                === "cancelled"
+        ).length;
 
-    <div class="table-wrap">
+    const pending =
+        orders.length -
+        delivered -
+        cancelled;
 
-      <table>
+    const low =
+        variants.filter(v =>
+            Number(v.stock || 0) <=
+            Number(v.lowStockLimit ?? 5)
+        );
 
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Permissions</th>
-          </tr>
-        </thead>
+    document.getElementById("dashSales")
+        .textContent=money(totalSales);
 
-        <tbody>
+    document.getElementById("dashOrders")
+        .textContent=orders.length;
 
-          ${
-            staff.map(s=>`
+    document.getElementById("dashDelivered")
+        .textContent=delivered;
 
-              <tr>
+    document.getElementById("dashCancelled")
+        .textContent=cancelled;
 
-                <td>
-                  ${escapeHtml(
-                    s.name ||
-                    s.displayName ||
-                    "-"
-                  )}
-                </td>
+    document.getElementById("dashPending")
+        .textContent=pending;
 
-                <td>
-                  ${escapeHtml(
-                    s.email ||
-                    "-"
-                  )}
-                </td>
+    document.getElementById("dashProducts")
+        .textContent=products.length;
 
-                <td>
-                  <span class="status green">
-                    ${escapeHtml(
-                      s.role || "-"
-                    )}
-                  </span>
-                </td>
+    document.getElementById("dashCustomers")
+        .textContent=customers.length;
 
-                <td>
-                  ${
-                    s.permissions
-                    ? Object.keys(
-                        s.permissions
-                      )
-                      .filter(
-                        k=>s.permissions[k]
-                      )
-                      .join(", ")
-                    : "-"
-                  }
-                </td>
+    document.getElementById("dashLowStock")
+        .textContent=low.length;
 
-              </tr>
+    document.getElementById("dashboardLowStock")
+        .innerHTML = low.length
+        ? low.map(v => {
 
-            `).join("") || `
-              <tr>
-                <td colspan="4">
-                  No staff records.
-                </td>
-              </tr>
-            `
-          }
+            const p =
+                productById(v.productId);
 
-        </tbody>
+            return `
+                <div style="
+                    padding:10px;
+                    border-bottom:1px solid #eee
+                ">
+                    <b>${escapeHTML(p?.name || "")}</b>
+                    -
+                    ${escapeHTML(v.name || "")}
 
-      </table>
+                    <span class="badge badge-yellow">
+                        Stock: ${v.stock || 0}
+                    </span>
+                </div>
+            `;
 
-    </div>
-  `;
+        }).join("")
+        : `<div class="empty">
+            No low-stock products.
+        </div>`;
 }
 
+/* ================= PAYMENTS ================= */
 
-function renderPermissions(){
+function renderPayments(){
 
-  if(!hasPermission("permissions")){
-    showPageMessage("আপনার Permissions permission নেই।");
-    return;
-  }
+    const table =
+        document.getElementById("paymentsTable");
 
-  $("content").innerHTML = `
+    if(!table) return;
 
-    <div class="panel">
+    table.innerHTML =
+        payments.map(p => `
 
-      <h2>Permissions</h2>
+        <tr>
 
-      <p>
-        Staff permissions Firestore
-        users/{UID}.permissions map থেকে
-        নিয়ন্ত্রিত হবে।
-      </p>
+            <td>${escapeHTML(
+                p.orderCode ||
+                p.orderId ||
+                "-"
+            )}</td>
 
-      <div class="alert">
-        Super Admin-এর সব permission থাকবে।
-      </div>
+            <td>${escapeHTML(
+                p.customerName || "-"
+            )}</td>
 
-      <div class="alert">
-        Staff-এর permission শুধু Firestore
-        Security Rules দিয়ে enforce করা উচিত।
-      </div>
+            <td>${escapeHTML(
+                p.method || p.paymentMethod || "-"
+            )}</td>
 
-    </div>
-  `;
+            <td>${escapeHTML(
+                p.transactionId || "-"
+            )}</td>
+
+            <td>${money(p.amount)}</td>
+
+            <td>${escapeHTML(
+                p.status || "pending"
+            )}</td>
+
+            <td>
+                <button class="btn btn-primary"
+                        onclick="approvePayment('${p.id}')">
+                    ✓ Approve
+                </button>
+            </td>
+
+        </tr>
+
+        `).join("") ||
+        `<tr>
+            <td colspan="7" class="empty">
+                No payments.
+            </td>
+        </tr>`;
 }
 
+window.approvePayment=async function(id){
 
-/* ================================
-   AI
-================================ */
-
-function renderAI(){
-
-  if(!hasPermission("ai")){
-    showPageMessage("আপনার AI Assistant permission নেই।");
-    return;
-  }
-
-  $("content").innerHTML = `
-
-    <div class="panel">
-
-      <h2>AI Assistant</h2>
-
-      <p>
-        এখানে ভবিষ্যতে sales, stock,
-        cancellation, customer behaviour
-        এবং business data analysis যোগ করা যাবে।
-      </p>
-
-      <div class="alert">
-        Current automatic recommendation:
-        ${
-          variants.some(v=>
-            Number(v.stock || 0) <= 5
-          )
-          ? "Low-stock products check করুন।"
-          : "Inventory বর্তমানে স্বাভাবিক।"
+    await updateDoc(
+        doc(db,"payments",id),
+        {
+            status:"verified",
+            verifiedBy:currentUser?.uid || "",
+            verifiedAt:serverTimestamp()
         }
-      </div>
+    );
 
-    </div>
-  `;
+    await audit(
+        "VERIFY_PAYMENT",
+        "payments",
+        id
+    );
+
+    await loadAllData();
+};
+
+/* ================= BLOCKED IP ================= */
+
+window.openBlockIPModal=function(){
+
+    document.getElementById("blockIP").value="";
+    document.getElementById("blockIPReason").value="";
+    document.getElementById("blockIPType").value="permanent";
+
+    document.getElementById("blockIPModal")
+        .classList.add("show");
+};
+
+window.blockIP=async function(){
+
+    const ip =
+        document.getElementById("blockIP")
+            .value.trim();
+
+    const reason =
+        document.getElementById("blockIPReason")
+            .value.trim();
+
+    if(!ip){
+
+        alert("IP address দিন।");
+        return;
+    }
+
+    await addDoc(
+        collection(db,"blockedIPs"),
+        {
+            ip,
+            reason,
+            type:
+                document.getElementById("blockIPType")
+                    .value,
+            blockedBy:
+                currentUser?.uid || "",
+            createdAt:
+                serverTimestamp(),
+            active:true
+        }
+    );
+
+    closeModal("blockIPModal");
+
+    await audit(
+        "BLOCK_IP",
+        "blockedIPs",
+        ip
+    );
+
+    await loadAllData();
+};
+
+function renderBlockedIPs(){
+
+    const table =
+        document.getElementById(
+            "blockedIPsTable"
+        );
+
+    if(!table) return;
+
+    table.innerHTML =
+        blockedIPs.map(x => `
+
+        <tr>
+
+            <td>${escapeHTML(x.ip)}</td>
+
+            <td>${escapeHTML(x.reason || "-")}</td>
+
+            <td>${escapeHTML(x.type || "-")}</td>
+
+            <td>${escapeHTML(x.blockedBy || "-")}</td>
+
+            <td>${formatDate(x.createdAt)}</td>
+
+            <td>
+
+                <button class="btn btn-blue"
+                        onclick="unblockIP('${x.id}')">
+                    Unblock
+                </button>
+
+            </td>
+
+        </tr>
+
+        `).join("") ||
+        `<tr>
+            <td colspan="6" class="empty">
+                No blocked IPs.
+            </td>
+        </tr>`;
+
+    document.getElementById("blockedIPCount")
+        .textContent=blockedIPs.length;
 }
 
+window.unblockIP=async function(id){
 
-/* ================================
-   SIMPLE COLLECTION
-================================ */
+    if(!confirm("IP unblock করবেন?"))
+        return;
 
-function renderSimpleCollection(
-  collectionName,
-  title,
-  data
-){
+    await updateDoc(
+        doc(db,"blockedIPs",id),
+        {
+            active:false,
+            unblockedAt:serverTimestamp(),
+            unblockedBy:currentUser?.uid || ""
+        }
+    );
 
-  $("content").innerHTML = `
+    await audit(
+        "UNBLOCK_IP",
+        "blockedIPs",
+        id
+    );
 
-    <div class="page-head">
-      <h2>${escapeHtml(title)}</h2>
-    </div>
+    await loadAllData();
+};
 
-    <div class="table-wrap">
+/* ================= SETTINGS ================= */
 
-      <table>
+async function loadSettings(){
 
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name / Title</th>
-            <th>Status</th>
-            <th>Created</th>
-          </tr>
-        </thead>
+    try{
 
-        <tbody>
+        const snap =
+            await getDoc(
+                doc(db,"settings","platform")
+            );
 
-          ${
-            data.map(row=>`
+        if(!snap.exists())
+            return;
 
-              <tr>
+        const s=snap.data();
 
-                <td>
-                  ${escapeHtml(row.id)}
-                </td>
+        document.getElementById("setBkashNumber").value =
+            s.bkashNumber || "";
 
-                <td>
-                  ${escapeHtml(
-                    row.name ||
-                    row.title ||
-                    row.subject ||
-                    "-"
-                  )}
-                </td>
+        document.getElementById("setNagadNumber").value =
+            s.nagadNumber || "";
 
-                <td>
-                  ${escapeHtml(
-                    row.status ||
-                    "-"
-                  )}
-                </td>
+        document.getElementById("setStandardDelivery").value =
+            s.standardDelivery ?? 60;
 
-                <td>
-                  ${formatDate(
-                    row.createdAt
-                  )}
-                </td>
+        document.getElementById("setExpressDelivery").value =
+            s.expressDelivery ?? 80;
 
-              </tr>
+        document.getElementById("setPlatformCharge").value =
+            s.platformCharge ?? 5;
 
-            `).join("") || `
+        document.getElementById("setOrderPrefix").value =
+            s.orderPrefix || "NB";
 
-              <tr>
-                <td colspan="4">
-                  No records.
-                </td>
-              </tr>
+        document.getElementById("setCustomerServicePhone").value =
+            s.customerServicePhone || "";
 
-            `
-          }
+        document.getElementById("setBusinessName").value =
+            s.businessName || "NatureBite";
 
-        </tbody>
+        document.getElementById("setBusinessAddress").value =
+            s.businessAddress || "";
 
-      </table>
+        document.getElementById("setBkashEnabled").checked =
+            s.bkashEnabled !== false;
 
-    </div>
-  `;
+        document.getElementById("setNagadEnabled").checked =
+            s.nagadEnabled !== false;
+
+        document.getElementById("setCodEnabled").checked =
+            s.codEnabled !== false;
+
+        document.getElementById("setDeliveryOnline").checked =
+            s.deliveryChargeOnlineEnabled !== false;
+
+        document.getElementById("setFullPaymentOnline").checked =
+            s.fullPaymentOnlineEnabled !== false;
+
+        document.getElementById("setPaymentVerification").checked =
+            s.onlinePaymentVerification !== false;
+
+        document.getElementById("setFreeDelivery").checked =
+            s.freeDeliveryEnabled === true;
+
+        document.getElementById("setDeliveryPrepaid").checked =
+            s.deliveryPrepaidRequired !== false;
+
+    }catch(e){
+
+        console.error(e);
+    }
 }
 
+window.saveSettings=async function(){
 
-/* ================================
-   START
-================================ */
+    const data={
 
-console.log(
-  "NatureBite Admin Panel loaded."
-);
+        bkashNumber:
+            document.getElementById("setBkashNumber").value.trim(),
+
+        nagadNumber:
+            document.getElementById("setNagadNumber").value.trim(),
+
+        standardDelivery:
+            Number(
+                document.getElementById("setStandardDelivery").value
+            ),
+
+        expressDelivery:
+            Number(
+                document.getElementById("setExpressDelivery").value
+            ),
+
+        platformCharge:
+            Number(
+                document.getElementById("setPlatformCharge").value
+            ),
+
+        platformChargeType:"fixed",
+
+        orderPrefix:
+            document.getElementById("setOrderPrefix").value.trim(),
+
+        customerServicePhone:
+            document.getElementById("setCustomerServicePhone").value.trim(),
+
+        businessName:
+            document.getElementById("setBusinessName").value.trim(),
+
+        businessAddress:
+            document.getElementById("setBusinessAddress").value.trim(),
+
+        bkashEnabled:
+            document.getElementById("setBkashEnabled").checked,
+
+        nagadEnabled:
+            document.getElementById("setNagadEnabled").checked,
+
+        codEnabled:
+            document.getElementById("setCodEnabled").checked,
+
+        deliveryChargeOnlineEnabled:
+            document.getElementById("setDeliveryOnline").checked,
+
+        fullPaymentOnlineEnabled:
+            document.getElementById("setFullPaymentOnline").checked,
+
+        onlinePaymentVerification:
+            document.getElementById("setPaymentVerification").checked,
+
+        freeDeliveryEnabled:
+            document.getElementById("setFreeDelivery").checked,
+
+        deliveryPrepaidRequired:
+            document.getElementById("setDeliveryPrepaid").checked,
+
+        updatedAt:
+            serverTimestamp()
+
+    };
+
+    await setDoc(
+        doc(db,"settings","platform"),
+        data,
+        {merge:true}
+    );
+
+    await audit(
+        "UPDATE_SETTINGS",
+        "settings",
+        "platform"
+    );
+
+    alert("Settings saved.");
+};
+
+/* ================= AUDIT ================= */
+
+async function audit(action,collectionName,documentId){
+
+    try{
+
+        await addDoc(
+            collection(db,"auditLogs"),
+            {
+                action,
+                collection:collectionName,
+                documentId,
+                userId:
+                    currentUser?.uid || "",
+                userEmail:
+                    currentUser?.email || "",
+                createdAt:
+                    serverTimestamp()
+            }
+        );
+
+    }catch(e){
+
+        console.warn("Audit failed",e);
+    }
+}
+
+/* ================= REPORT ================= */
+
+window.generateReport=function(period){
+
+    let filtered =
+        [...orders];
+
+    const now =
+        new Date();
+
+    if(period==="today"){
+
+        filtered =
+            filtered.filter(o => {
+
+                const d =
+                    toDate(o.createdAt);
+
+                return d &&
+                    d.toDateString() ===
+                    now.toDateString();
+            });
+
+    }else if(period==="week"){
+
+        const start =
+            new Date(now);
+
+        start.setDate(
+            now.getDate()-7
+        );
+
+        filtered =
+            filtered.filter(o => {
+
+                const d =
+                    toDate(o.createdAt);
+
+                return d && d>=start;
+            });
+
+    }else if(period==="month"){
+
+        const start =
+            new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                1
+            );
+
+        filtered =
+            filtered.filter(o => {
+
+                const d =
+                    toDate(o.createdAt);
+
+                return d && d>=start;
+            });
+    }
+
+    const sales =
+        filtered.reduce(
+            (s,o)=>
+                s+Number(o.total||0),
+            0
+        );
+
+    const delivered =
+        filtered.filter(
+            o => o.status==="Delivered"
+        ).length;
+
+    const cancelled =
+        filtered.filter(
+            o => o.status==="Cancelled"
+        ).length;
+
+    document.getElementById("reportBox")
+        .innerHTML=`
+
+        <div class="cards">
+
+            <div class="card">
+                <div class="label">Orders</div>
+                <div class="value">${filtered.length}</div>
+            </div>
+
+            <div class="card">
+                <div class="label">Sales</div>
+                <div class="value">${money(sales)}</div>
+            </div>
+
+            <div class="card">
+                <div class="label">Delivered</div>
+                <div class="value">${delivered}</div>
+            </div>
+
+            <div class="card">
+                <div class="label">Cancelled</div>
+                <div class="value">${cancelled}</div>
+            </div>
+
+        </div>
+
+        <table>
+
+            <tr>
+                <th>Order</th>
+                <th>Status</th>
+                <th>Total</th>
+            </tr>
+
+            ${
+                filtered.map(o=>`
+
+                    <tr>
+                        <td>${escapeHTML(
+                            o.orderCode ||
+                            o.id
+                        )}</td>
+
+                        <td>${escapeHTML(
+                            o.status || "-"
+                        )}</td>
+
+                        <td>${money(o.total)}</td>
+                    </tr>
+
+                `).join("")
+            }
+
+        </table>
+        `;
+};
+
+function toDate(v){
+
+    if(!v) return null;
+
+    if(typeof v.toDate==="function")
+        return v.toDate();
+
+    const d=new Date(v);
+
+    return isNaN(d) ? null : d;
+}
+
+function formatDate(v){
+
+    const d=toDate(v);
+
+    if(!d) return "-";
+
+    return d.toLocaleString(
+        "en-BD",
+        {
+            dateStyle:"short",
+            timeStyle:"short"
+        }
+    );
+}
+
+/* ================= SIMPLE MODULES ================= */
+
+window.simpleAdd=function(collectionName){
+
+    const value =
+        prompt(
+            `New ${collectionName} record name:`
+        );
+
+    if(!value)
+        return;
+
+    addDoc(
+        collection(db,collectionName),
+        {
+            name:value,
+            active:true,
+            createdAt:serverTimestamp(),
+            createdBy:currentUser?.uid || ""
+        }
+    ).then(async()=>{
+
+        await audit(
+            "ADD_RECORD",
+            collectionName,
+            value
+        );
+
+        alert("Record added.");
+
+    }).catch(e =>
+        alert(e.message)
+    );
+};
+
+/* ================= IMAGE ================= */
+
+window.previewImage=function(inputId,previewId){
+
+    const url =
+        document.getElementById(inputId)
+            .value.trim();
+
+    const box =
+        document.getElementById(previewId);
+
+    if(!url){
+
+        box.innerHTML="🖼️";
+        return;
+    }
+
+    box.innerHTML =
+        `<img src="${escapeHTML(url)}"
+              onerror="this.parentElement.innerHTML='❌'">`;
+};
+
+/* ================= MODAL ================= */
+
+window.closeModal=function(id){
+
+    document.getElementById(id)
+        .classList.remove("show");
+};
+
+/* ================= INIT ================= */
+
+loadAllData();
 
 </script>
 
