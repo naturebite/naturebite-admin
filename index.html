@@ -1,183 +1,448 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nature Bite | Admin Panel</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Nature bite — Admin Panel</title>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 
 <style>
-:root {
+:root{
   --green:#2E7D32;
+  --green2:#388E3C;
   --sage:#A5C18E;
   --cream:#F5F2E8;
   --brown:#5D4037;
+  --danger:#C62828;
+  --warning:#EF6C00;
+  --blue:#1565C0;
+  --text:#263238;
+  --muted:#78909C;
   --white:#fff;
-  --dark:#203e28;
-  --border:#e0e7dc;
-  --muted:#718071;
-  --red:#c62828;
-  --orange:#ef8c22;
+  --border:#e5e7eb;
+  --shadow:0 8px 30px rgba(0,0,0,.07);
 }
-* {box-sizing:border-box}
-body {
+
+*{box-sizing:border-box}
+body{
   margin:0;
-  background:var(--cream);
-  color:#263328;
-  font-family:Arial, sans-serif;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f6f8f5;
+  color:var(--text);
 }
-button,input,select,textarea {font:inherit}
-button {
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+
+.app{
+  display:flex;
+  min-height:100vh;
+}
+
+.sidebar{
+  width:260px;
+  background:#173f1d;
+  color:white;
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  overflow:auto;
+  z-index:50;
+  transition:.25s;
+}
+
+.brand{
+  padding:22px 20px;
+  border-bottom:1px solid rgba(255,255,255,.12);
+}
+.brand h1{
+  margin:0;
+  font-size:24px;
+}
+.brand small{
+  color:#c9ddc9;
+}
+
+.nav{
+  padding:12px;
+}
+.nav button{
+  width:100%;
   border:0;
-  border-radius:8px;
-  padding:10px 14px;
-  cursor:pointer;
-}
-button:disabled {opacity:.5;cursor:not-allowed}
-.primary {background:var(--green);color:white}
-.secondary {background:#e6eee1;color:#234b29}
-.danger {background:#ffebee;color:#b71c1c}
-.muted {color:var(--muted)}
-.hidden {display:none!important}
-.login {
-  width:min(420px,92%);
-  margin:10vh auto;
-  background:white;
-  border-radius:18px;
-  padding:28px;
-  box-shadow:0 6px 30px #0001;
-}
-.login h1 {text-align:center;color:var(--green)}
-.login button {width:100%}
-input,select,textarea {
-  display:block;
-  width:100%;
-  padding:11px;
-  margin:6px 0 14px;
-  border:1px solid var(--border);
-  border-radius:8px;
-  background:white;
-  color:#263328;
-}
-textarea {min-height:85px;resize:vertical}
-label {font-size:13px;font-weight:700}
-.layout {display:flex;min-height:100vh}
-.sidebar {
-  width:255px;
-  flex-shrink:0;
-  background:var(--dark);
-  color:white;
-  padding:16px 12px;
-}
-.brand {
-  font-size:22px;
-  font-weight:bold;
-  padding:12px 10px;
-  border-bottom:1px solid #ffffff30;
-  margin-bottom:10px;
-}
-.navlist {display:flex;flex-direction:column;gap:3px}
-.nav {
-  display:block;
-  width:100%;
-  text-align:left;
-  color:white;
   background:transparent;
-  padding:11px 12px;
-  border-radius:8px;
+  color:#dfeee0;
+  text-align:left;
+  padding:12px 14px;
+  margin:2px 0;
+  border-radius:9px;
+  transition:.2s;
 }
-.nav.active,.nav:hover {background:#426c49}
-.main {flex:1;min-width:0}
-.topbar {
+.nav button:hover,
+.nav button.active{
+  background:#2E7D32;
+  color:white;
+}
+
+.main{
+  margin-left:260px;
+  width:calc(100% - 260px);
+}
+
+.topbar{
+  height:70px;
   background:white;
   border-bottom:1px solid var(--border);
-  padding:14px 20px;
   display:flex;
   align-items:center;
   justify-content:space-between;
+  padding:0 22px;
+  position:sticky;
+  top:0;
+  z-index:30;
+}
+
+.menu-btn{
+  display:none;
+  border:0;
+  background:none;
+  font-size:25px;
+}
+
+.admin-user{
+  display:flex;
+  align-items:center;
   gap:12px;
 }
-.content {padding:20px}
-.section {display:none}
-.section.active {display:block}
-.grid {
+.avatar{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:var(--green);
+  color:white;
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+  place-items:center;
+  font-weight:bold;
+}
+
+.content{
+  padding:22px;
+}
+
+.page-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:20px;
+}
+.page-title h2{
+  margin:0;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
   gap:12px;
 }
-.card {
+.card{
   background:white;
   border:1px solid var(--border);
-  border-radius:12px;
-  padding:16px;
-  min-width:0;
-  margin-bottom:14px;
+  border-radius:13px;
+  padding:17px;
+  box-shadow:var(--shadow);
 }
-.card h3 {font-size:14px;color:var(--muted);margin:0 0 10px}
-.metric {font-size:24px;font-weight:bold;color:var(--green)}
-.toolbar {display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-.toolbar input {max-width:280px}
-.table-wrap {
-  width:100%;
+.card .label{
+  color:var(--muted);
+  font-size:12px;
+}
+.card .value{
+  margin-top:8px;
+  font-size:22px;
+  font-weight:bold;
+}
+.green{color:var(--green)}
+.red{color:var(--danger)}
+.orange{color:var(--warning)}
+.blue{color:var(--blue)}
+
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  margin-top:18px;
+}
+
+.panel{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+.panel h3{
+  margin-top:0;
+}
+
+.stats-list{
+  display:grid;
+  gap:11px;
+}
+.stat-row{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid #eee;
+}
+
+.table-wrap{
   overflow:auto;
   background:white;
-  border-radius:10px;
+  border-radius:13px;
   border:1px solid var(--border);
+  box-shadow:var(--shadow);
 }
-table {border-collapse:collapse;width:100%;min-width:650px}
-th,td {
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:800px;
+}
+th,td{
+  padding:12px;
+  border-bottom:1px solid #eee;
   text-align:left;
-  padding:11px;
-  border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+th{
+  background:#f4f7f3;
   font-size:13px;
 }
-th {background:#edf3e9}
-.badge {
+td{
+  font-size:13px;
+}
+
+.badge{
   display:inline-block;
-  padding:4px 8px;
-  border-radius:20px;
-  background:#e6eee1;
+  padding:5px 9px;
+  border-radius:30px;
+  font-size:11px;
+  font-weight:bold;
+}
+.badge.green{background:#e5f5e6}
+.badge.red{background:#fde8e8}
+.badge.orange{background:#fff1df}
+.badge.blue{background:#e8f1ff}
+.badge.gray{background:#eef1f2}
+
+.btn{
+  border:0;
+  padding:9px 13px;
+  border-radius:8px;
+  background:var(--green);
+  color:white;
+  font-weight:600;
+}
+.btn:hover{opacity:.9}
+.btn.secondary{
+  background:#eceff1;
+  color:#263238;
+}
+.btn.danger{background:var(--danger)}
+.btn.warning{background:var(--warning)}
+.btn.blue{background:var(--blue)}
+.btn.small{
+  padding:6px 9px;
   font-size:11px;
 }
-.badge.red {background:#ffebee;color:#b71c1c}
-.badge.orange {background:#fff2df;color:#995500}
-.form-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:10px;
+
+.toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-bottom:15px;
 }
-.error {color:var(--red);white-space:pre-wrap;font-size:13px}
-.notice {
-  padding:12px;
-  background:#fff8df;
-  border:1px solid #efdfa5;
+.input{
+  border:1px solid #d5dadd;
+  border-radius:8px;
+  padding:10px;
+  background:white;
+  min-width:160px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:13px;
+}
+.form-group{
+  display:grid;
+  gap:6px;
+}
+.form-group.full{
+  grid-column:1/-1;
+}
+.form-group label{
+  font-size:12px;
+  font-weight:bold;
+}
+.form-group input,
+.form-group select,
+.form-group textarea{
+  border:1px solid #d5dadd;
+  border-radius:8px;
+  padding:10px;
+}
+.form-group textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+  padding:15px;
+}
+.modal.show{display:flex}
+.modal-box{
+  width:min(760px,100%);
+  max-height:92vh;
+  overflow:auto;
+  background:white;
+  border-radius:15px;
+  padding:20px;
+}
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+  margin-bottom:15px;
+}
+.close{
+  border:0;
+  background:#eee;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+}
+
+.alert{
+  padding:11px;
   border-radius:9px;
-  margin:12px 0;
+  margin-bottom:8px;
   font-size:13px;
 }
-.success {color:var(--green)}
-.actions {display:flex;gap:6px;flex-wrap:wrap}
-.module-title {margin:0 0 14px}
-@media(max-width:760px) {
-  .layout {display:block}
-  .sidebar {width:100%;padding:8px}
-  .brand {padding:8px;border:0}
-  .navlist {
-    flex-direction:row;
-    overflow-x:auto;
-    padding-bottom:5px;
-  }
-  .nav {white-space:nowrap;width:auto}
-  .content {padding:12px}
-  .topbar {padding:12px}
+.alert.warning{background:#fff4e5}
+.alert.danger{background:#fdeaea}
+.alert.info{background:#e9f2ff}
+.alert.success{background:#e8f6e9}
+
+.report{
+  background:white;
+  padding:35px;
+  max-width:950px;
+  margin:auto;
 }
-@media print {
-  .sidebar,.topbar,.no-print {display:none!important}
-  body {background:white}
-  .layout {display:block}
-  .content {padding:0}
-  .section {display:none!important}
-  .section.active {display:block!important}
-  .card {border:1px solid #aaa;break-inside:avoid}
+.report h1,.report h2{
+  text-align:center;
+}
+.report-section{
+  margin-top:25px;
+}
+.report-row{
+  display:flex;
+  justify-content:space-between;
+  border-bottom:1px solid #ddd;
+  padding:8px 0;
+}
+
+.login{
+  min-height:100vh;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#173f1d,#2E7D32);
+  padding:20px;
+}
+.login-box{
+  width:min(420px,100%);
+  background:white;
+  border-radius:18px;
+  padding:28px;
+  box-shadow:0 20px 60px rgba(0,0,0,.2);
+}
+.login-logo{
+  text-align:center;
+  margin-bottom:20px;
+}
+.login-logo h1{
+  margin:0;
+  color:var(--green);
+}
+.login-form{
+  display:grid;
+  gap:13px;
+}
+.login-form input{
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:8px;
+}
+.login-msg{
+  font-size:13px;
+  color:var(--danger);
+  min-height:18px;
+}
+
+.hidden{display:none!important}
+
+@media(max-width:1200px){
+  .cards{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:800px){
+  .sidebar{
+    transform:translateX(-100%);
+  }
+  .sidebar.open{
+    transform:translateX(0);
+  }
+  .main{
+    margin-left:0;
+    width:100%;
+  }
+  .menu-btn{display:block}
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .grid2{grid-template-columns:1fr}
+  .content{padding:13px}
+  .form-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .cards{grid-template-columns:1fr 1fr}
+  .card{padding:12px}
+  .card .value{font-size:18px}
+  .topbar{padding:0 12px}
+}
+
+/* PRINT */
+@media print{
+  body{background:white}
+  .sidebar,.topbar,.no-print,.modal{display:none!important}
+  .main{
+    margin:0;
+    width:100%;
+  }
+  .content{padding:0}
+  .report{
+    max-width:none;
+    padding:10px;
+  }
 }
 </style>
 </head>
@@ -185,1273 +450,4336 @@ th {background:#edf3e9}
 <body>
 
 <!-- LOGIN -->
-<section id="loginScreen" class="login">
-  <h1>🌿 Nature Bite</h1>
-  <p style="text-align:center">Admin & Staff Login</p>
+<div id="loginScreen" class="login">
+  <div class="login-box">
+    <div class="login-logo">
+      <h1>Nature bite</h1>
+      <p>Admin Panel</p>
+    </div>
 
-  <label>Email Address</label>
-  <input id="loginEmail" type="email"
-         autocomplete="username" placeholder="admin@example.com">
+    <form class="login-form" onsubmit="login(event)">
+      <input id="loginEmail" type="email" placeholder="Admin/Staff Email" required>
+      <input id="loginPassword" type="password" placeholder="Password" required>
+      <button class="btn" type="submit">Login</button>
+      <div id="loginMsg" class="login-msg"></div>
+    </form>
 
-  <label>Password</label>
-  <input id="loginPassword" type="password"
-         autocomplete="current-password" placeholder="Password">
+    <p style="font-size:11px;color:#78909C;text-align:center">
+      Customer panel has no Admin login link.
+    </p>
+  </div>
+</div>
 
-  <button id="loginButton" class="primary">Login</button>
-  <p id="loginError" class="error"></p>
-  <p class="muted" style="font-size:12px">
-    শুধুমাত্র অনুমোদিত Admin ও Staff প্রবেশ করতে পারবেন।
-  </p>
-</section>
+<!-- APPLICATION -->
+<div id="app" class="app hidden">
 
-<!-- ADMIN APPLICATION -->
-<div id="adminApp" class="layout hidden">
+  <aside id="sidebar" class="sidebar">
+    <div class="brand">
+      <h1>Nature bite</h1>
+      <small>Business Administration</small>
+    </div>
 
-  <aside class="sidebar">
-    <div class="brand">🌿 Nature Bite</div>
-    <div id="navigation" class="navlist"></div>
+    <div class="nav">
+
+      <button onclick="showPage('dashboard',this)" class="active">📊 Dashboard</button>
+      <button onclick="showPage('orders',this)">🛒 Orders</button>
+      <button onclick="showPage('products',this)">🥜 Products</button>
+      <button onclick="showPage('inventory',this)">📦 Inventory</button>
+      <button onclick="showPage('categories',this)">🗂️ Categories</button>
+      <button onclick="showPage('customers',this)">👥 Customers</button>
+      <button onclick="showPage('riders',this)">🛵 Riders</button>
+      <button onclick="showPage('delivery',this)">🚚 Delivery Partners</button>
+      <button onclick="showPage('payments',this)">💳 Payments</button>
+      <button onclick="showPage('refunds',this)">↩️ Refunds</button>
+      <button onclick="showPage('cancellations',this)">❌ Cancellations</button>
+      <button onclick="showPage('offers',this)">🎟️ Offers & Coupons</button>
+      <button onclick="showPage('wheel',this)">🎡 Lucky Wheel</button>
+      <button onclick="showPage('draw',this)">🎁 Lucky Draw</button>
+      <button onclick="showPage('reviews',this)">⭐ Reviews</button>
+      <button onclick="showPage('support',this)">🎫 Support</button>
+      <button onclick="showPage('reports',this)">📈 Reports</button>
+      <button onclick="showPage('expenses',this)">💰 Expenses</button>
+      <button onclick="showPage('chalan',this)">🧾 Chalan</button>
+      <button onclick="showPage('staff',this)">👨‍💼 Staff & Permissions</button>
+      <button onclick="showPage('ai',this)">🤖 AI Assistant</button>
+      <button onclick="showPage('notifications',this)">🔔 Notifications</button>
+      <button onclick="showPage('website',this)">🌐 Website Content</button>
+      <button onclick="showPage('appcontent',this)">📱 App Content</button>
+      <button onclick="showPage('features',this)">🧩 Feature Management</button>
+      <button onclick="showPage('settings',this)">⚙️ Settings</button>
+      <button onclick="showPage('audit',this)">📜 Audit Logs</button>
+
+      <button onclick="logout()" style="margin-top:15px;background:#8b1e1e">
+        🚪 Logout
+      </button>
+    </div>
   </aside>
 
   <main class="main">
+
     <header class="topbar">
+      <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+
       <div>
-        <strong id="pageTitle">Dashboard</strong>
-        <div id="userInfo" class="muted" style="font-size:12px"></div>
+        <strong id="pageHeading">Dashboard</strong>
       </div>
-      <button id="logoutButton" class="danger">Logout</button>
+
+      <div class="admin-user">
+        <div>
+          <strong id="adminName">Super Admin</strong><br>
+          <small id="adminRole">Super Admin</small>
+        </div>
+        <div class="avatar">SA</div>
+      </div>
     </header>
 
-    <div class="content">
+    <div id="content" class="content"></div>
 
-      <!-- DASHBOARD -->
-      <section id="dashboard" class="section active">
-        <h2 class="module-title">Business Dashboard</h2>
-
-        <div class="grid">
-          <div class="card"><h3>Total Sales</h3><div class="metric" id="dSales">৳0</div></div>
-          <div class="card"><h3>Total Orders</h3><div class="metric" id="dOrders">0</div></div>
-          <div class="card"><h3>Delivered</h3><div class="metric" id="dDelivered">0</div></div>
-          <div class="card"><h3>Pending</h3><div class="metric" id="dPending">0</div></div>
-          <div class="card"><h3>Cancelled</h3><div class="metric" id="dCancelled">0</div></div>
-          <div class="card"><h3>Net Profit</h3><div class="metric" id="dProfit">৳0</div></div>
-          <div class="card"><h3>Low Stock</h3><div class="metric" id="dLowStock">0</div></div>
-        </div>
-
-        <h3>Sales & Finance</h3>
-        <div class="grid">
-          <div class="card"><h3>Product Sales</h3><div id="dProductSales">৳0</div></div>
-          <div class="card"><h3>Delivery Income</h3><div id="dDeliveryIncome">৳0</div></div>
-          <div class="card"><h3>Platform Income</h3><div id="dPlatformIncome">৳0</div></div>
-          <div class="card"><h3>Expenses</h3><div id="dExpenses">৳0</div></div>
-          <div class="card"><h3>Gross Profit</h3><div id="dGross">৳0</div></div>
-        </div>
-
-        <div class="notice">
-          Dashboard-এর হিসাব Firestore-এর Orders ও Expenses থেকে
-          তৈরি হবে। Product Cost, Refund ও অন্যান্য খরচের সঠিক
-          হিসাবের জন্য ডেটা পূর্ণাঙ্গ হতে হবে।
-        </div>
-      </section>
-
-      <!-- PRODUCTS -->
-      <section id="products" class="section">
-        <h2 class="module-title">Products</h2>
-
-        <div class="toolbar no-print">
-          <button id="newProductButton" class="primary">+ Add Product</button>
-          <input id="productSearch" placeholder="Search product...">
-        </div>
-
-        <div id="productForm" class="card hidden no-print">
-          <h3 id="productFormTitle">Add Product</h3>
-          <input id="productId" type="hidden">
-
-          <div class="form-grid">
-            <div><label>Product Name</label><input id="pName"></div>
-            <div><label>Category</label><input id="pCategory"></div>
-            <div><label>Subcategory</label><input id="pSubcategory"></div>
-            <div><label>SKU</label><input id="pSku"></div>
-            <div><label>Price (৳)</label><input id="pPrice" type="number" min="0"></div>
-            <div><label>Discount (৳)</label><input id="pDiscount" type="number" min="0"></div>
-            <div><label>Stock</label><input id="pStock" type="number" min="0"></div>
-            <div><label>Low Stock Threshold</label><input id="pThreshold" type="number" min="0" value="5"></div>
-            <div><label>Weight / Variant</label><input id="pVariant"></div>
-            <div><label>Image URL</label><input id="pImage" type="url"></div>
-            <div><label>Active</label>
-              <select id="pActive">
-                <option value="true">Active</option>
-                <option value="false">Inactive</option>
-              </select>
-            </div>
-            <div><label>Featured</label>
-              <select id="pFeatured">
-                <option value="false">No</option>
-                <option value="true">Yes</option>
-              </select>
-            </div>
-            <div><label>New Product</label>
-              <select id="pNew">
-                <option value="false">No</option>
-                <option value="true">Yes</option>
-              </select>
-            </div>
-            <div><label>Best Seller</label>
-              <select id="pBestSeller">
-                <option value="false">No</option>
-                <option value="true">Yes</option>
-              </select>
-            </div>
-          </div>
-
-          <label>Description</label>
-          <textarea id="pDescription"></textarea>
-
-          <div class="toolbar">
-            <button id="saveProductButton" class="primary">Save Product</button>
-            <button id="cancelProductButton" class="secondary">Cancel</button>
-          </div>
-          <p id="productError" class="error"></p>
-        </div>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Product</th><th>Category</th><th>SKU</th>
-                <th>Price</th><th>Stock</th><th>Status</th><th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="productRows">
-              <tr><td colspan="7">Loading products...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- ORDERS -->
-      <section id="orders" class="section">
-        <h2 class="module-title">Orders</h2>
-        <div class="toolbar no-print">
-          <input id="orderSearch" placeholder="Search order...">
-          <button class="secondary" id="printOrdersButton">Print Orders</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr>
-              <th>Order ID</th><th>Customer</th><th>Mobile</th>
-              <th>Total</th><th>Payment</th><th>Status</th><th>Details</th>
-            </tr></thead>
-            <tbody id="orderRows">
-              <tr><td colspan="7">Loading orders...</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div id="orderDetails" class="card hidden"></div>
-      </section>
-
-      <!-- GENERIC MODULES -->
-      <section id="genericModule" class="section">
-        <h2 id="genericTitle" class="module-title">Module</h2>
-        <div class="notice">
-          এই মডিউলের ডেটা Firestore Collection থেকে পরিচালিত হবে।
-          নতুন ডেটা যোগ করার আগে নির্দিষ্ট Schema ও অনুমতি
-          কনফিগার করতে হবে।
-        </div>
-        <div class="toolbar no-print">
-          <input id="genericSearch" placeholder="Search...">
-          <button id="genericRefresh" class="secondary">Refresh</button>
-          <button id="genericAdd" class="primary">Add Record</button>
-        </div>
-        <div id="genericForm" class="card hidden no-print">
-          <h3 id="genericFormTitle">New Record</h3>
-          <div id="genericFields"></div>
-          <div class="toolbar">
-            <button id="genericSave" class="primary">Save</button>
-            <button id="genericCancel" class="secondary">Cancel</button>
-          </div>
-          <p id="genericError" class="error"></p>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr id="genericHead"></tr></thead>
-            <tbody id="genericRows">
-              <tr><td>Open a module to load records.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- PRINTABLE MONTHLY REPORT -->
-      <section id="reports" class="section">
-        <h2 class="module-title">Monthly Business Report</h2>
-        <div class="toolbar no-print">
-          <input id="reportMonth" type="month">
-          <button id="reportRefresh" class="primary">Load Report</button>
-          <button id="printReport" class="secondary">🖨️ Print Complete Report</button>
-        </div>
-        <div id="reportContent" class="card">
-          <h2>NATURE BITE</h2>
-          <h3>Monthly Business Report</h3>
-          <p>মাস নির্বাচন করে রিপোর্ট তৈরি করুন।</p>
-        </div>
-      </section>
-
-      <!-- SETTINGS -->
-      <section id="settings" class="section">
-        <h2 class="module-title">Settings & API Configuration</h2>
-        <div class="notice">
-          Secret API key HTML বা Firestore-এর public data-তে
-          সংরক্ষণ করবেন না। নিরাপদ Backend-এর Environment
-          Variables-এ রাখতে হবে।
-        </div>
-        <div id="settingsStatus" class="grid">
-          <div class="card"><h3>bKash</h3><span class="badge orange">Not Connected</span></div>
-          <div class="card"><h3>Nagad</h3><span class="badge orange">Not Connected</span></div>
-          <div class="card"><h3>Pathao</h3><span class="badge orange">Not Connected</span></div>
-          <div class="card"><h3>Steadfast</h3><span class="badge orange">Not Connected</span></div>
-          <div class="card"><h3>RedX</h3><span class="badge orange">Not Connected</span></div>
-          <div class="card"><h3>Facebook CAPI</h3><span class="badge orange">Not Connected</span></div>
-          <div class="card"><h3>AI API</h3><span class="badge orange">Not Connected</span></div>
-        </div>
-        <div class="card">
-          <h3>Business Settings</h3>
-          <label>Business Name</label><input id="businessName" value="Nature Bite">
-          <label>bKash Number</label><input id="bkashNumber">
-          <label>Nagad Number</label><input id="nagadNumber">
-          <label>Platform Charge (৳)</label><input id="platformCharge" type="number" min="0">
-          <label>Delivery Charge (৳)</label><input id="deliveryCharge" type="number" min="0">
-          <button id="saveSettings" class="primary">Save Settings</button>
-          <p id="settingsError" class="error"></p>
-        </div>
-      </section>
-
-    </div>
   </main>
 </div>
 
-<script type="module">
-import { initializeApp } from
-  "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 
-import {
-  getAuth, signInWithEmailAndPassword,
-  onAuthStateChanged, signOut
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+<!-- GENERAL MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="modalTitle">Form</h3>
+      <button class="close" onclick="closeModal()">×</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
 
-import {
-  getFirestore, collection, doc, getDoc, getDocs,
-  addDoc, updateDoc, deleteDoc, onSnapshot,
-  serverTimestamp, query, orderBy
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-/*
-  Firebase Console থেকে Web App Configuration নিয়ে
-  নিচের তথ্যগুলো পরিবর্তন করুন।
-*/
-const firebaseConfig = {
-  apiKey: "AIzaSyAHkf-TowBU4Lw-PJCxMKzdTbknRLLpPds",
-  authDomain: "nature-bite.firebaseapp.com",
-  projectId: "nature-bite",
-  storageBucket: "nature-bite.firebasestorage.app",
-  messagingSenderId: "651000838958",
-  appId: "1:651000838958:web:1d59655ce567cd873758bf"
+<script>
+
+/* =========================================================
+   NATURE BITE ADMIN — FOUNDATION
+   Local Demo Database
+   Firebase layer will replace this storage layer.
+========================================================= */
+
+const DB_KEY = "nature_bite_admin_db_v1";
+
+let currentPage = "dashboard";
+let currentUser = {
+  name:"Super Admin",
+  email:"admin@naturebite.local",
+  role:"Super Admin"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const defaultDB = {
 
-const $ = id => document.getElementById(id);
+  settings:{
+    businessName:"Nature bite",
+    logo:"",
+    contact:"",
+    address:"",
+    bkash:"",
+    nagad:"",
+    deliveryCharge:60,
+    freeDeliveryMinimum:1000,
+    platformCharge:10,
+    minimumOrder:100,
+    maintenance:false
+  },
 
-const MODULES = [
-  ["dashboard","Dashboard","dashboard"],
-  ["orders","Orders","orders"],
-  ["products","Products","products"],
-  ["inventory","Inventory","inventory"],
-  ["categories","Categories","categories"],
-  ["customers","Customers","customers"],
-  ["riders","Riders","riders"],
-  ["deliveryPartners","Delivery Partners","deliveryPartners"],
-  ["payments","Payments","payments"],
-  ["refunds","Refunds","refunds"],
-  ["cancellations","Cancellations","cancellations"],
-  ["offers","Offers & Coupons","offers"],
-  ["luckyWheel","Lucky Wheel","luckyWheel"],
-  ["luckyDraw","Lucky Draw","luckyDraw"],
-  ["reviews","Reviews","reviews"],
-  ["support","Support","support"],
-  ["reports","Reports","reports"],
-  ["expenses","Expenses","expenses"],
-  ["chalan","Chalan","chalan"],
-  ["staff","Staff & Permissions","staff"],
-  ["ai","AI Assistant","ai"],
-  ["notifications","Notifications","notifications"],
-  ["website","Website Content","websiteContent"],
-  ["appContent","App Content","appContent"],
-  ["settings","Settings","settings"],
-  ["features","Customer Features","customer_features"],
-  ["audit","Audit Logs","auditLogs"]
+  categories:[
+    {id:"CAT-001",name:"Healthy Snacks",active:true,sort:1},
+    {id:"CAT-002",name:"Kids Special Foods",active:true,sort:2},
+    {id:"CAT-003",name:"Diabetic/Keto-Friendly",active:true,sort:3},
+    {id:"CAT-004",name:"Instant Mix Items",active:true,sort:4}
+  ],
+
+  products:[
+    {
+      id:"NB-P-001",
+      name:"Peanut Energy Bite",
+      category:"Healthy Snacks",
+      description:"Healthy peanut energy snack.",
+      featured:true,
+      new:true,
+      bestSeller:false,
+      active:true,
+      variants:[
+        {id:"V-001",weight:"50g",price:80,cost:45,stock:40,sku:"PEB-50"},
+        {id:"V-002",weight:"100g",price:150,cost:82,stock:25,sku:"PEB-100"},
+        {id:"V-003",weight:"250g",price:350,cost:190,stock:12,sku:"PEB-250"}
+      ]
+    }
+  ],
+
+  orders:[
+    {
+      id:"NB-10001",
+      customer:"Demo Customer",
+      mobile:"01XXXXXXXXX",
+      address:"Chattogram",
+      products:[
+        {name:"Peanut Energy Bite",variant:"50g",qty:2,price:80,cost:45}
+      ],
+      deliveryCharge:60,
+      platformCharge:10,
+      discount:0,
+      paymentMethod:"bKash",
+      paymentStatus:"Verified",
+      senderNumber:"01XXXXXXXXX",
+      transactionId:"TXN-DEMO",
+      date:"2026-09-30T18:30:00",
+      note:"Please call before delivery",
+      rider:"Not Assigned",
+      status:"Delivered"
+    }
+  ],
+
+  customers:[],
+  riders:[],
+  deliveryPartners:[
+    {id:"DP-001",name:"Nature Bite Delivery",contact:"",area:"Chattogram",charge:60,api:"Manual",active:true},
+    {id:"DP-002",name:"Pathao",contact:"",area:"Bangladesh",charge:0,api:"Not Connected",active:false},
+    {id:"DP-003",name:"Steadfast",contact:"",area:"Bangladesh",charge:0,api:"Not Connected",active:false},
+    {id:"DP-004",name:"CarryBee",contact:"",area:"Bangladesh",charge:0,api:"Not Connected",active:false}
+  ],
+
+  payments:[],
+  refunds:[],
+  cancellations:[],
+  offers:[],
+  wheel:[],
+  draw:[],
+  reviews:[],
+  support:[],
+  expenses:[],
+  chalans:[],
+  staff:[],
+  notifications:[],
+  audit:[],
+  features:[],
+  website:{},
+  appcontent:{}
+};
+
+function loadDB(){
+  const raw = localStorage.getItem(DB_KEY);
+  if(!raw){
+    localStorage.setItem(DB_KEY,JSON.stringify(defaultDB));
+    return structuredClone(defaultDB);
+  }
+  return JSON.parse(raw);
+}
+
+let db = loadDB();
+
+function saveDB(){
+  localStorage.setItem(DB_KEY,JSON.stringify(db));
+}
+
+function uid(prefix){
+  return prefix+"-"+Date.now().toString(36).toUpperCase();
+}
+
+function money(n){
+  return "৳"+Number(n||0).toLocaleString("en-BD");
+}
+
+function esc(str){
+  return String(str??"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;");
+}
+
+function logAction(action,module,targetId,result="Success"){
+  db.audit.unshift({
+    id:uid("LOG"),
+    user:currentUser.email,
+    role:currentUser.role,
+    action,
+    module,
+    targetId:targetId||"-",
+    time:new Date().toISOString(),
+    result
+  });
+  saveDB();
+}
+
+function badge(status){
+  let cls="gray";
+  const s=String(status||"").toLowerCase();
+
+  if(["delivered","verified","approved","completed","active"].includes(s)) cls="green";
+  else if(["cancelled","rejected","refunded","inactive"].includes(s)) cls="red";
+  else if(["pending","processing","packed","out for delivery"].includes(s)) cls="orange";
+  else if(["confirmed","rider assigned","picked up"].includes(s)) cls="blue";
+
+  return `<span class="badge ${cls}">${esc(status)}</span>`;
+}
+
+
+/* =========================================================
+   AUTH — DEMO
+========================================================= */
+
+function login(e){
+  e.preventDefault();
+
+  const email=document.getElementById("loginEmail").value.trim();
+  const password=document.getElementById("loginPassword").value;
+
+  /*
+    DEMO LOGIN ONLY.
+
+    Firebase Authentication will replace this.
+  */
+
+  if(
+    (email==="admin@naturebite.local" && password==="admin123")
+  ){
+    currentUser={
+      name:"Super Admin",
+      email,
+      role:"Super Admin"
+    };
+
+    sessionStorage.setItem("nb_admin_login","1");
+    openApp();
+    return;
+  }
+
+  document.getElementById("loginMsg").textContent =
+    "Demo login: admin@naturebite.local / admin123";
+}
+
+function logout(){
+  sessionStorage.removeItem("nb_admin_login");
+  location.reload();
+}
+
+function openApp(){
+  document.getElementById("loginScreen").style.display="none";
+  document.getElementById("app").classList.remove("hidden");
+  document.getElementById("adminName").textContent=currentUser.name;
+  document.getElementById("adminRole").textContent=currentUser.role;
+  showPage("dashboard");
+}
+
+function init(){
+  if(sessionStorage.getItem("nb_admin_login")){
+    openApp();
+  }else{
+    document.getElementById("loginScreen").style.display="flex";
+  }
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function toggleSidebar(){
+  document.getElementById("sidebar").classList.toggle("open");
+}
+
+function showPage(page,btn=null){
+
+  currentPage=page;
+
+  document.querySelectorAll(".nav button")
+    .forEach(b=>b.classList.remove("active"));
+
+  if(btn) btn.classList.add("active");
+
+  document.getElementById("pageHeading").textContent=
+    page.replaceAll("_"," ");
+
+  const pages={
+    dashboard:dashboardPage,
+    orders:ordersPage,
+    products:productsPage,
+    inventory:inventoryPage,
+    categories:categoriesPage,
+    customers:customersPage,
+    riders:ridersPage,
+    delivery:deliveryPage,
+    payments:paymentsPage,
+    refunds:refundsPage,
+    cancellations:cancellationsPage,
+    offers:offersPage,
+    wheel:wheelPage,
+    draw:drawPage,
+    reviews:reviewsPage,
+    support:supportPage,
+    reports:reportsPage,
+    expenses:expensesPage,
+    chalan:chalanPage,
+    staff:staffPage,
+    ai:aiPage,
+    notifications:notificationsPage,
+    website:websitePage,
+    appcontent:appContentPage,
+    features:featuresPage,
+    settings:settingsPage,
+    audit:auditPage
+  };
+
+  document.getElementById("content").innerHTML=
+    (pages[page]||dashboardPage)();
+
+  if(window.innerWidth<800){
+    document.getElementById("sidebar").classList.remove("open");
+  }
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function orderTotal(o){
+  const productTotal=o.products.reduce(
+    (s,p)=>s+(Number(p.price)*Number(p.qty)),0
+  );
+  return productTotal+
+    Number(o.deliveryCharge||0)+
+    Number(o.platformCharge||0)-
+    Number(o.discount||0);
+}
+
+function orderProductCost(o){
+  return o.products.reduce(
+    (s,p)=>s+(Number(p.cost||0)*Number(p.qty)),0
+  );
+}
+
+function financials(){
+  let sales=0;
+  let delivery=0;
+  let platform=0;
+  let discount=0;
+  let productCost=0;
+
+  db.orders.forEach(o=>{
+    if(o.status==="Cancelled" || o.status==="Returned") return;
+
+    sales+=o.products.reduce(
+      (s,p)=>s+Number(p.price)*Number(p.qty),0
+    );
+
+    delivery+=Number(o.deliveryCharge||0);
+    platform+=Number(o.platformCharge||0);
+    discount+=Number(o.discount||0);
+    productCost+=orderProductCost(o);
+  });
+
+  const expenses=db.expenses.reduce(
+    (s,e)=>s+Number(e.amount||0),0
+  );
+
+  const gross=sales-productCost-discount;
+  const income=sales+delivery+platform-discount;
+  const net=income-productCost-expenses;
+
+  return {
+    sales,delivery,platform,discount,
+    productCost,expenses,gross,income,net
+  };
+}
+
+function dashboardPage(){
+
+  const f=financials();
+
+  const totalOrders=db.orders.length;
+  const delivered=db.orders.filter(o=>o.status==="Delivered").length;
+  const pending=db.orders.filter(o=>[
+    "Pending","Confirmed","Processing","Packed",
+    "Rider Assigned","Picked Up","Out for Delivery"
+  ].includes(o.status)).length;
+
+  const cancelled=db.orders.filter(
+    o=>o.status==="Cancelled"
+  ).length;
+
+  const lowStock=db.products.reduce(
+    (n,p)=>n+p.variants.filter(v=>Number(v.stock)<=10).length,0
+  );
+
+  const pendingPayments=db.orders.filter(
+    o=>o.paymentStatus==="Pending"
+  ).length;
+
+  return `
+  <div class="page-title">
+    <div>
+      <h2>Business Dashboard</h2>
+      <small>Nature bite — Admin Control Center</small>
+    </div>
+    <button class="btn" onclick="showPage('reports')">
+      📈 Monthly Reports
+    </button>
+  </div>
+
+  <div class="cards">
+
+    ${dashboardCard("Total Sales",money(f.sales),"green")}
+    ${dashboardCard("Total Orders",totalOrders,"blue")}
+    ${dashboardCard("Delivered",delivered,"green")}
+    ${dashboardCard("Pending",pending,"orange")}
+    ${dashboardCard("Cancelled",cancelled,"red")}
+    ${dashboardCard("Net Profit",money(f.net),f.net>=0?"green":"red")}
+    ${dashboardCard("Low Stock",lowStock,"orange")}
+
+  </div>
+
+  <div class="grid2">
+
+    <div class="panel">
+      <h3>💰 Sales & Finance</h3>
+
+      <div class="stats-list">
+        ${row("Total Sales",money(f.sales))}
+        ${row("Product Sales",money(f.sales))}
+        ${row("Delivery Income",money(f.delivery))}
+        ${row("Platform Income",money(f.platform))}
+        ${row("Discount",money(f.discount))}
+        ${row("Product Cost",money(f.productCost))}
+        ${row("Expenses",money(f.expenses))}
+        ${row("Gross Profit",money(f.gross))}
+        ${row("Net Profit / Loss",money(f.net))}
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>📦 Order Overview</h3>
+
+      <div class="stats-list">
+        ${row("New Orders",countStatus("Pending"))}
+        ${row("Confirmed",countStatus("Confirmed"))}
+        ${row("Processing",countStatus("Processing"))}
+        ${row("Packed",countStatus("Packed"))}
+        ${row("Rider Assigned",countStatus("Rider Assigned"))}
+        ${row("Out for Delivery",countStatus("Out for Delivery"))}
+        ${row("Delivered",countStatus("Delivered"))}
+        ${row("Cancelled",countStatus("Cancelled"))}
+      </div>
+    </div>
+
+  </div>
+
+  <div class="grid2">
+
+    <div class="panel">
+      <h3>🚨 Alerts</h3>
+
+      ${pendingPayments
+        ? `<div class="alert warning">💳 ${pendingPayments} payment verification pending</div>`
+        : `<div class="alert success">✓ No pending payment verification</div>`}
+
+      ${lowStock
+        ? `<div class="alert warning">📦 ${lowStock} variant(s) at low stock</div>`
+        : `<div class="alert success">✓ Stock level normal</div>`}
+
+      <div class="alert info">
+        ↩️ Pending Refunds: ${db.refunds.filter(x=>x.status==="Pending").length}
+      </div>
+
+      <div class="alert info">
+        ❌ Cancellation Requests: ${db.cancellations.filter(x=>x.status==="Pending").length}
+      </div>
+
+      <div class="alert info">
+        🧾 Chalan Awaiting Approval:
+        ${db.chalans.filter(x=>x.status==="Pending Approval").length}
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>🕘 Recent Orders</h3>
+
+      ${db.orders.slice(0,6).map(o=>`
+        <div class="stat-row">
+          <span>
+            <strong>${esc(o.id)}</strong><br>
+            <small>${esc(o.customer)}</small>
+          </span>
+          <span>${money(orderTotal(o))}<br>${badge(o.status)}</span>
+        </div>
+      `).join("") || "<p>No orders yet.</p>"}
+    </div>
+
+  </div>
+
+  <div class="panel" style="margin-top:18px">
+    <h3>🤖 AI / Business Insights</h3>
+
+    <div class="alert info">
+      📊 Product sales are calculated from completed/non-cancelled orders.
+    </div>
+
+    <div class="alert warning">
+      📦 Low-stock recommendation:
+      ${lowStock
+        ? "Review low-stock variants before accepting more orders."
+        : "No immediate low-stock warning."}
+    </div>
+
+    <div class="alert success">
+      🔐 AI cannot approve financial or order actions automatically.
+      Approval will remain with authorized Admin/Staff.
+    </div>
+  </div>
+  `;
+}
+
+function dashboardCard(label,value,cls){
+  return `
+  <div class="card">
+    <div class="label">${label}</div>
+    <div class="value ${cls}">${value}</div>
+  </div>`;
+}
+
+function row(a,b){
+  return `<div class="stat-row"><span>${a}</span><strong>${b}</strong></div>`;
+}
+
+function countStatus(status){
+  return db.orders.filter(o=>o.status===status).length;
+}
+
+
+/* =========================================================
+   ORDERS
+========================================================= */
+
+function ordersPage(){
+
+  return `
+  <div class="page-title">
+    <div>
+      <h2>Orders</h2>
+      <small>Order management & delivery workflow</small>
+    </div>
+
+    <button class="btn" onclick="newOrder()">＋ New Order</button>
+  </div>
+
+  <div class="toolbar">
+    <input class="input"
+      placeholder="Search Order / Customer / Mobile"
+      oninput="filterOrders(this.value)">
+
+    <select class="input" onchange="filterOrders('',this.value)">
+      <option value="">All Status</option>
+      <option>Pending</option>
+      <option>Confirmed</option>
+      <option>Processing</option>
+      <option>Packed</option>
+      <option>Rider Assigned</option>
+      <option>Picked Up</option>
+      <option>Out for Delivery</option>
+      <option>Delivered</option>
+      <option>Cancelled</option>
+      <option>Returned</option>
+      <option>Refund Requested</option>
+      <option>Refunded</option>
+    </select>
+
+    <button class="btn secondary" onclick="printAllLabels()">
+      🖨️ Print All Labels
+    </button>
+  </div>
+
+  <div id="ordersTable">
+    ${ordersTable(db.orders)}
+  </div>
+  `;
+}
+
+function ordersTable(list){
+
+  return `
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Select</th>
+        <th>Order ID</th>
+        <th>Customer</th>
+        <th>Mobile</th>
+        <th>Products</th>
+        <th>Total</th>
+        <th>Payment</th>
+        <th>Status</th>
+        <th>Rider</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+    ${list.map(o=>`
+      <tr>
+        <td>
+          <input type="checkbox" class="order-select" value="${esc(o.id)}">
+        </td>
+
+        <td><strong>${esc(o.id)}</strong></td>
+
+        <td>${esc(o.customer)}</td>
+
+        <td>${esc(o.mobile)}</td>
+
+        <td>
+          ${o.products.map(p=>
+            `${esc(p.name)} (${esc(p.variant)}) × ${p.qty}`
+          ).join("<br>")}
+        </td>
+
+        <td><strong>${money(orderTotal(o))}</strong></td>
+
+        <td>
+          ${esc(o.paymentMethod)}<br>
+          ${badge(o.paymentStatus)}
+        </td>
+
+        <td>${badge(o.status)}</td>
+
+        <td>${esc(o.rider||"Not Assigned")}</td>
+
+        <td>
+          <button class="btn small"
+            onclick="viewOrder('${o.id}')">View</button>
+
+          <button class="btn small blue"
+            onclick="printLabel('${o.id}')">🖨️</button>
+        </td>
+      </tr>
+    `).join("")}
+
+    </tbody>
+  </table>
+  </div>
+  `;
+}
+
+function filterOrders(search="",status=""){
+
+  const q=String(search||"").toLowerCase();
+
+  const list=db.orders.filter(o=>{
+
+    const matchSearch=!q ||
+      o.id.toLowerCase().includes(q) ||
+      o.customer.toLowerCase().includes(q) ||
+      o.mobile.toLowerCase().includes(q);
+
+    const matchStatus=!status || o.status===status;
+
+    return matchSearch && matchStatus;
+  });
+
+  document.getElementById("ordersTable").innerHTML=
+    ordersTable(list);
+}
+
+function viewOrder(id){
+
+  const o=db.orders.find(x=>x.id===id);
+  if(!o)return;
+
+  openModal(
+    "Order — "+o.id,
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Order ID</label>
+        <input value="${esc(o.id)}" disabled>
+      </div>
+
+      <div class="form-group">
+        <label>Customer</label>
+        <input value="${esc(o.customer)}" disabled>
+      </div>
+
+      <div class="form-group">
+        <label>Mobile</label>
+        <input value="${esc(o.mobile)}">
+      </div>
+
+      <div class="form-group">
+        <label>Payment Status</label>
+        <select id="orderPaymentStatus">
+          ${["Pending","Verified","Rejected"].map(s=>
+            `<option ${o.paymentStatus===s?"selected":""}>${s}</option>`
+          ).join("")}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Order Status</label>
+        <select id="orderStatus">
+          ${[
+            "Pending",
+            "Confirmed",
+            "Processing",
+            "Packed",
+            "Rider Assigned",
+            "Picked Up",
+            "Out for Delivery",
+            "Delivered",
+            "Cancelled",
+            "Returned",
+            "Refund Requested",
+            "Refunded"
+          ].map(s=>
+            `<option ${o.status===s?"selected":""}>${s}</option>`
+          ).join("")}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Rider</label>
+        <select id="orderRider">
+          <option>Not Assigned</option>
+          ${db.riders.map(r=>
+            `<option ${o.rider===r.name?"selected":""}>${esc(r.name)}</option>`
+          ).join("")}
+        </select>
+      </div>
+
+      <div class="form-group full">
+        <label>Delivery Address</label>
+        <textarea id="orderAddress">${esc(o.address)}</textarea>
+      </div>
+
+      <div class="form-group full">
+        <label>Special Delivery Note</label>
+        <textarea id="orderNote">${esc(o.note)}</textarea>
+      </div>
+
+    </div>
+
+    <div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn"
+        onclick="saveOrder('${o.id}')">Save Changes</button>
+
+      <button class="btn blue"
+        onclick="printLabel('${o.id}')">🖨️ Print 3×5 Label</button>
+    </div>
+
+    <hr style="margin:20px 0">
+
+    <h3>Order Timeline</h3>
+
+    <div class="stats-list">
+      ${[
+        "Order Placed",
+        "Payment Verification",
+        "Confirmed",
+        "Processing",
+        "Packed",
+        "Rider Assigned",
+        "Picked Up",
+        "Out for Delivery",
+        "Delivered"
+      ].map(x=>`
+        <div class="stat-row">
+          <span>${x}</span>
+          ${x==="Delivered" && o.status==="Delivered"
+            ? badge("Completed")
+            : ""}
+        </div>
+      `).join("")}
+    </div>
+    `
+  );
+}
+
+function saveOrder(id){
+
+  const o=db.orders.find(x=>x.id===id);
+  if(!o)return;
+
+  o.paymentStatus=document.getElementById("orderPaymentStatus").value;
+  o.status=document.getElementById("orderStatus").value;
+  o.rider=document.getElementById("orderRider").value;
+  o.address=document.getElementById("orderAddress").value;
+  o.note=document.getElementById("orderNote").value;
+
+  saveDB();
+
+  logAction("Updated Order","Orders",id);
+
+  closeModal();
+  showPage("orders");
+}
+
+function newOrder(){
+
+  openModal(
+    "Create Manual Order",
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Customer Name</label>
+        <input id="newCustomer">
+      </div>
+
+      <div class="form-group">
+        <label>Mobile</label>
+        <input id="newMobile">
+      </div>
+
+      <div class="form-group full">
+        <label>Delivery Address</label>
+        <textarea id="newAddress"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Product</label>
+        <select id="newProduct" onchange="loadVariantsForOrder()">
+          ${db.products.filter(p=>p.active).map(p=>
+            `<option value="${p.id}">${esc(p.name)}</option>`
+          ).join("")}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Variant</label>
+        <select id="newVariant"></select>
+      </div>
+
+      <div class="form-group">
+        <label>Quantity</label>
+        <input id="newQty" type="number" value="1" min="1">
+      </div>
+
+      <div class="form-group">
+        <label>Payment Method</label>
+        <select id="newPayment">
+          <option>Cash on Delivery</option>
+          <option>bKash</option>
+          <option>Nagad</option>
+        </select>
+      </div>
+
+    </div>
+
+    <button class="btn" style="margin-top:15px"
+      onclick="createOrder()">Create Order</button>
+    `
+  );
+
+  setTimeout(loadVariantsForOrder,50);
+}
+
+function loadVariantsForOrder(){
+
+  const pid=document.getElementById("newProduct")?.value;
+  const box=document.getElementById("newVariant");
+
+  if(!pid||!box)return;
+
+  const p=db.products.find(x=>x.id===pid);
+
+  box.innerHTML=p.variants.map(v=>
+    `<option value="${v.id}">${esc(v.weight)} — ${money(v.price)}</option>`
+  ).join("");
+}
+
+function createOrder(){
+
+  const pid=document.getElementById("newProduct").value;
+  const vid=document.getElementById("newVariant").value;
+
+  const p=db.products.find(x=>x.id===pid);
+  const v=p.variants.find(x=>x.id===vid);
+
+  const order={
+    id:uid("NB"),
+    customer:document.getElementById("newCustomer").value,
+    mobile:document.getElementById("newMobile").value,
+    address:document.getElementById("newAddress").value,
+    products:[
+      {
+        name:p.name,
+        variant:v.weight,
+        qty:Number(document.getElementById("newQty").value),
+        price:v.price,
+        cost:v.cost
+      }
+    ],
+    deliveryCharge:Number(db.settings.deliveryCharge),
+    platformCharge:Number(db.settings.platformCharge),
+    discount:0,
+    paymentMethod:document.getElementById("newPayment").value,
+    paymentStatus:"Pending",
+    senderNumber:"",
+    transactionId:"",
+    date:new Date().toISOString(),
+    note:"",
+    rider:"Not Assigned",
+    status:"Pending"
+  };
+
+  db.orders.unshift(order);
+
+  saveDB();
+  logAction("Created Order","Orders",order.id);
+
+  closeModal();
+  showPage("orders");
+}
+
+
+/* =========================================================
+   3x5 ORDER LABEL
+========================================================= */
+
+function printLabel(id){
+
+  const o=db.orders.find(x=>x.id===id);
+  if(!o)return;
+
+  const token="NB-SECURE-"+btoa(o.id+"|"+location.host);
+
+  const products=o.products.map(p=>
+    `${p.name} — ${p.variant} × ${p.qty}`
+  ).join("<br>");
+
+  const total=orderTotal(o);
+
+  const win=window.open("","_blank");
+
+  win.document.write(`
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>Nature bite — ${esc(o.id)}</title>
+    <style>
+      @page{size:3in 5in;margin:0}
+      *{box-sizing:border-box}
+      body{
+        margin:0;
+        font-family:Arial;
+        width:3in;
+        min-height:5in;
+      }
+      .label{
+        width:3in;
+        min-height:5in;
+        padding:.13in;
+        border:1px solid #111;
+      }
+      h1{
+        font-size:18px;
+        text-align:center;
+        margin:0 0 4px;
+      }
+      .center{text-align:center}
+      .line{
+        border-top:1px dashed #555;
+        margin:8px 0;
+      }
+      .row{
+        display:flex;
+        justify-content:space-between;
+        gap:5px;
+        font-size:10px;
+        margin:3px 0;
+      }
+      .products{
+        font-size:10px;
+        line-height:1.4;
+      }
+      #qr{
+        margin:8px auto;
+        width:100px;
+        height:100px;
+      }
+      #barcode{
+        width:100%;
+        height:45px;
+      }
+      .small{font-size:8px}
+    </style>
+  </head>
+
+  <body onload="window.print()">
+    <div class="label">
+
+      <h1>NATURE BITE</h1>
+      <div class="center"><strong>ORDER LABEL</strong></div>
+
+      <div class="line"></div>
+
+      <div class="row">
+        <strong>Order ID</strong>
+        <strong>${esc(o.id)}</strong>
+      </div>
+
+      <div class="row">
+        <span>Customer</span>
+        <span>${esc(o.customer)}</span>
+      </div>
+
+      <div class="row">
+        <span>Mobile</span>
+        <span>${esc(o.mobile)}</span>
+      </div>
+
+      <div style="font-size:10px;margin-top:5px">
+        <strong>Address:</strong><br>
+        ${esc(o.address)}
+      </div>
+
+      <div class="line"></div>
+
+      <strong style="font-size:10px">Products</strong>
+
+      <div class="products">
+        ${products}
+      </div>
+
+      <div class="line"></div>
+
+      <div class="row">
+        <span>Payment</span>
+        <span>${esc(o.paymentMethod)}</span>
+      </div>
+
+      <div class="row">
+        <span>Status</span>
+        <span>${esc(o.paymentStatus)}</span>
+      </div>
+
+      <div class="row">
+        <span>Delivery</span>
+        <span>${money(o.deliveryCharge)}</span>
+      </div>
+
+      <div class="row">
+        <span>Platform</span>
+        <span>${money(o.platformCharge)}</span>
+      </div>
+
+      <div class="row">
+        <strong>Total</strong>
+        <strong>${money(total)}</strong>
+      </div>
+
+      <div class="line"></div>
+
+      <div class="center">
+        <div id="qr"></div>
+        <svg id="barcode"></svg>
+      </div>
+
+      <p class="small center">
+        Secure order reference only.<br>
+        Rider authentication required to view protected information.
+      </p>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"><\/script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"><\/script>
+
+    <script>
+      new QRCode(document.getElementById("qr"),{
+        text:${JSON.stringify(token)},
+        width:100,
+        height:100
+      });
+
+      JsBarcode("#barcode",${JSON.stringify(o.id)},{
+        format:"CODE128",
+        displayValue:true,
+        fontSize:10,
+        height:38,
+        margin:2
+      });
+    <\/script>
+
+  </body>
+  </html>
+  `);
+
+  win.document.close();
+
+  logAction("Printed Order Label","Orders",id);
+}
+
+function printAllLabels(){
+
+  const checked=[
+    ...document.querySelectorAll(".order-select:checked")
+  ].map(x=>x.value);
+
+  if(!checked.length){
+    alert("Select at least one order.");
+    return;
+  }
+
+  checked.forEach((id,i)=>{
+    setTimeout(()=>printLabel(id),i*700);
+  });
+}
+
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+function productsPage(){
+
+  return `
+  <div class="page-title">
+    <div>
+      <h2>Products</h2>
+      <small>Products, variants, prices and stock</small>
+    </div>
+    <button class="btn" onclick="productForm()">＋ Add Product</button>
+  </div>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Category</th>
+        <th>Variants</th>
+        <th>Stock</th>
+        <th>Featured</th>
+        <th>New</th>
+        <th>Best Seller</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      ${db.products.map(p=>`
+        <tr>
+          <td><strong>${esc(p.name)}</strong></td>
+          <td>${esc(p.category)}</td>
+          <td>
+            ${p.variants.map(v=>
+              `${esc(v.weight)} — ${money(v.price)} — ${v.stock}`
+            ).join("<br>")}
+          </td>
+          <td>${p.variants.reduce((s,v)=>s+Number(v.stock),0)}</td>
+          <td>${p.featured?"✓":"—"}</td>
+          <td>${p.new?"✓":"—"}</td>
+          <td>${p.bestSeller?"✓":"—"}</td>
+          <td>${badge(p.active?"Active":"Inactive")}</td>
+          <td>
+            <button class="btn small"
+              onclick="productForm('${p.id}')">Edit</button>
+            <button class="btn small danger"
+              onclick="deleteProduct('${p.id}')">Delete</button>
+          </td>
+        </tr>
+      `).join("")}
+    </tbody>
+  </table>
+  </div>
+  `;
+}
+
+function productForm(id=null){
+
+  const p=id
+    ? db.products.find(x=>x.id===id)
+    : {
+      name:"",
+      category:db.categories[0]?.name||"",
+      description:"",
+      featured:false,
+      new:true,
+      bestSeller:false,
+      active:true,
+      variants:[]
+    };
+
+  openModal(
+    id?"Edit Product":"Add Product",
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Product Name</label>
+        <input id="pName" value="${esc(p.name)}">
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <select id="pCategory">
+          ${db.categories.map(c=>
+            `<option ${p.category===c.name?"selected":""}>
+              ${esc(c.name)}
+            </option>`
+          ).join("")}
+        </select>
+      </div>
+
+      <div class="form-group full">
+        <label>Description</label>
+        <textarea id="pDescription">${esc(p.description)}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Product Image URL</label>
+        <input id="pImage" value="${esc(p.image||"")}">
+      </div>
+
+      <div class="form-group">
+        <label>SKU Base</label>
+        <input id="pSKU" value="${esc(p.sku||"")}">
+      </div>
+
+      <div class="form-group">
+        <label><input id="pFeatured" type="checkbox" ${p.featured?"checked":""}> Featured</label>
+        <label><input id="pNew" type="checkbox" ${p.new?"checked":""}> New</label>
+        <label><input id="pBest" type="checkbox" ${p.bestSeller?"checked":""}> Best Seller</label>
+        <label><input id="pActive" type="checkbox" ${p.active?"checked":""}> Active</label>
+      </div>
+
+      <div class="form-group full">
+
+        <label>Variants</label>
+
+        <div id="variantList">
+
+        ${p.variants.map((v,i)=>variantHTML(v,i)).join("")}
+
+        </div>
+
+        <button type="button" class="btn secondary"
+          onclick="addVariant()">＋ Add Variant</button>
+
+      </div>
+
+    </div>
+
+    <button class="btn" style="margin-top:15px"
+      onclick="saveProduct('${id||""}')">
+      Save Product
+    </button>
+    `
+  );
+}
+
+function variantHTML(v={},i){
+
+  return `
+  <div class="panel" style="margin:8px 0;padding:12px">
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Weight / Variant</label>
+        <input class="v-weight" value="${esc(v.weight||"")}">
+      </div>
+
+      <div class="form-group">
+        <label>SKU</label>
+        <input class="v-sku" value="${esc(v.sku||"")}">
+      </div>
+
+      <div class="form-group">
+        <label>Selling Price</label>
+        <input class="v-price" type="number" value="${v.price||0}">
+      </div>
+
+      <div class="form-group">
+        <label>Product Cost</label>
+        <input class="v-cost" type="number" value="${v.cost||0}">
+      </div>
+
+      <div class="form-group">
+        <label>Stock</label>
+        <input class="v-stock" type="number" value="${v.stock||0}">
+      </div>
+
+      <div class="form-group">
+        <label>Low Stock Threshold</label>
+        <input class="v-threshold" type="number" value="${v.threshold||10}">
+      </div>
+
+    </div>
+
+  </div>
+  `;
+}
+
+function addVariant(){
+  document.getElementById("variantList")
+    .insertAdjacentHTML(
+      "beforeend",
+      variantHTML({},Date.now())
+    );
+}
+
+function saveProduct(id){
+
+  const variants=[...document.querySelectorAll("#variantList .panel")]
+    .map(box=>({
+      id:uid("VAR"),
+      weight:box.querySelector(".v-weight").value,
+      sku:box.querySelector(".v-sku").value,
+      price:Number(box.querySelector(".v-price").value||0),
+      cost:Number(box.querySelector(".v-cost").value||0),
+      stock:Number(box.querySelector(".v-stock").value||0),
+      threshold:Number(box.querySelector(".v-threshold").value||10)
+    }));
+
+  const data={
+    id:id||uid("NB-P"),
+    name:document.getElementById("pName").value,
+    category:document.getElementById("pCategory").value,
+    description:document.getElementById("pDescription").value,
+    image:document.getElementById("pImage").value,
+    sku:document.getElementById("pSKU").value,
+    featured:document.getElementById("pFeatured").checked,
+    new:document.getElementById("pNew").checked,
+    bestSeller:document.getElementById("pBest").checked,
+    active:document.getElementById("pActive").checked,
+    variants
+  };
+
+  if(id){
+    const i=db.products.findIndex(x=>x.id===id);
+    db.products[i]=data;
+    logAction("Edited Product","Products",id);
+  }else{
+    db.products.unshift(data);
+    logAction("Added Product","Products",data.id);
+  }
+
+  saveDB();
+  closeModal();
+  showPage("products");
+}
+
+function deleteProduct(id){
+
+  if(!confirm("Delete this product?"))return;
+
+  db.products=db.products.filter(x=>x.id!==id);
+
+  saveDB();
+  logAction("Deleted Product","Products",id);
+  showPage("products");
+}
+
+
+/* =========================================================
+   INVENTORY
+========================================================= */
+
+function inventoryPage(){
+
+  return `
+  <div class="page-title">
+    <div>
+      <h2>Inventory</h2>
+      <small>Variant-wise stock control</small>
+    </div>
+
+    <button class="btn" onclick="stockAdjustment()">
+      ＋ Stock Adjustment
+    </button>
+  </div>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Variant</th>
+        <th>SKU</th>
+        <th>Stock</th>
+        <th>Threshold</th>
+        <th>Status</th>
+        <th>Cost Value</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    ${db.products.flatMap(p=>
+      p.variants.map(v=>`
+        <tr>
+          <td>${esc(p.name)}</td>
+          <td>${esc(v.weight)}</td>
+          <td>${esc(v.sku)}</td>
+          <td><strong>${v.stock}</strong></td>
+          <td>${v.threshold||10}</td>
+          <td>
+            ${v.stock<=0
+              ?badge("Out of Stock")
+              :v.stock<=Number(v.threshold||10)
+                ?badge("Low Stock")
+                :badge("Active")}
+          </td>
+          <td>${money(v.stock*v.cost)}</td>
+        </tr>
+      `)
+    ).join("")}
+
+    </tbody>
+  </table>
+  </div>
+  `;
+}
+
+function stockAdjustment(){
+
+  openModal(
+    "Stock Adjustment",
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Product</label>
+        <select id="stockProduct"
+          onchange="loadStockVariants()">
+          ${db.products.map(p=>
+            `<option value="${p.id}">${esc(p.name)}</option>`
+          ).join("")}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Variant</label>
+        <select id="stockVariant"></select>
+      </div>
+
+      <div class="form-group">
+        <label>Type</label>
+        <select id="stockType">
+          <option>Stock In</option>
+          <option>Stock Out</option>
+          <option>Adjustment</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Quantity</label>
+        <input id="stockQty" type="number" min="0">
+      </div>
+
+      <div class="form-group full">
+        <label>Note</label>
+        <textarea id="stockNote"></textarea>
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveStockAdjustment()">
+      Save Stock
+    </button>
+    `
+  );
+
+  setTimeout(loadStockVariants,50);
+}
+
+function loadStockVariants(){
+
+  const pid=document.getElementById("stockProduct")?.value;
+  const box=document.getElementById("stockVariant");
+
+  if(!pid||!box)return;
+
+  const p=db.products.find(x=>x.id===pid);
+
+  box.innerHTML=p.variants.map(v=>
+    `<option value="${v.id}">${esc(v.weight)}</option>`
+  ).join("");
+}
+
+function saveStockAdjustment(){
+
+  const p=db.products.find(
+    x=>x.id===document.getElementById("stockProduct").value
+  );
+
+  const v=p.variants.find(
+    x=>x.id===document.getElementById("stockVariant").value
+  );
+
+  const qty=Number(document.getElementById("stockQty").value||0);
+  const type=document.getElementById("stockType").value;
+
+  if(type==="Stock In") v.stock+=qty;
+  if(type==="Stock Out") v.stock=Math.max(0,v.stock-qty);
+  if(type==="Adjustment") v.stock=qty;
+
+  saveDB();
+
+  logAction(
+    type,
+    "Inventory",
+    p.id+" / "+v.id
+  );
+
+  closeModal();
+  showPage("inventory");
+}
+
+
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
+function categoriesPage(){
+
+  return `
+  <div class="page-title">
+    <h2>Categories</h2>
+    <button class="btn" onclick="categoryForm()">＋ Add Category</button>
+  </div>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Sort</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${db.categories.map(c=>`
+        <tr>
+          <td>${esc(c.name)}</td>
+          <td>${c.sort}</td>
+          <td>${badge(c.active?"Active":"Inactive")}</td>
+          <td>
+            <button class="btn small"
+              onclick="categoryForm('${c.id}')">Edit</button>
+            <button class="btn small danger"
+              onclick="deleteCategory('${c.id}')">Delete</button>
+          </td>
+        </tr>
+      `).join("")}
+    </tbody>
+  </table>
+  </div>
+  `;
+}
+
+function categoryForm(id=null){
+
+  const c=id
+    ? db.categories.find(x=>x.id===id)
+    : {name:"",sort:1,active:true};
+
+  openModal(
+    id?"Edit Category":"Add Category",
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Category Name</label>
+        <input id="catName" value="${esc(c.name)}">
+      </div>
+
+      <div class="form-group">
+        <label>Sort Order</label>
+        <input id="catSort" type="number" value="${c.sort}">
+      </div>
+
+      <div class="form-group">
+        <label>Image URL</label>
+        <input id="catImage" value="${esc(c.image||"")}">
+      </div>
+
+      <div class="form-group">
+        <label>
+          <input id="catActive" type="checkbox"
+            ${c.active?"checked":""}>
+          Active
+        </label>
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveCategory('${id||""}')">
+      Save
+    </button>
+    `
+  );
+}
+
+function saveCategory(id){
+
+  const data={
+    id:id||uid("CAT"),
+    name:document.getElementById("catName").value,
+    sort:Number(document.getElementById("catSort").value||0),
+    image:document.getElementById("catImage").value,
+    active:document.getElementById("catActive").checked
+  };
+
+  if(id){
+    const i=db.categories.findIndex(x=>x.id===id);
+    db.categories[i]=data;
+  }else db.categories.push(data);
+
+  saveDB();
+  logAction(id?"Edited Category":"Added Category","Categories",data.id);
+
+  closeModal();
+  showPage("categories");
+}
+
+function deleteCategory(id){
+  if(!confirm("Delete category?"))return;
+  db.categories=db.categories.filter(x=>x.id!==id);
+  saveDB();
+  logAction("Deleted Category","Categories",id);
+  showPage("categories");
+}
+
+
+/* =========================================================
+   CUSTOMERS
+========================================================= */
+
+function customersPage(){
+
+  return `
+  <div class="page-title">
+    <h2>Customers</h2>
+    <small>${db.customers.length} registered customers</small>
+  </div>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Mobile</th>
+        <th>Email</th>
+        <th>Orders</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+    ${db.customers.map(c=>`
+      <tr>
+        <td>${esc(c.name)}</td>
+        <td>${esc(c.mobile)}</td>
+        <td>${esc(c.email)}</td>
+        <td>${c.orders||0}</td>
+        <td>${badge(c.status||"Active")}</td>
+      </tr>
+    `).join("") || `
+      <tr><td colspan="5">Customer data will appear here after Firebase connection.</td></tr>
+    `}
+
+    </tbody>
+  </table>
+  </div>
+  `;
+}
+
+
+/* =========================================================
+   RIDERS
+========================================================= */
+
+function ridersPage(){
+
+  return `
+  <div class="page-title">
+    <div>
+      <h2>Riders</h2>
+      <small>Rider registration & delivery management</small>
+    </div>
+
+    <button class="btn" onclick="riderForm()">＋ Add Rider</button>
+  </div>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Mobile</th>
+        <th>Zone</th>
+        <th>Availability</th>
+        <th>Assigned</th>
+        <th>Completed</th>
+        <th>COD</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+    ${db.riders.map(r=>`
+      <tr>
+        <td>${esc(r.name)}</td>
+        <td>${esc(r.mobile)}</td>
+        <td>${esc(r.zone)}</td>
+        <td>${badge(r.availability||"Offline")}</td>
+        <td>${r.assigned||0}</td>
+        <td>${r.completed||0}</td>
+        <td>${money(r.cod||0)}</td>
+        <td>${badge(r.active?"Active":"Inactive")}</td>
+      </tr>
+    `).join("") || `
+      <tr><td colspan="8">No riders added yet.</td></tr>
+    `}
+
+    </tbody>
+  </table>
+  </div>
+  `;
+}
+
+function riderForm(){
+
+  openModal(
+    "Add Rider",
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Name</label>
+        <input id="rName">
+      </div>
+
+      <div class="form-group">
+        <label>Mobile</label>
+        <input id="rMobile">
+      </div>
+
+      <div class="form-group">
+        <label>Zone</label>
+        <input id="rZone">
+      </div>
+
+      <div class="form-group">
+        <label>Documents</label>
+        <input id="rDocs" placeholder="Document reference">
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveRider()">Save Rider</button>
+    `
+  );
+}
+
+function saveRider(){
+
+  const r={
+    id:uid("RIDER"),
+    name:document.getElementById("rName").value,
+    mobile:document.getElementById("rMobile").value,
+    zone:document.getElementById("rZone").value,
+    documents:document.getElementById("rDocs").value,
+    availability:"Offline",
+    assigned:0,
+    completed:0,
+    cancelled:0,
+    earnings:0,
+    cod:0,
+    settlement:0,
+    rating:0,
+    active:true
+  };
+
+  db.riders.push(r);
+  saveDB();
+
+  logAction("Added Rider","Riders",r.id);
+
+  closeModal();
+  showPage("riders");
+}
+
+
+/* =========================================================
+   DELIVERY PARTNERS
+========================================================= */
+
+function deliveryPage(){
+
+  return `
+  <div class="page-title">
+    <h2>Delivery Partners</h2>
+    <button class="btn" onclick="deliveryForm()">＋ Add Partner</button>
+  </div>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Contact</th>
+        <th>Service Area</th>
+        <th>Charge</th>
+        <th>API</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+    ${db.deliveryPartners.map(d=>`
+      <tr>
+        <td>${esc(d.name)}</td>
+        <td>${esc(d.contact)}</td>
+        <td>${esc(d.area)}</td>
+        <td>${money(d.charge)}</td>
+        <td>${badge(d.api||"Manual")}</td>
+        <td>${badge(d.active?"Active":"Inactive")}</td>
+        <td>
+          <button class="btn small"
+            onclick="deliveryForm('${d.id}')">Edit</button>
+        </td>
+      </tr>
+    `).join("")}
+
+    </tbody>
+  </table>
+  </div>
+  `;
+}
+
+function deliveryForm(id=null){
+
+  const d=id
+    ? db.deliveryPartners.find(x=>x.id===id)
+    : {
+      name:"",
+      contact:"",
+      area:"",
+      charge:0,
+      api:"Manual",
+      active:true
+    };
+
+  openModal(
+    id?"Edit Delivery Partner":"Add Delivery Partner",
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Name</label>
+        <input id="dName" value="${esc(d.name)}">
+      </div>
+
+      <div class="form-group">
+        <label>Contact</label>
+        <input id="dContact" value="${esc(d.contact)}">
+      </div>
+
+      <div class="form-group">
+        <label>Service Area</label>
+        <input id="dArea" value="${esc(d.area)}">
+      </div>
+
+      <div class="form-group">
+        <label>Delivery Charge</label>
+        <input id="dCharge" type="number" value="${d.charge}">
+      </div>
+
+      <div class="form-group">
+        <label>Integration Mode</label>
+        <select id="dApi">
+          <option ${d.api==="Manual"?"selected":""}>Manual</option>
+          <option ${d.api==="Not Connected"?"selected":""}>Not Connected</option>
+          <option ${d.api==="Connected"?"selected":""}>Connected</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <input id="dActive" type="checkbox" ${d.active?"checked":""}>
+          Active
+        </label>
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveDelivery('${id||""}')">
+      Save
+    </button>
+    `
+  );
+}
+
+function saveDelivery(id){
+
+  const d={
+    id:id||uid("DP"),
+    name:document.getElementById("dName").value,
+    contact:document.getElementById("dContact").value,
+    area:document.getElementById("dArea").value,
+    charge:Number(document.getElementById("dCharge").value||0),
+    api:document.getElementById("dApi").value,
+    active:document.getElementById("dActive").checked
+  };
+
+  if(id){
+    db.deliveryPartners[
+      db.deliveryPartners.findIndex(x=>x.id===id)
+    ]=d;
+  }else{
+    db.deliveryPartners.push(d);
+  }
+
+  saveDB();
+  logAction(id?"Edited Delivery Partner":"Added Delivery Partner","Delivery",d.id);
+
+  closeModal();
+  showPage("delivery");
+}
+
+
+/* =========================================================
+   PAYMENTS
+========================================================= */
+
+function paymentsPage(){
+
+  const list=[
+    ...db.orders.map(o=>({
+      id:o.id,
+      method:o.paymentMethod,
+      status:o.paymentStatus,
+      amount:orderTotal(o),
+      sender:o.senderNumber,
+      txn:o.transactionId
+    })),
+    ...db.payments
+  ];
+
+  return `
+  <div class="page-title">
+    <h2>Payments</h2>
+    <button class="btn" onclick="paymentForm()">＋ Manual Payment</button>
+  </div>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Order</th>
+        <th>Method</th>
+        <th>Amount</th>
+        <th>Sender</th>
+        <th>Transaction ID</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+    ${list.map(p=>`
+      <tr>
+        <td>${esc(p.id)}</td>
+        <td>${esc(p.method)}</td>
+        <td>${money(p.amount)}</td>
+        <td>${esc(p.sender||"")}</td>
+        <td>${esc(p.txn||"")}</td>
+        <td>${badge(p.status)}</td>
+        <td>
+          ${p.status==="Pending"
+            ? `
+              <button class="btn small"
+                onclick="verifyPayment('${p.id}','Verified')">
+                Approve
+              </button>
+              <button class="btn small danger"
+                onclick="verifyPayment('${p.id}','Rejected')">
+                Reject
+              </button>
+            `
+            :"—"}
+        </td>
+      </tr>
+    `).join("")}
+
+    </tbody>
+  </table>
+  </div>
+  `;
+}
+
+function verifyPayment(orderId,status){
+
+  const o=db.orders.find(x=>x.id===orderId);
+
+  if(o){
+    o.paymentStatus=status;
+
+    if(status==="Verified" && o.status==="Pending"){
+      o.status="Confirmed";
+    }
+
+    saveDB();
+
+    logAction(
+      status==="Verified"?"Approved Payment":"Rejected Payment",
+      "Payments",
+      orderId
+    );
+  }
+
+  showPage("payments");
+}
+
+function paymentForm(){
+
+  openModal(
+    "Manual Payment",
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Order ID</label>
+        <input id="payOrder">
+      </div>
+
+      <div class="form-group">
+        <label>Payment Method</label>
+        <select id="payMethod">
+          <option>bKash</option>
+          <option>Nagad</option>
+          <option>Cash</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Amount</label>
+        <input id="payAmount" type="number">
+      </div>
+
+      <div class="form-group">
+        <label>Sender Number</label>
+        <input id="paySender">
+      </div>
+
+      <div class="form-group">
+        <label>Transaction ID</label>
+        <input id="payTxn">
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveManualPayment()">
+      Save Payment
+    </button>
+    `
+  );
+}
+
+function saveManualPayment(){
+
+  const p={
+    id:document.getElementById("payOrder").value||uid("PAY"),
+    method:document.getElementById("payMethod").value,
+    amount:Number(document.getElementById("payAmount").value||0),
+    sender:document.getElementById("paySender").value,
+    txn:document.getElementById("payTxn").value,
+    status:"Pending"
+  };
+
+  db.payments.unshift(p);
+  saveDB();
+
+  logAction("Added Manual Payment","Payments",p.id);
+
+  closeModal();
+  showPage("payments");
+}
+
+
+/* =========================================================
+   REFUNDS / CANCELLATIONS
+========================================================= */
+
+function refundsPage(){
+
+  return `
+  <div class="page-title">
+    <h2>Refunds</h2>
+    <button class="btn" onclick="refundForm()">＋ Refund Request</button>
+  </div>
+
+  ${simpleTable(
+    ["Order","Customer","Amount","Reason","Method","Status","Action"],
+    db.refunds.map(r=>[
+      r.order,
+      r.customer,
+      money(r.amount),
+      r.reason,
+      r.method,
+      badge(r.status),
+      r.status==="Pending"
+        ? `<button class="btn small" onclick="updateRefund('${r.id}','Approved')">Approve</button>
+           <button class="btn small danger" onclick="updateRefund('${r.id}','Rejected')">Reject</button>`
+        :"—"
+    ])
+  )}
+  `;
+}
+
+function refundForm(){
+
+  openModal(
+    "Refund Request",
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Order</label>
+        <input id="refOrder">
+      </div>
+
+      <div class="form-group">
+        <label>Customer</label>
+        <input id="refCustomer">
+      </div>
+
+      <div class="form-group">
+        <label>Amount</label>
+        <input id="refAmount" type="number">
+      </div>
+
+      <div class="form-group">
+        <label>Payment Method</label>
+        <input id="refMethod">
+      </div>
+
+      <div class="form-group full">
+        <label>Reason</label>
+        <textarea id="refReason"></textarea>
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveRefund()">Submit</button>
+    `
+  );
+}
+
+function saveRefund(){
+
+  const r={
+    id:uid("REF"),
+    order:document.getElementById("refOrder").value,
+    customer:document.getElementById("refCustomer").value,
+    amount:Number(document.getElementById("refAmount").value||0),
+    reason:document.getElementById("refReason").value,
+    method:document.getElementById("refMethod").value,
+    status:"Pending"
+  };
+
+  db.refunds.unshift(r);
+  saveDB();
+  logAction("Created Refund Request","Refunds",r.id);
+
+  closeModal();
+  showPage("refunds");
+}
+
+function updateRefund(id,status){
+
+  const r=db.refunds.find(x=>x.id===id);
+  if(!r)return;
+
+  r.status=status;
+
+  if(status==="Approved"){
+    r.status="Completed";
+  }
+
+  saveDB();
+  logAction(status+" Refund","Refunds",id);
+
+  showPage("refunds");
+}
+
+function cancellationsPage(){
+
+  return `
+  <div class="page-title">
+    <h2>Cancellations</h2>
+    <button class="btn" onclick="cancelForm()">＋ Cancellation</button>
+  </div>
+
+  ${simpleTable(
+    ["Order","Customer","Reason","Requested By","Status"],
+    db.cancellations.map(c=>[
+      c.order,
+      c.customer,
+      c.reason,
+      c.by,
+      badge(c.status)
+    ])
+  )}
+  `;
+}
+
+function cancelForm(){
+
+  openModal(
+    "Cancellation Request",
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Order</label>
+        <input id="canOrder">
+      </div>
+
+      <div class="form-group">
+        <label>Customer</label>
+        <input id="canCustomer">
+      </div>
+
+      <div class="form-group full">
+        <label>Reason</label>
+        <textarea id="canReason"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Requested By</label>
+        <select id="canBy">
+          <option>Customer</option>
+          <option>Admin</option>
+        </select>
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveCancellation()">Save</button>
+    `
+  );
+}
+
+function saveCancellation(){
+
+  const c={
+    id:uid("CAN"),
+    order:document.getElementById("canOrder").value,
+    customer:document.getElementById("canCustomer").value,
+    reason:document.getElementById("canReason").value,
+    by:document.getElementById("canBy").value,
+    status:"Pending"
+  };
+
+  db.cancellations.unshift(c);
+  saveDB();
+
+  logAction("Created Cancellation","Cancellations",c.id);
+
+  closeModal();
+  showPage("cancellations");
+}
+
+
+/* =========================================================
+   OFFERS
+========================================================= */
+
+function offersPage(){
+
+  return `
+  <div class="page-title">
+    <h2>Offers & Coupons</h2>
+    <button class="btn" onclick="offerForm()">＋ Add Offer</button>
+  </div>
+
+  ${simpleTable(
+    ["Code","Type","Value","Min Order","Max Discount","Usage","Start","End","Status","Action"],
+    db.offers.map(o=>[
+      o.code,
+      o.type,
+      o.value,
+      money(o.min),
+      money(o.max),
+      o.limit,
+      o.start,
+      o.end,
+      badge(o.active?"Active":"Inactive"),
+      `<button class="btn small" onclick="offerForm('${o.id}')">Edit</button>`
+    ])
+  )}
+  `;
+}
+
+function offerForm(id=null){
+
+  const o=id
+    ? db.offers.find(x=>x.id===id)
+    : {
+      code:"",
+      type:"Percentage",
+      value:10,
+      min:0,
+      max:0,
+      limit:100,
+      start:"",
+      end:"",
+      active:true
+    };
+
+  openModal(
+    id?"Edit Coupon":"Create Coupon",
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Coupon Code</label>
+        <input id="ofCode" value="${esc(o.code)}">
+      </div>
+
+      <div class="form-group">
+        <label>Discount Type</label>
+        <select id="ofType">
+          <option>Percentage</option>
+          <option>Fixed</option>
+          <option>Free Delivery</option>
+          <option>Buy 1 Get 1</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Value</label>
+        <input id="ofValue" type="number" value="${o.value}">
+      </div>
+
+      <div class="form-group">
+        <label>Minimum Order</label>
+        <input id="ofMin" type="number" value="${o.min}">
+      </div>
+
+      <div class="form-group">
+        <label>Maximum Discount</label>
+        <input id="ofMax" type="number" value="${o.max}">
+      </div>
+
+      <div class="form-group">
+        <label>Usage Limit</label>
+        <input id="ofLimit" type="number" value="${o.limit}">
+      </div>
+
+      <div class="form-group">
+        <label>Start</label>
+        <input id="ofStart" type="datetime-local" value="${o.start}">
+      </div>
+
+      <div class="form-group">
+        <label>End</label>
+        <input id="ofEnd" type="datetime-local" value="${o.end}">
+      </div>
+
+      <div class="form-group">
+        <label>
+          <input id="ofActive" type="checkbox" ${o.active?"checked":""}>
+          Active
+        </label>
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveOffer('${id||""}')">
+      Save Coupon
+    </button>
+    `
+  );
+}
+
+function saveOffer(id){
+
+  const o={
+    id:id||uid("COUPON"),
+    code:document.getElementById("ofCode").value.toUpperCase(),
+    type:document.getElementById("ofType").value,
+    value:Number(document.getElementById("ofValue").value||0),
+    min:Number(document.getElementById("ofMin").value||0),
+    max:Number(document.getElementById("ofMax").value||0),
+    limit:Number(document.getElementById("ofLimit").value||0),
+    start:document.getElementById("ofStart").value,
+    end:document.getElementById("ofEnd").value,
+    active:document.getElementById("ofActive").checked
+  };
+
+  if(id){
+    db.offers[db.offers.findIndex(x=>x.id===id)]=o;
+  }else{
+    db.offers.unshift(o);
+  }
+
+  saveDB();
+  logAction(id?"Edited Coupon":"Created Coupon","Offers",o.id);
+
+  closeModal();
+  showPage("offers");
+}
+
+
+/* =========================================================
+   LUCKY WHEEL / DRAW
+========================================================= */
+
+function wheelPage(){
+
+  return `
+  <div class="page-title">
+    <h2>🎡 Lucky Wheel</h2>
+    <button class="btn" onclick="wheelForm()">＋ Add Prize</button>
+  </div>
+
+  ${simpleTable(
+    ["Prize","Discount","Coupon","Probability","Daily Limit","Customer Limit","Status"],
+    db.wheel.map(w=>[
+      w.prize,
+      w.discount,
+      w.coupon,
+      w.probability+"%",
+      w.daily,
+      w.customer,
+      badge(w.active?"Active":"Inactive")
+    ])
+  )}
+  `;
+}
+
+function wheelForm(){
+
+  openModal(
+    "Lucky Wheel Prize",
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Prize</label>
+        <input id="wPrize">
+      </div>
+
+      <div class="form-group">
+        <label>Discount</label>
+        <input id="wDiscount">
+      </div>
+
+      <div class="form-group">
+        <label>Coupon</label>
+        <input id="wCoupon">
+      </div>
+
+      <div class="form-group">
+        <label>Probability %</label>
+        <input id="wProb" type="number">
+      </div>
+
+      <div class="form-group">
+        <label>Daily Limit</label>
+        <input id="wDaily" type="number">
+      </div>
+
+      <div class="form-group">
+        <label>Customer Limit</label>
+        <input id="wCustomer" type="number">
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveWheel()">Save Prize</button>
+    `
+  );
+}
+
+function saveWheel(){
+
+  db.wheel.push({
+    id:uid("WHEEL"),
+    prize:document.getElementById("wPrize").value,
+    discount:document.getElementById("wDiscount").value,
+    coupon:document.getElementById("wCoupon").value,
+    probability:Number(document.getElementById("wProb").value||0),
+    daily:Number(document.getElementById("wDaily").value||0),
+    customer:Number(document.getElementById("wCustomer").value||0),
+    active:true
+  });
+
+  saveDB();
+  logAction("Added Lucky Wheel Prize","Lucky Wheel","-");
+
+  closeModal();
+  showPage("wheel");
+}
+
+function drawPage(){
+
+  return `
+  <div class="page-title">
+    <h2>🎁 Lucky Draw</h2>
+    <button class="btn" onclick="drawForm()">＋ Campaign</button>
+  </div>
+
+  ${simpleTable(
+    ["Campaign","Entry Rules","Participants","Draw Date","Winners","Prize","Status"],
+    db.draw.map(d=>[
+      d.campaign,
+      d.rules,
+      d.participants,
+      d.date,
+      d.winners,
+      d.prize,
+      badge(d.active?"Active":"Inactive")
+    ])
+  )}
+  `;
+}
+
+function drawForm(){
+
+  openModal(
+    "Lucky Draw Campaign",
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Campaign</label>
+        <input id="drawCampaign">
+      </div>
+
+      <div class="form-group">
+        <label>Entry Rules</label>
+        <input id="drawRules">
+      </div>
+
+      <div class="form-group">
+        <label>Draw Date</label>
+        <input id="drawDate" type="datetime-local">
+      </div>
+
+      <div class="form-group">
+        <label>Prize</label>
+        <input id="drawPrize">
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveDraw()">Save</button>
+    `
+  );
+}
+
+function saveDraw(){
+
+  db.draw.push({
+    id:uid("DRAW"),
+    campaign:document.getElementById("drawCampaign").value,
+    rules:document.getElementById("drawRules").value,
+    participants:0,
+    date:document.getElementById("drawDate").value,
+    winners:0,
+    prize:document.getElementById("drawPrize").value,
+    active:true
+  });
+
+  saveDB();
+  logAction("Created Lucky Draw","Lucky Draw","-");
+
+  closeModal();
+  showPage("draw");
+}
+
+
+/* =========================================================
+   REVIEWS
+========================================================= */
+
+function reviewsPage(){
+
+  return `
+  <div class="page-title">
+    <h2>⭐ Reviews</h2>
+  </div>
+
+  ${simpleTable(
+    ["Customer","Product","Rating","Review","Status"],
+    db.reviews.map(r=>[
+      r.customer,
+      r.product,
+      "★".repeat(Number(r.rating||0)),
+      r.text,
+      badge(r.status)
+    ])
+  )}
+
+  <div class="alert info" style="margin-top:15px">
+    Customer reviews should only be created for products from Delivered Orders.
+  </div>
+  `;
+}
+
+
+/* =========================================================
+   SUPPORT
+========================================================= */
+
+function supportPage(){
+
+  return `
+  <div class="page-title">
+    <h2>🎫 Support Tickets</h2>
+    <button class="btn" onclick="supportForm()">＋ New Ticket</button>
+  </div>
+
+  ${simpleTable(
+    ["Ticket","Customer","Category","Subject","Status","Created"],
+    db.support.map(s=>[
+      s.id,
+      s.customer,
+      s.category,
+      s.subject,
+      badge(s.status),
+      s.date
+    ])
+  )}
+  `;
+}
+
+function supportForm(){
+
+  openModal(
+    "Support Ticket",
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Customer</label>
+        <input id="supCustomer">
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <select id="supCategory">
+          <option>General</option>
+          <option>Order</option>
+          <option>Payment</option>
+          <option>Delivery</option>
+          <option>Cancellation</option>
+          <option>Refund</option>
+          <option>Damaged</option>
+          <option>Product</option>
+          <option>Wrong Product</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="form-group full">
+        <label>Subject</label>
+        <input id="supSubject">
+      </div>
+
+      <div class="form-group full">
+        <label>Message</label>
+        <textarea id="supMessage"></textarea>
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveSupport()">Create Ticket</button>
+    `
+  );
+}
+
+function saveSupport(){
+
+  const s={
+    id:uid("TICKET"),
+    customer:document.getElementById("supCustomer").value,
+    category:document.getElementById("supCategory").value,
+    subject:document.getElementById("supSubject").value,
+    message:document.getElementById("supMessage").value,
+    status:"Open",
+    date:new Date().toLocaleString()
+  };
+
+  db.support.unshift(s);
+  saveDB();
+
+  logAction("Created Support Ticket","Support",s.id);
+
+  closeModal();
+  showPage("support");
+}
+
+
+/* =========================================================
+   EXPENSES
+========================================================= */
+
+function expensesPage(){
+
+  const total=db.expenses.reduce(
+    (s,e)=>s+Number(e.amount||0),0
+  );
+
+  return `
+  <div class="page-title">
+    <div>
+      <h2>💰 Expenses</h2>
+      <small>Total recorded expenses: ${money(total)}</small>
+    </div>
+
+    <button class="btn" onclick="expenseForm()">＋ Add Expense</button>
+  </div>
+
+  ${simpleTable(
+    ["Category","Amount","Date","Note","Added By","Reference"],
+    db.expenses.map(e=>[
+      e.category,
+      money(e.amount),
+      e.date,
+      e.note,
+      e.by,
+      e.reference
+    ])
+  )}
+  `;
+}
+
+function expenseForm(){
+
+  openModal(
+    "Add Expense",
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Category</label>
+        <select id="exCategory">
+          <option>Raw Materials</option>
+          <option>Packaging</option>
+          <option>Delivery</option>
+          <option>Salary</option>
+          <option>Marketing</option>
+          <option>Rent</option>
+          <option>Electricity</option>
+          <option>Software</option>
+          <option>Supplier/Purchase</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Amount</label>
+        <input id="exAmount" type="number">
+      </div>
+
+      <div class="form-group">
+        <label>Date</label>
+        <input id="exDate" type="date">
+      </div>
+
+      <div class="form-group">
+        <label>Receipt / Reference</label>
+        <input id="exRef">
+      </div>
+
+      <div class="form-group full">
+        <label>Note</label>
+        <textarea id="exNote"></textarea>
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveExpense()">Save Expense</button>
+    `
+  );
+}
+
+function saveExpense(){
+
+  const e={
+    id:uid("EXP"),
+    category:document.getElementById("exCategory").value,
+    amount:Number(document.getElementById("exAmount").value||0),
+    date:document.getElementById("exDate").value ||
+      new Date().toISOString().slice(0,10),
+    note:document.getElementById("exNote").value,
+    by:currentUser.email,
+    reference:document.getElementById("exRef").value
+  };
+
+  db.expenses.unshift(e);
+  saveDB();
+
+  logAction("Added Expense","Expenses",e.id);
+
+  closeModal();
+  showPage("expenses");
+}
+
+
+/* =========================================================
+   MONTHLY REPORTS
+========================================================= */
+
+function reportsPage(){
+
+  const months=monthlyStatements();
+
+  return `
+  <div class="page-title">
+    <div>
+      <h2>📈 Reports & Monthly Statements</h2>
+      <small>Sales, expenses and profit/loss</small>
+    </div>
+
+    <button class="btn" onclick="printCompleteReport()">
+      🖨️ PRINT COMPLETE REPORT
+    </button>
+  </div>
+
+  <div class="toolbar">
+
+    <select id="reportMonth" class="input">
+      ${months.map(m=>
+        `<option value="${m.key}">${m.label}</option>`
+      ).join("")}
+    </select>
+
+    <button class="btn secondary"
+      onclick="viewMonthlyReport()">
+      View Month
+    </button>
+
+  </div>
+
+  <div id="monthlyReport">
+    ${monthlyReportHTML(months[months.length-1]?.key)}
+  </div>
+  `;
+}
+
+function monthlyStatements(){
+
+  const set=new Set();
+
+  db.orders.forEach(o=>{
+    set.add(new Date(o.date).toISOString().slice(0,7));
+  });
+
+  db.expenses.forEach(e=>{
+    set.add(String(e.date).slice(0,7));
+  });
+
+  const now=new Date();
+  set.add(now.toISOString().slice(0,7));
+
+  return [...set].sort().map(key=>{
+
+    const [y,m]=key.split("-");
+
+    const date=new Date(Number(y),Number(m)-1,1);
+
+    return {
+      key,
+      label:date.toLocaleString("en-US",{
+        month:"long",
+        year:"numeric"
+      })
+    };
+  });
+}
+
+function monthlyData(key){
+
+  const orders=db.orders.filter(o=>
+    String(o.date).slice(0,7)===key
+  );
+
+  const expenses=db.expenses.filter(e=>
+    String(e.date).slice(0,7)===key
+  );
+
+  let productSales=0;
+  let deliveryIncome=0;
+  let platformIncome=0;
+  let discount=0;
+  let productCost=0;
+
+  orders.forEach(o=>{
+
+    if(["Cancelled","Returned"].includes(o.status))return;
+
+    productSales+=o.products.reduce(
+      (s,p)=>s+Number(p.price)*Number(p.qty),0
+    );
+
+    deliveryIncome+=Number(o.deliveryCharge||0);
+    platformIncome+=Number(o.platformCharge||0);
+    discount+=Number(o.discount||0);
+    productCost+=orderProductCost(o);
+  });
+
+  const expenseTotal=expenses.reduce(
+    (s,e)=>s+Number(e.amount||0),0
+  );
+
+  const totalIncome=
+    productSales+
+    deliveryIncome+
+    platformIncome-
+    discount;
+
+  const grossProfit=
+    productSales-
+    discount-
+    productCost;
+
+  const net=
+    totalIncome-
+    productCost-
+    expenseTotal;
+
+  return {
+    orders,
+    expenses,
+    productSales,
+    deliveryIncome,
+    platformIncome,
+    discount,
+    productCost,
+    expenseTotal,
+    totalIncome,
+    grossProfit,
+    net
+  };
+}
+
+function monthlyReportHTML(key){
+
+  if(!key){
+    return `<div class="panel">No report data.</div>`;
+  }
+
+  const [year,month]=key.split("-");
+
+  const date=new Date(Number(year),Number(month)-1,1);
+
+  const label=date.toLocaleString("en-US",{
+    month:"long",
+    year:"numeric"
+  });
+
+  const d=monthlyData(key);
+
+  const delivered=d.orders.filter(
+    o=>o.status==="Delivered"
+  ).length;
+
+  const cancelled=d.orders.filter(
+    o=>o.status==="Cancelled"
+  ).length;
+
+  const refunded=d.orders.filter(
+    o=>o.status==="Refunded"
+  ).length;
+
+  return `
+  <div class="report" id="reportPrintArea">
+
+    <h1>NATURE BITE</h1>
+    <h2>Monthly Business Report</h2>
+
+    <p style="text-align:center">
+      <strong>${label}</strong>
+    </p>
+
+    <div class="report-section">
+      <h3>SALES SUMMARY</h3>
+      ${reportRow("Total Product Sales",money(d.productSales))}
+      ${reportRow("Total Orders",d.orders.length)}
+      ${reportRow("Delivered Orders",delivered)}
+      ${reportRow("Cancelled Orders",cancelled)}
+      ${reportRow("Refunded Orders",refunded)}
+    </div>
+
+    <div class="report-section">
+      <h3>INCOME</h3>
+      ${reportRow("Product Sales",money(d.productSales))}
+      ${reportRow("Delivery Income",money(d.deliveryIncome))}
+      ${reportRow("Platform Income",money(d.platformIncome))}
+      ${reportRow("Discount",money(d.discount))}
+      ${reportRow("Total Income",money(d.totalIncome))}
+    </div>
+
+    <div class="report-section">
+      <h3>EXPENSES</h3>
+      ${reportRow("Product / Purchase Cost",money(d.productCost))}
+
+      ${reportExpenseRows(d.expenses)}
+
+      ${reportRow("Total Operating Expenses",money(d.expenseTotal))}
+    </div>
+
+    <div class="report-section">
+      <h3>FINANCIAL SUMMARY</h3>
+      ${reportRow("Gross Profit",money(d.grossProfit))}
+      ${reportRow("Net Profit / Loss",money(d.net))}
+    </div>
+
+    <div class="report-section">
+      <h3>PAYMENT SUMMARY</h3>
+      ${reportRow("bKash",
+        money(d.orders.filter(o=>o.paymentMethod==="bKash")
+        .reduce((s,o)=>s+orderTotal(o),0)))}
+
+      ${reportRow("Nagad",
+        money(d.orders.filter(o=>o.paymentMethod==="Nagad")
+        .reduce((s,o)=>s+orderTotal(o),0)))}
+
+      ${reportRow("COD",
+        money(d.orders.filter(o=>o.paymentMethod==="Cash on Delivery")
+        .reduce((s,o)=>s+orderTotal(o),0)))}
+    </div>
+
+    <div class="report-section">
+      <h3>DELIVERY SUMMARY</h3>
+
+      ${reportRow(
+        "Nature Bite Delivery",
+        d.orders.filter(o=>o.rider&&o.rider!=="Not Assigned").length
+      )}
+
+      ${reportRow("Pathao","Manual/API pending")}
+      ${reportRow("Steadfast","Manual/API pending")}
+      ${reportRow("CarryBee","Manual/API pending")}
+    </div>
+
+    <div class="report-section">
+      <h3>INVENTORY SUMMARY</h3>
+
+      ${reportRow(
+        "Current Inventory Valuation",
+        money(
+          db.products.reduce(
+            (s,p)=>s+p.variants.reduce(
+              (x,v)=>x+(Number(v.stock)*Number(v.cost||0)),0
+            ),0
+          )
+        )
+      )}
+
+      ${reportRow(
+        "Low Stock Variants",
+        db.products.reduce(
+          (s,p)=>s+p.variants.filter(
+            v=>Number(v.stock)<=Number(v.threshold||10)
+          ).length,0
+        )
+      )}
+    </div>
+
+    <div class="report-section">
+      <h3>CUSTOMER SUMMARY</h3>
+      ${reportRow("New Customers","Firebase data pending")}
+      ${reportRow("Returning Customers","Firebase data pending")}
+    </div>
+
+    <hr>
+
+    <p style="text-align:center;font-size:11px">
+      Generated by Nature bite Admin<br>
+      ${new Date().toLocaleString()}
+    </p>
+
+  </div>
+  `;
+}
+
+function reportRow(a,b){
+  return `<div class="report-row">
+    <span>${a}</span>
+    <strong>${b}</strong>
+  </div>`;
+}
+
+function reportExpenseRows(list){
+
+  const cats={};
+
+  list.forEach(e=>{
+    cats[e.category]=(cats[e.category]||0)+Number(e.amount||0);
+  });
+
+  return Object.entries(cats)
+    .map(([k,v])=>reportRow(k,money(v)))
+    .join("");
+}
+
+function viewMonthlyReport(){
+
+  const key=document.getElementById("reportMonth").value;
+
+  document.getElementById("monthlyReport").innerHTML=
+    monthlyReportHTML(key);
+}
+
+function printCompleteReport(){
+
+  const key=document.getElementById("reportMonth")?.value ||
+    new Date().toISOString().slice(0,7);
+
+  const html=monthlyReportHTML(key);
+
+  const win=window.open("","_blank");
+
+  win.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Nature bite Monthly Report</title>
+      <style>
+        body{font-family:Arial;margin:30px}
+        .report{max-width:900px;margin:auto}
+        .report h1,.report h2{text-align:center}
+        .report-section{margin-top:25px}
+        .report-row{
+          display:flex;
+          justify-content:space-between;
+          padding:8px 0;
+          border-bottom:1px solid #ddd
+        }
+      </style>
+    </head>
+    <body onload="window.print()">
+      ${html}
+    </body>
+    </html>
+  `);
+
+  win.document.close();
+
+  logAction("Printed Monthly Report","Reports",key);
+}
+
+
+/* =========================================================
+   CHALAN
+========================================================= */
+
+function chalanPage(){
+
+  return `
+  <div class="page-title">
+    <div>
+      <h2>🧾 Chalan</h2>
+      <small>Approval required before official print/finalization</small>
+    </div>
+
+    <button class="btn" onclick="chalanForm()">
+      ＋ Create Chalan
+    </button>
+  </div>
+
+  <div class="alert warning">
+    A Chalan cannot be officially printed/finalized until it is Approved.
+  </div>
+
+  ${simpleTable(
+    ["Chalan No","Supplier/Customer","Amount","Created By","Status","Action"],
+    db.chalans.map(c=>[
+      c.number,
+      c.party,
+      money(c.total),
+      c.createdBy,
+      badge(c.status),
+      chalanActions(c)
+    ])
+  )}
+  `;
+}
+
+function chalanActions(c){
+
+  if(c.status==="Pending Approval"){
+    return `
+      <button class="btn small"
+        onclick="approveChalan('${c.id}')">
+        Approve
+      </button>
+
+      <button class="btn small danger"
+        onclick="rejectChalan('${c.id}')">
+        Reject
+      </button>
+    `;
+  }
+
+  if(c.status==="Approved"){
+    return `
+      <button class="btn small blue"
+        onclick="printChalan('${c.id}')">
+        🖨️ Print
+      </button>
+    `;
+  }
+
+  return "—";
+}
+
+function chalanForm(){
+
+  openModal(
+    "Create Chalan",
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Chalan Number</label>
+        <input id="chNumber" value="${uid("NB").slice(0,14)}">
+      </div>
+
+      <div class="form-group">
+        <label>Supplier / Customer</label>
+        <input id="chParty">
+      </div>
+
+      <div class="form-group">
+        <label>Product</label>
+        <input id="chProduct">
+      </div>
+
+      <div class="form-group">
+        <label>Variant / Weight</label>
+        <input id="chVariant">
+      </div>
+
+      <div class="form-group">
+        <label>Quantity</label>
+        <input id="chQty" type="number">
+      </div>
+
+      <div class="form-group">
+        <label>Unit Price</label>
+        <input id="chPrice" type="number">
+      </div>
+
+      <div class="form-group full">
+        <label>Transport / Delivery Info</label>
+        <input id="chTransport">
+      </div>
+
+      <div class="form-group full">
+        <label>Note</label>
+        <textarea id="chNote"></textarea>
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveChalan()">
+      Submit for Approval
+    </button>
+    `
+  );
+}
+
+function saveChalan(){
+
+  const qty=Number(document.getElementById("chQty").value||0);
+  const price=Number(document.getElementById("chPrice").value||0);
+
+  const c={
+    id:uid("CHALAN"),
+    number:document.getElementById("chNumber").value,
+    party:document.getElementById("chParty").value,
+    product:document.getElementById("chProduct").value,
+    variant:document.getElementById("chVariant").value,
+    quantity:qty,
+    unitPrice:price,
+    total:qty*price,
+    transport:document.getElementById("chTransport").value,
+    note:document.getElementById("chNote").value,
+    createdBy:currentUser.email,
+    createdAt:new Date().toISOString(),
+    status:"Pending Approval",
+    history:[
+      {
+        action:"Created",
+        by:currentUser.email,
+        time:new Date().toISOString()
+      },
+      {
+        action:"Submitted for Approval",
+        by:currentUser.email,
+        time:new Date().toISOString()
+      }
+    ]
+  };
+
+  db.chalans.unshift(c);
+
+  db.notifications.unshift({
+    id:uid("NOT"),
+    type:"Chalan Approval",
+    title:"New Chalan Approval Request",
+    message:`${c.number} — ${money(c.total)}`,
+    date:new Date().toISOString(),
+    read:false
+  });
+
+  saveDB();
+
+  logAction("Submitted Chalan","Chalan",c.id);
+
+  closeModal();
+  showPage("chalan");
+}
+
+function approveChalan(id){
+
+  const c=db.chalans.find(x=>x.id===id);
+  if(!c)return;
+
+  c.status="Approved";
+
+  c.history.push({
+    action:"Approved",
+    by:currentUser.email,
+    time:new Date().toISOString()
+  });
+
+  saveDB();
+
+  logAction("Approved Chalan","Chalan",id);
+
+  showPage("chalan");
+}
+
+function rejectChalan(id){
+
+  const reason=prompt("Reject reason:");
+
+  if(reason===null)return;
+
+  const c=db.chalans.find(x=>x.id===id);
+  if(!c)return;
+
+  c.status="Rejected";
+  c.rejectReason=reason;
+
+  c.history.push({
+    action:"Rejected",
+    reason,
+    by:currentUser.email,
+    time:new Date().toISOString()
+  });
+
+  saveDB();
+
+  logAction("Rejected Chalan","Chalan",id);
+
+  showPage("chalan");
+}
+
+function printChalan(id){
+
+  const c=db.chalans.find(x=>x.id===id);
+
+  if(!c || c.status!=="Approved"){
+    alert("Chalan must be Approved before printing.");
+    return;
+  }
+
+  const win=window.open("","_blank");
+
+  win.document.write(`
+  <html>
+  <head>
+    <title>${esc(c.number)}</title>
+    <style>
+      body{font-family:Arial;padding:30px}
+      .box{max-width:800px;margin:auto}
+      table{width:100%;border-collapse:collapse}
+      td,th{border:1px solid #ddd;padding:10px}
+      h1,h2{text-align:center}
+    </style>
+  </head>
+  <body onload="window.print()">
+    <div class="box">
+      <h1>NATURE BITE</h1>
+      <h2>CHALAN</h2>
+
+      <p>
+        Chalan No: <strong>${esc(c.number)}</strong><br>
+        Date: ${new Date(c.createdAt).toLocaleString()}<br>
+        Created By: ${esc(c.createdBy)}<br>
+        Approved By: ${esc(currentUser.email)}
+      </p>
+
+      <table>
+        <tr>
+          <th>Product</th>
+          <th>Variant</th>
+          <th>Quantity</th>
+          <th>Unit Price</th>
+          <th>Total</th>
+        </tr>
+
+        <tr>
+          <td>${esc(c.product)}</td>
+          <td>${esc(c.variant)}</td>
+          <td>${c.quantity}</td>
+          <td>${money(c.unitPrice)}</td>
+          <td>${money(c.total)}</td>
+        </tr>
+      </table>
+
+      <h3 style="text-align:right">
+        Grand Total: ${money(c.total)}
+      </h3>
+
+      <p style="text-align:center">
+        <strong>APPROVED</strong>
+      </p>
+
+    </div>
+  </body>
+  </html>
+  `);
+
+  win.document.close();
+
+  c.history.push({
+    action:"Printed",
+    by:currentUser.email,
+    time:new Date().toISOString()
+  });
+
+  saveDB();
+
+  logAction("Printed Chalan","Chalan",id);
+}
+
+
+/* =========================================================
+   STAFF + RBAC
+========================================================= */
+
+const roles=[
+  "Super Admin",
+  "Order Manager",
+  "Product Manager",
+  "Inventory Manager",
+  "Accountant / Finance",
+  "Delivery Manager",
+  "Customer Support",
+  "Marketing Manager"
 ];
 
-/*
-  Generic module schemas.
-  These are initial fields, not a substitute for validating
-  each business workflow in a trusted backend.
-*/
-const SCHEMAS = {
-  inventory: [
-    ["productId","Product ID","text"],
-    ["variant","Variant","text"],
-    ["type","Stock Action","select:Stock In|Stock Out|Adjustment"],
-    ["quantity","Quantity","number"],
-    ["note","Note","text"]
-  ],
-  categories: [
-    ["name","Category Name","text"],
-    ["imageUrl","Image URL","url"],
-    ["sortOrder","Sort Order","number"],
-    ["active","Active","boolean"]
-  ],
-  customers: [
-    ["name","Name","text"],
-    ["mobile","Mobile","text"],
-    ["email","Email","email"],
-    ["status","Account Status","text"]
-  ],
-  riders: [
-    ["name","Rider Name","text"],
-    ["mobile","Mobile","text"],
-    ["zone","Zone","text"],
-    ["availability","Availability","text"],
-    ["active","Active","boolean"]
-  ],
-  deliveryPartners: [
-    ["name","Partner Name","text"],
-    ["contact","Contact","text"],
-    ["serviceArea","Service Area","text"],
-    ["deliveryCharge","Delivery Charge","number"],
-    ["active","Active","boolean"]
-  ],
-  payments: [
-    ["orderId","Order ID","text"],
-    ["method","Payment Method","text"],
-    ["amount","Amount","number"],
-    ["senderNumber","Sender Number","text"],
-    ["transactionId","Transaction ID","text"],
-    ["status","Status","text"]
-  ],
-  refunds: [
-    ["orderId","Order ID","text"],
-    ["customerId","Customer ID","text"],
-    ["amount","Amount","number"],
-    ["reason","Reason","text"],
-    ["status","Status","text"]
-  ],
-  cancellations: [
-    ["orderId","Order ID","text"],
-    ["reason","Reason","text"],
-    ["status","Status","text"]
-  ],
-  offers: [
-    ["code","Coupon Code","text"],
-    ["type","Discount Type","text"],
-    ["value","Discount Value","number"],
-    ["minimumOrder","Minimum Order","number"],
-    ["maximumDiscount","Maximum Discount","number"],
-    ["usageLimit","Usage Limit","number"],
-    ["startDate","Start Date","date"],
-    ["endDate","End Date","date"],
-    ["active","Active","boolean"]
-  ],
-  luckyWheel: [
-    ["prize","Prize","text"],
-    ["coupon","Coupon","text"],
-    ["probability","Probability","number"],
-    ["dailyLimit","Daily Limit","number"],
-    ["active","Active","boolean"]
-  ],
-  luckyDraw: [
-    ["campaign","Campaign","text"],
-    ["entryRules","Entry Rules","text"],
-    ["drawDate","Draw Date","date"],
-    ["prize","Prize","text"],
-    ["active","Active","boolean"]
-  ],
-  reviews: [
-    ["customerId","Customer ID","text"],
-    ["productId","Product ID","text"],
-    ["rating","Rating","number"],
-    ["comment","Comment","text"],
-    ["status","Status","text"]
-  ],
-  support: [
-    ["customerId","Customer ID","text"],
-    ["category","Category","text"],
-    ["subject","Subject","text"],
-    ["message","Message","text"],
-    ["status","Status","text"]
-  ],
-  expenses: [
-    ["category","Category","text"],
-    ["amount","Amount","number"],
-    ["date","Date","date"],
-    ["note","Note","text"],
-    ["reference","Receipt / Reference","text"]
-  ],
-  chalan: [
-    ["chalanNumber","Chalan Number","text"],
-    ["supplier","Supplier","text"],
-    ["date","Date","date"],
-    ["product","Product","text"],
-    ["variant","Variant","text"],
-    ["quantity","Quantity","number"],
-    ["unitPrice","Unit Price","number"],
-    ["note","Note","text"],
-    ["status","Status","text"]
-  ],
-  staff: [
-    ["name","Staff Name","text"],
-    ["email","Email","email"],
-    ["role","Role","text"],
-    ["active","Active","boolean"]
-  ],
-  notifications: [
-    ["title","Title","text"],
-    ["message","Message","text"],
-    ["type","Type","text"],
-    ["read","Read","boolean"]
-  ],
-  websiteContent: [
-    ["section","Section","text"],
-    ["title","Title","text"],
-    ["content","Content","text"],
-    ["active","Active","boolean"]
-  ],
-  appContent: [
-    ["section","Section","text"],
-    ["title","Title","text"],
-    ["content","Content","text"],
-    ["active","Active","boolean"]
-  ],
-  customer_features: [
-    ["name","Feature Name","text"],
-    ["description","Description","text"],
-    ["position","Position","text"],
-    ["sortOrder","Sort Order","number"],
-    ["active","Active","boolean"],
-    ["visible","Visible","boolean"],
-    ["startDate","Start Date","date"],
-    ["endDate","End Date","date"]
-  ],
-  auditLogs: [
-    ["userId","User ID","text"],
-    ["role","Role","text"],
-    ["action","Action","text"],
-    ["module","Module","text"],
-    ["targetId","Target ID","text"],
-    ["result","Result","text"]
-  ],
-  ai: [
-    ["title","Recommendation","text"],
-    ["description","Description","text"],
-    ["status","Status","text"]
-  ]
-};
-
-let currentUser = null;
-let currentRole = "";
-let staffData = {};
-let products = [];
-let orders = [];
-let expenses = [];
-let activeModule = "dashboard";
-let activeCollection = "";
-let genericRecords = [];
-let genericEditingId = null;
-let productListener = null;
-let orderListener = null;
-let expenseListener = null;
-let genericListener = null;
-
-/* Navigation */
-function buildNavigation() {
-  const root = $("navigation");
-  root.innerHTML = "";
-
-  MODULES.forEach(([id,title]) => {
-    if (!canView(id)) return;
-
-    const button = document.createElement("button");
-    button.className = "nav";
-    button.textContent = title;
-    button.dataset.module = id;
-    button.addEventListener("click",() => openModule(id,title));
-    root.appendChild(button);
-  });
-}
-
-function openModule(id,title) {
-  activeModule = id;
-
-  document.querySelectorAll(".section").forEach(section =>
-    section.classList.remove("active")
-  );
-
-  const fixed = $(id);
-  if (fixed) {
-    fixed.classList.add("active");
-  } else {
-    $("genericModule").classList.add("active");
-    $("genericTitle").textContent = title;
-    loadGenericModule(id);
-  }
-
-  document.querySelectorAll(".nav").forEach(button =>
-    button.classList.toggle("active",button.dataset.module === id)
-  );
-
-  $("pageTitle").textContent = title;
-}
-
-function collectionFor(id) {
-  return MODULES.find(item => item[0] === id)?.[2] || id;
-}
-
-/*
-  UI permission check.
-  This does not secure Firestore by itself.
-  Firestore Security Rules must enforce the same permissions.
-*/
-function canView(module) {
-  if (currentRole === "Super Admin") return true;
-  const perms = staffData.permissions || {};
-  return perms[module]?.view === true;
-}
-
-function canDo(module,action) {
-  if (currentRole === "Super Admin") return true;
-  return staffData.permissions?.[module]?.[action] === true;
-}
-
-/* Authentication */
-$("loginButton").addEventListener("click",async () => {
-  $("loginError").textContent = "";
-
-  try {
-    await signInWithEmailAndPassword(
-      auth,
-      $("loginEmail").value.trim(),
-      $("loginPassword").value
-    );
-  } catch(error) {
-    $("loginError").textContent = error.message;
-  }
-});
-
-$("logoutButton").addEventListener("click",async () => {
-  await signOut(auth);
-});
-
-onAuthStateChanged(auth,async user => {
-  currentUser = user;
-
-  if (!user) {
-    stopAllListeners();
-    $("loginScreen").classList.remove("hidden");
-    $("adminApp").classList.add("hidden");
-    return;
-  }
-
-  try {
-    const staffSnap = await getDoc(doc(db,"staff",user.uid));
-
-    if (!staffSnap.exists()) {
-      await signOut(auth);
-      $("loginError").textContent =
-        "এই ব্যবহারকারীর Staff Profile পাওয়া যায়নি।";
-      return;
-    }
-
-    staffData = staffSnap.data();
-    currentRole = staffData.role || "Staff";
-
-    if (staffData.active === false) {
-      await signOut(auth);
-      $("loginError").textContent = "এই Staff Account নিষ্ক্রিয়।";
-      return;
-    }
-
-    $("loginScreen").classList.add("hidden");
-    $("adminApp").classList.remove("hidden");
-    $("userInfo").textContent =
-      (staffData.name || user.email) + " | " + currentRole;
-
-    buildNavigation();
-    startCoreListeners();
-
-    openModule("dashboard","Dashboard");
-
-  } catch(error) {
-    $("loginError").textContent = error.message;
-  }
-});
-
-/* Realtime data */
-function stopAllListeners() {
-  [productListener,orderListener,expenseListener,genericListener]
-    .forEach(unsubscribe => {
-      if (unsubscribe) unsubscribe();
-    });
-
-  productListener = null;
-  orderListener = null;
-  expenseListener = null;
-  genericListener = null;
-}
-
-function startCoreListeners() {
-  stopAllListeners();
-
-  if (canView("products")) {
-    productListener = onSnapshot(
-      collection(db,"products"),
-      snapshot => {
-        products = snapshot.docs.map(d => ({id:d.id,...d.data()}));
-        renderProducts();
-        updateDashboard();
-      },
-      error => showProductError(error)
-    );
-  }
-
-  if (canView("orders")) {
-    orderListener = onSnapshot(
-      collection(db,"orders"),
-      snapshot => {
-        orders = snapshot.docs.map(d => ({id:d.id,...d.data()}));
-        renderOrders();
-        updateDashboard();
-      },
-      error => {
-        $("orderRows").innerHTML =
-          `<tr><td colspan="7">${escapeHtml(error.message)}</td></tr>`;
-      }
-    );
-  }
-
-  if (canView("expenses")) {
-    expenseListener = onSnapshot(
-      collection(db,"expenses"),
-      snapshot => {
-        expenses = snapshot.docs.map(d => ({id:d.id,...d.data()}));
-        updateDashboard();
-      },
-      error => console.error(error)
-    );
-  }
-}
-
-function escapeHtml(value) {
-  return String(value ?? "").replace(/[&<>"']/g,char => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",
-    '"':"&quot;","'":"&#39;"
-  }[char]));
-}
-
-function money(value) {
-  return "৳" + Number(value || 0).toLocaleString("en-BD");
-}
-
-/* Products */
-function showProductError(error) {
-  $("productRows").innerHTML =
-    `<tr><td colspan="7">Product Error: ${escapeHtml(error.message)}</td></tr>`;
-}
-
-function renderProducts() {
-  const query = $("productSearch").value.toLowerCase().trim();
-
-  const list = products.filter(product =>
-    String(product.name || "").toLowerCase().includes(query) ||
-    String(product.sku || "").toLowerCase().includes(query)
-  );
-
-  $("productRows").innerHTML = list.map(product => `
-    <tr>
-      <td>${escapeHtml(product.name)}</td>
-      <td>${escapeHtml(product.category)}</td>
-      <td>${escapeHtml(product.sku)}</td>
-      <td>${money(product.price)}</td>
-      <td>${Number(product.stock || 0)}</td>
-      <td>
-        <span class="badge ${product.active === false ? "red":""}">
-          ${product.active === false ? "Inactive":"Active"}
-        </span>
-      </td>
-      <td class="actions">
-        ${canDo("products","edit") ?
-          `<button class="secondary" data-edit="${escapeHtml(product.id)}">Edit</button>`:""}
-        ${canDo("products","delete") ?
-          `<button class="danger" data-delete="${escapeHtml(product.id)}">Delete</button>`:""}
-      </td>
-    </tr>
-  `).join("") || `<tr><td colspan="7">No products found.</td></tr>`;
-
-  document.querySelectorAll("[data-edit]").forEach(button =>
-    button.addEventListener("click",() => editProduct(button.dataset.edit))
-  );
-
-  document.querySelectorAll("[data-delete]").forEach(button =>
-    button.addEventListener("click",() => deleteProduct(button.dataset.delete))
-  );
-}
-
-function clearProductForm() {
-  [
-    "productId","pName","pCategory","pSubcategory","pSku",
-    "pPrice","pDiscount","pStock","pVariant","pImage","pDescription"
-  ].forEach(id => $(id).value = "");
-
-  $("pThreshold").value = 5;
-  $("pActive").value = "true";
-  $("pFeatured").value = "false";
-  $("pNew").value = "false";
-  $("pBestSeller").value = "false";
-  $("productError").textContent = "";
-}
-
-$("newProductButton").addEventListener("click",() => {
-  if (!canDo("products","create")) {
-    alert("আপনার Product Create Permission নেই।");
-    return;
-  }
-  clearProductForm();
-  $("productFormTitle").textContent = "Add Product";
-  $("productForm").classList.remove("hidden");
-});
-
-$("cancelProductButton").addEventListener("click",() => {
-  $("productForm").classList.add("hidden");
-});
-
-$("productSearch").addEventListener("input",renderProducts);
-
-function editProduct(id) {
-  if (!canDo("products","edit")) return;
-
-  const p = products.find(item => item.id === id);
-  if (!p) return;
-
-  $("productId").value = p.id;
-  $("pName").value = p.name || "";
-  $("pCategory").value = p.category || "";
-  $("pSubcategory").value = p.subcategory || "";
-  $("pSku").value = p.sku || "";
-  $("pPrice").value = p.price ?? 0;
-  $("pDiscount").value = p.discount ?? 0;
-  $("pStock").value = p.stock ?? 0;
-  $("pThreshold").value = p.lowStockThreshold ?? 5;
-  $("pVariant").value = p.variant || "";
-  $("pImage").value = p.imageUrl || "";
-  $("pDescription").value = p.description || "";
-  $("pActive").value = String(p.active !== false);
-  $("pFeatured").value = String(p.featured === true);
-  $("pNew").value = String(p.isNew === true);
-  $("pBestSeller").value = String(p.bestSeller === true);
-
-  $("productFormTitle").textContent = "Edit Product";
-  $("productForm").classList.remove("hidden");
-}
-
-$("saveProductButton").addEventListener("click",async () => {
-  $("productError").textContent = "";
-
-  const id = $("productId").value;
-  const price = Number($("pPrice").value);
-  const discount = Number($("pDiscount").value || 0);
-  const stock = Number($("pStock").value);
-  const threshold = Number($("pThreshold").value);
-
-  if (!id && !canDo("products","create")) {
-    $("productError").textContent = "Create Permission নেই।";
-    return;
-  }
-  if (id && !canDo("products","edit")) {
-    $("productError").textContent = "Edit Permission নেই।";
-    return;
-  }
-  if (!$("pName").value.trim()) {
-    $("productError").textContent = "Product Name দিতে হবে।";
-    return;
-  }
-  if (![price,discount,stock,threshold].every(Number.isFinite) ||
-      price < 0 || discount < 0 || stock < 0 || threshold < 0) {
-    $("productError").textContent = "Price, Discount ও Stock সঠিক দিন।";
-    return;
-  }
-
-  const data = {
-    name:$("pName").value.trim(),
-    category:$("pCategory").value.trim(),
-    subcategory:$("pSubcategory").value.trim(),
-    sku:$("pSku").value.trim(),
-    price,
-    discount,
-    stock,
-    lowStockThreshold:threshold,
-    variant:$("pVariant").value.trim(),
-    imageUrl:$("pImage").value.trim(),
-    description:$("pDescription").value.trim(),
-    active:$("pActive").value === "true",
-    featured:$("pFeatured").value === "true",
-    isNew:$("pNew").value === "true",
-    bestSeller:$("pBestSeller").value === "true",
-    updatedAt:serverTimestamp(),
-    updatedBy:currentUser.uid
-  };
-
-  try {
-    if (id) {
-      await updateDoc(doc(db,"products",id),data);
-      await addAudit("Product Updated","products",id);
-    } else {
-      data.createdAt = serverTimestamp();
-      data.createdBy = currentUser.uid;
-      const created = await addDoc(collection(db,"products"),data);
-      await addAudit("Product Created","products",created.id);
-    }
-
-    $("productForm").classList.add("hidden");
-    clearProductForm();
-
-  } catch(error) {
-    $("productError").textContent =
-      "Product Save Failed: " + error.message;
-  }
-});
-
-async function deleteProduct(id) {
-  if (!canDo("products","delete")) {
-    alert("আপনার Delete Permission নেই।");
-    return;
-  }
-  if (!confirm("আপনি কি এই Product Delete করতে চান?")) return;
-
-  try {
-    await deleteDoc(doc(db,"products",id));
-    await addAudit("Product Deleted","products",id);
-  } catch(error) {
-    alert("Delete Failed: " + error.message);
-  }
-}
-
-/* Orders */
-function renderOrders() {
-  const search = $("orderSearch").value.toLowerCase().trim();
-
-  const list = orders.filter(order =>
-    String(order.orderId || order.id).toLowerCase().includes(search) ||
-    String(order.customerName || "").toLowerCase().includes(search) ||
-    String(order.mobile || "").toLowerCase().includes(search)
-  );
-
-  $("orderRows").innerHTML = list.map(order => `
-    <tr>
-      <td>${escapeHtml(order.orderId || order.id)}</td>
-      <td>${escapeHtml(order.customerName)}</td>
-      <td>${escapeHtml(order.mobile)}</td>
-      <td>${money(order.total)}</td>
-      <td>${escapeHtml(order.paymentStatus || "Pending")}</td>
-      <td>${escapeHtml(order.status || "Pending")}</td>
-      <td>
-        <button class="secondary" data-order="${escapeHtml(order.id)}">View</button>
-      </td>
-    </tr>
-  `).join("") || `<tr><td colspan="7">No orders found.</td></tr>`;
-
-  document.querySelectorAll("[data-order]").forEach(button =>
-    button.addEventListener("click",() => showOrder(button.dataset.order))
-  );
-}
-
-$("orderSearch").addEventListener("input",renderOrders);
-
-function showOrder(id) {
-  const order = orders.find(item => item.id === id);
-  if (!order) return;
-
-  $("orderDetails").classList.remove("hidden");
-  $("orderDetails").innerHTML = `
-    <h3>Order ${escapeHtml(order.orderId || order.id)}</h3>
-    <p><b>Customer:</b> ${escapeHtml(order.customerName)}</p>
-    <p><b>Mobile:</b> ${escapeHtml(order.mobile)}</p>
-    <p><b>Address:</b> ${escapeHtml(order.address)}</p>
-    <p><b>Payment:</b> ${escapeHtml(order.paymentMethod)} /
-      ${escapeHtml(order.paymentStatus)}</p>
-    <p><b>Sender Number:</b> ${escapeHtml(order.senderNumber)}</p>
-    <p><b>Transaction ID:</b> ${escapeHtml(order.transactionId)}</p>
-    <p><b>Delivery Charge:</b> ${money(order.deliveryCharge)}</p>
-    <p><b>Platform Charge:</b> ${money(order.platformCharge)}</p>
-    <p><b>Discount:</b> ${money(order.discount)}</p>
-    <p><b>Total:</b> ${money(order.total)}</p>
-    <p><b>Status:</b> ${escapeHtml(order.status)}</p>
-    <p><b>Rider:</b> ${escapeHtml(order.riderName)}</p>
-    <p><b>Note:</b> ${escapeHtml(order.note)}</p>
-    <button class="secondary no-print" onclick="window.print()">Print</button>
+const modules=[
+  "Orders",
+  "Products",
+  "Inventory",
+  "Customers",
+  "Payments",
+  "Refunds",
+  "Reports",
+  "Expenses",
+  "Riders",
+  "Delivery Partners",
+  "Notifications",
+  "Offers/Coupons",
+  "Lucky Wheel",
+  "Lucky Draw",
+  "Reviews",
+  "Support",
+  "Staff",
+  "Settings"
+];
+
+const actions=[
+  "View",
+  "Create",
+  "Edit",
+  "Delete",
+  "Approve"
+];
+
+function staffPage(){
+
+  return `
+  <div class="page-title">
+    <div>
+      <h2>👨‍💼 Staff & Permissions</h2>
+      <small>Role Based Access Control</small>
+    </div>
+
+    <button class="btn" onclick="staffForm()">
+      ＋ Add Staff
+    </button>
+  </div>
+
+  <div class="alert info">
+    UI visibility is not sufficient for security.
+    Firebase Security Rules will also enforce these permissions.
+  </div>
+
+  ${simpleTable(
+    ["Name","Email","Role","Status"],
+    db.staff.map(s=>[
+      s.name,
+      s.email,
+      s.role,
+      badge(s.active?"Active":"Inactive")
+    ])
+  )}
+
+  <div class="panel" style="margin-top:18px">
+    <h3>Role Templates</h3>
+
+    ${roles.map(r=>`
+      <div class="stat-row">
+        <strong>${r}</strong>
+        <button class="btn small"
+          onclick="permissionForm('${r}')">
+          Configure
+        </button>
+      </div>
+    `).join("")}
+  </div>
   `;
 }
 
-$("printOrdersButton").addEventListener("click",() => window.print());
+function staffForm(){
 
-/* Dashboard */
-function updateDashboard() {
-  const delivered = orders.filter(o => o.status === "Delivered");
-  const pending = orders.filter(o =>
-    ["Pending","Confirmed","Processing","Packed","Rider Assigned",
-     "Picked Up","Out for Delivery"].includes(o.status)
-  );
-  const cancelled = orders.filter(o => o.status === "Cancelled");
+  openModal(
+    "Add Staff",
+    `
+    <div class="form-grid">
 
-  const sales = delivered.reduce((sum,o) =>
-    sum + Number(o.productTotal ?? o.total ?? 0),0);
+      <div class="form-group">
+        <label>Name</label>
+        <input id="stName">
+      </div>
 
-  const delivery = delivered.reduce((sum,o) =>
-    sum + Number(o.deliveryCharge || 0),0);
+      <div class="form-group">
+        <label>Email</label>
+        <input id="stEmail" type="email">
+      </div>
 
-  const platform = delivered.reduce((sum,o) =>
-    sum + Number(o.platformCharge || 0),0);
+      <div class="form-group">
+        <label>Role</label>
+        <select id="stRole">
+          ${roles.map(r=>`<option>${r}</option>`).join("")}
+        </select>
+      </div>
 
-  const expenseTotal = expenses.reduce((sum,e) =>
-    sum + Number(e.amount || 0),0);
+      <div class="form-group">
+        <label>Active</label>
+        <input id="stActive" type="checkbox" checked>
+      </div>
 
-  $("dSales").textContent = money(sales);
-  $("dOrders").textContent = orders.length;
-  $("dDelivered").textContent = delivered.length;
-  $("dPending").textContent = pending.length;
-  $("dCancelled").textContent = cancelled.length;
-  $("dProductSales").textContent = money(sales);
-  $("dDeliveryIncome").textContent = money(delivery);
-  $("dPlatformIncome").textContent = money(platform);
-  $("dExpenses").textContent = money(expenseTotal);
+    </div>
 
-  const gross = sales - expenseTotal;
-  $("dGross").textContent = money(gross);
+    <p style="font-size:12px;color:#78909C">
+      Firebase Authentication account creation will be connected
+      in the Firebase phase.
+    </p>
 
-  // Product Cost, refunds, delivery costs and other liabilities
-  // না থাকলে এটিকে প্রকৃত Net Profit বলা যাবে না।
-  $("dProfit").textContent = "৳—";
-
-  $("dLowStock").textContent = products.filter(p =>
-    Number(p.stock || 0) <= Number(p.lowStockThreshold ?? 5)
-  ).length;
-}
-
-/* Generic Firestore CRUD */
-function loadGenericModule(moduleId) {
-  if (genericListener) genericListener();
-  genericListener = null;
-
-  activeCollection = collectionFor(moduleId);
-  genericRecords = [];
-  genericEditingId = null;
-
-  const schema = SCHEMAS[activeCollection] || [];
-  $("genericHead").innerHTML =
-    "<th>ID</th>" +
-    schema.map(field => `<th>${escapeHtml(field[1])}</th>`).join("") +
-    "<th>Actions</th>";
-
-  if (!canView(moduleId)) {
-    $("genericRows").innerHTML =
-      `<tr><td>আপনার এই Module দেখার Permission নেই।</td></tr>`;
-    $("genericAdd").disabled = true;
-    return;
-  }
-
-  $("genericAdd").disabled = !canDo(moduleId,"create");
-
-  genericListener = onSnapshot(
-    collection(db,activeCollection),
-    snapshot => {
-      genericRecords = snapshot.docs.map(d => ({id:d.id,...d.data()}));
-      renderGeneric(moduleId,schema);
-    },
-    error => {
-      $("genericRows").innerHTML =
-        `<tr><td>Load Error: ${escapeHtml(error.message)}</td></tr>`;
-    }
+    <button class="btn" onclick="saveStaff()">Save Staff</button>
+    `
   );
 }
 
-function renderGeneric(moduleId,schema) {
-  const search = $("genericSearch").value.toLowerCase().trim();
-  const list = genericRecords.filter(record =>
-    JSON.stringify(record).toLowerCase().includes(search)
-  );
+function saveStaff(){
 
-  $("genericRows").innerHTML = list.map(record => `
-    <tr>
-      <td>${escapeHtml(record.id)}</td>
-      ${schema.map(([key]) =>
-        `<td>${escapeHtml(record[key])}</td>`
-      ).join("")}
-      <td class="actions">
-        ${canDo(moduleId,"edit") ?
-          `<button class="secondary" data-generic-edit="${escapeHtml(record.id)}">Edit</button>`:""}
-        ${canDo(moduleId,"delete") ?
-          `<button class="danger" data-generic-delete="${escapeHtml(record.id)}">Delete</button>`:""}
-      </td>
-    </tr>
-  `).join("") || `<tr><td colspan="${schema.length+2}">No records.</td></tr>`;
-
-  document.querySelectorAll("[data-generic-edit]").forEach(button =>
-    button.addEventListener("click",() =>
-      editGeneric(button.dataset.genericEdit,moduleId,schema)
-    )
-  );
-
-  document.querySelectorAll("[data-generic-delete]").forEach(button =>
-    button.addEventListener("click",() =>
-      deleteGeneric(button.dataset.genericDelete,moduleId)
-    )
-  );
-}
-
-function editGeneric(id,moduleId,schema) {
-  const record = genericRecords.find(item => item.id === id);
-  if (!record) return;
-
-  genericEditingId = id;
-  buildGenericFields(schema,record);
-  $("genericFormTitle").textContent = "Edit Record";
-  $("genericForm").classList.remove("hidden");
-}
-
-function buildGenericFields(schema,record={}) {
-  const root = $("genericFields");
-  root.innerHTML = "";
-
-  schema.forEach(([key,label,type]) => {
-    const wrapper = document.createElement("div");
-    const caption = document.createElement("label");
-    caption.textContent = label;
-    wrapper.appendChild(caption);
-
-    let input;
-
-    if (type.startsWith("select:")) {
-      input = document.createElement("select");
-      type.slice(7).split("|").forEach(option => {
-        const opt = document.createElement("option");
-        opt.value = option;
-        opt.textContent = option;
-        input.appendChild(opt);
-      });
-      input.value = record[key] ?? "";
-    } else {
-      input = document.createElement("input");
-      input.type = type === "boolean" ? "checkbox" : type;
-      if (type === "boolean") input.checked = record[key] === true;
-      else input.value = record[key] ?? "";
-    }
-
-    input.dataset.field = key;
-    wrapper.appendChild(input);
-    root.appendChild(wrapper);
-  });
-}
-
-$("genericAdd").addEventListener("click",() => {
-  if (!canDo(activeModule,"create")) return;
-  genericEditingId = null;
-  buildGenericFields(SCHEMAS[activeCollection] || {});
-  $("genericFormTitle").textContent = "Add Record";
-  $("genericForm").classList.remove("hidden");
-});
-
-$("genericCancel").addEventListener("click",() => {
-  $("genericForm").classList.add("hidden");
-});
-
-$("genericRefresh").addEventListener("click",() => {
-  loadGenericModule(activeModule);
-});
-
-$("genericSearch").addEventListener("input",() => {
-  renderGeneric(activeModule,SCHEMAS[activeCollection] || []);
-});
-
-$("genericSave").addEventListener("click",async () => {
-  $("genericError").textContent = "";
-
-  const schema = SCHEMAS[activeCollection] || [];
-  const data = {};
-
-  for (const [key,label,type] of schema) {
-    const input = document.querySelector(`[data-field="${key}"]`);
-    if (!input) continue;
-
-    if (type === "boolean") data[key] = input.checked;
-    else if (type === "number") data[key] = Number(input.value || 0);
-    else data[key] = input.value.trim();
-  }
-
-  try {
-    if (genericEditingId) {
-      if (!canDo(activeModule,"edit")) throw new Error("Edit Permission নেই");
-      await updateDoc(doc(db,activeCollection,genericEditingId),{
-        ...data,updatedAt:serverTimestamp(),updatedBy:currentUser.uid
-      });
-      await addAudit("Record Updated",activeCollection,genericEditingId);
-    } else {
-      if (!canDo(activeModule,"create")) throw new Error("Create Permission নেই");
-      const created = await addDoc(collection(db,activeCollection),{
-        ...data,createdAt:serverTimestamp(),createdBy:currentUser.uid
-      });
-      await addAudit("Record Created",activeCollection,created.id);
-    }
-    $("genericForm").classList.add("hidden");
-  } catch(error) {
-    $("genericError").textContent = error.message;
-  }
-});
-
-async function deleteGeneric(id,moduleId) {
-  if (!canDo(moduleId,"delete")) {
-    alert("Delete Permission নেই");
-    return;
-  }
-  if (!confirm("এই Record Delete করতে চান?")) return;
-
-  try {
-    await deleteDoc(doc(db,activeCollection,id));
-    await addAudit("Record Deleted",activeCollection,id);
-  } catch(error) {
-    alert(error.message);
-  }
-}
-
-/* Monthly Report */
-$("reportMonth").value = new Date().toISOString().slice(0,7);
-
-$("reportRefresh").addEventListener("click",buildMonthlyReport);
-$("printReport").addEventListener("click",() => window.print());
-
-function buildMonthlyReport() {
-  const month = $("reportMonth").value;
-  if (!month) return;
-
-  const inMonth = dateValue => {
-    if (!dateValue) return false;
-    const date = dateValue.toDate ?
-      dateValue.toDate() : new Date(dateValue);
-    return !Number.isNaN(date.getTime()) &&
-      date.toISOString().slice(0,7) === month;
+  const s={
+    id:uid("STAFF"),
+    name:document.getElementById("stName").value,
+    email:document.getElementById("stEmail").value,
+    role:document.getElementById("stRole").value,
+    active:document.getElementById("stActive").checked,
+    permissions:{}
   };
 
-  const monthlyOrders = orders.filter(o =>
-    inMonth(o.createdAt || o.orderDate)
+  db.staff.push(s);
+  saveDB();
+
+  logAction("Added Staff","Staff",s.id);
+
+  closeModal();
+  showPage("staff");
+}
+
+function permissionForm(role){
+
+  const saved=db.staff.find(s=>s.role===role)?.permissions||{};
+
+  openModal(
+    "Permissions — "+role,
+    `
+    <div style="overflow:auto">
+
+    <table style="min-width:700px">
+      <thead>
+        <tr>
+          <th>Module</th>
+          ${actions.map(a=>`<th>${a}</th>`).join("")}
+        </tr>
+      </thead>
+
+      <tbody>
+
+      ${modules.map(m=>`
+        <tr>
+          <td><strong>${m}</strong></td>
+
+          ${actions.map(a=>{
+            const key=m+"_"+a;
+            const checked=role==="Super Admin"
+              ? true
+              : Boolean(saved[key]);
+
+            return `
+              <td>
+                <input
+                  type="checkbox"
+                  class="perm"
+                  data-key="${esc(key)}"
+                  ${checked?"checked":""}
+                  ${role==="Super Admin"?"disabled":""}>
+              </td>
+            `;
+          }).join("")}
+
+        </tr>
+      `).join("")}
+
+      </tbody>
+    </table>
+
+    </div>
+
+    <button class="btn" style="margin-top:15px"
+      onclick="savePermissions('${esc(role)}')">
+      Save Permissions
+    </button>
+    `
+  );
+}
+
+function savePermissions(role){
+
+  if(role==="Super Admin"){
+    closeModal();
+    return;
+  }
+
+  const permissions={};
+
+  document.querySelectorAll(".perm").forEach(x=>{
+    permissions[x.dataset.key]=x.checked;
+  });
+
+  db.staff
+    .filter(s=>s.role===role)
+    .forEach(s=>{
+      s.permissions=permissions;
+    });
+
+  saveDB();
+
+  logAction(
+    "Changed Permissions",
+    "Staff",
+    role
   );
 
-  const monthlyExpenses = expenses.filter(e => inMonth(e.date));
+  closeModal();
+  showPage("staff");
+}
 
-  const delivered = monthlyOrders.filter(o => o.status === "Delivered");
-  const cancelled = monthlyOrders.filter(o => o.status === "Cancelled");
 
-  const sales = delivered.reduce((s,o) =>
-    s + Number(o.productTotal ?? o.total ?? 0),0);
-  const delivery = delivered.reduce((s,o) =>
-    s + Number(o.deliveryCharge || 0),0);
-  const platform = delivered.reduce((s,o) =>
-    s + Number(o.platformCharge || 0),0);
-  const discounts = delivered.reduce((s,o) =>
-    s + Number(o.discount || 0),0);
-  const expenseTotal = monthlyExpenses.reduce((s,e) =>
-    s + Number(e.amount || 0),0);
+/* =========================================================
+   AI
+========================================================= */
 
-  $("reportContent").innerHTML = `
-    <h2 style="text-align:center">NATURE BITE</h2>
-    <h3 style="text-align:center">Monthly Business Report</h3>
-    <h4 style="text-align:center">${escapeHtml(month)}</h4>
-    <hr>
-    <h3>SALES SUMMARY</h3>
-    <p>Total Product Sales: ${money(sales)}</p>
-    <p>Total Orders: ${monthlyOrders.length}</p>
-    <p>Delivered Orders: ${delivered.length}</p>
-    <p>Cancelled Orders: ${cancelled.length}</p>
-    <p>Refunds: Not calculated</p>
-    <hr>
-    <h3>INCOME</h3>
-    <p>Product Sales: ${money(sales)}</p>
-    <p>Delivery Income: ${money(delivery)}</p>
-    <p>Platform Income: ${money(platform)}</p>
-    <p>Discount: ${money(discounts)}</p>
-    <hr>
-    <h3>EXPENSES</h3>
-    ${monthlyExpenses.map(e =>
-      `<p>${escapeHtml(e.category)}: ${money(e.amount)}</p>`
-    ).join("")}
-    <p><b>Total Recorded Expenses: ${money(expenseTotal)}</b></p>
-    <hr>
-    <h3>FINANCIAL SUMMARY</h3>
-    <p>Total Recorded Income: ${money(sales+delivery+platform)}</p>
-    <p>Total Recorded Expenses: ${money(expenseTotal)}</p>
-    <p>Gross Profit: Not fully calculated</p>
-    <p>Net Profit/Loss: Not verified</p>
-    <hr>
-    <p style="text-align:center">Generated by Nature Bite Admin</p>
-    <p class="muted">এই রিপোর্টে Product Cost, Refund ও অন্যান্য
-    অসম্পূর্ণ তথ্য অন্তর্ভুক্ত নয়। এটি চূড়ান্ত আর্থিক বিবরণী নয়।</p>
+function aiPage(){
+
+  const f=financials();
+
+  const topProducts={};
+
+  db.orders.forEach(o=>{
+    o.products.forEach(p=>{
+      topProducts[p.name]=(topProducts[p.name]||0)+Number(p.qty);
+    });
+  });
+
+  const best=Object.entries(topProducts)
+    .sort((a,b)=>b[1]-a[1])
+    .slice(0,5);
+
+  return `
+  <div class="page-title">
+    <h2>🤖 AI Assistant</h2>
+  </div>
+
+  <div class="panel">
+
+    <h3>Business Analysis</h3>
+
+    <div class="alert info">
+      Total Sales: ${money(f.sales)}
+    </div>
+
+    <div class="alert info">
+      Net Profit/Loss: ${money(f.net)}
+    </div>
+
+    <h3>Product Performance</h3>
+
+    ${best.map(x=>`
+      <div class="stat-row">
+        <span>${esc(x[0])}</span>
+        <strong>${x[1]} units</strong>
+      </div>
+    `).join("") || "No sales data."}
+
+    <h3 style="margin-top:20px">Recommendations</h3>
+
+    <div class="alert warning">
+      AI recommendations will require Admin approval before
+      financial/order actions.
+    </div>
+
+    <div class="alert success">
+      AI is advisory only in this system.
+    </div>
+
+  </div>
   `;
 }
 
-/* Settings */
-$("saveSettings").addEventListener("click",async () => {
-  $("settingsError").textContent = "";
-  if (!canDo("settings","edit")) {
-    $("settingsError").textContent = "Settings Edit Permission নেই।";
-    return;
-  }
 
-  try {
-    await updateDoc(doc(db,"settings","business"),{
-      businessName:$("businessName").value.trim(),
-      bkashNumber:$("bkashNumber").value.trim(),
-      nagadNumber:$("nagadNumber").value.trim(),
-      platformCharge:Number($("platformCharge").value || 0),
-      deliveryCharge:Number($("deliveryCharge").value || 0),
-      updatedAt:serverTimestamp(),
-      updatedBy:currentUser.uid
-    });
-    $("settingsError").textContent = "Settings Saved";
-    $("settingsError").className = "success";
-    await addAudit("Business Settings Updated","settings","business");
-  } catch(error) {
-    $("settingsError").textContent = error.message;
-  }
-});
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
 
-/* Audit helper */
-async function addAudit(action,module,targetId) {
-  /*
-    এই client-side log শুধু প্রাথমিক সুবিধা।
-    Production audit log trusted Cloud Function থেকে
-    তৈরি করতে হবে, যাতে Staff তা পরিবর্তন করতে না পারে।
-  */
-  try {
-    await addDoc(collection(db,"auditLogs"),{
-      userId:currentUser.uid,
-      role:currentRole,
-      action,
-      module,
-      targetId,
-      result:"success",
-      time:serverTimestamp()
-    });
-  } catch(error) {
-    console.error("Audit write failed",error);
-  }
+function notificationsPage(){
+
+  return `
+  <div class="page-title">
+    <h2>🔔 Notification Center</h2>
+    <button class="btn secondary"
+      onclick="markNotificationsRead()">
+      Mark All Read
+    </button>
+  </div>
+
+  ${db.notifications.map(n=>`
+    <div class="panel" style="margin-bottom:10px">
+      <strong>${esc(n.title)}</strong>
+      <p>${esc(n.message)}</p>
+      <small>${new Date(n.date).toLocaleString()}</small>
+      ${n.read?badge("Read"):badge("Pending")}
+    </div>
+  `).join("") || `
+    <div class="panel">No notifications.</div>
+  `}
+  `;
 }
+
+function markNotificationsRead(){
+
+  db.notifications.forEach(n=>n.read=true);
+  saveDB();
+
+  logAction("Marked Notifications Read","Notifications","ALL");
+
+  showPage("notifications");
+}
+
+
+/* =========================================================
+   WEBSITE / APP CONTENT
+========================================================= */
+
+function websitePage(){
+
+  return `
+  <div class="page-title">
+    <h2>🌐 Website Content</h2>
+  </div>
+
+  <div class="panel">
+
+    <div class="form-grid">
+
+      <div class="form-group full">
+        <label>Homepage Hero Title</label>
+        <input id="webHero"
+          value="${esc(db.website.hero||"Healthy food for a healthier life")}">
+      </div>
+
+      <div class="form-group full">
+        <label>Hero Description</label>
+        <textarea id="webDesc">${esc(db.website.desc||"")}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label>About Us</label>
+        <textarea id="webAbout">${esc(db.website.about||"")}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Contact</label>
+        <textarea id="webContact">${esc(db.website.contact||"")}</textarea>
+      </div>
+
+      <div class="form-group full">
+        <label>FAQ</label>
+        <textarea id="webFaq">${esc(db.website.faq||"")}</textarea>
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveWebsiteContent()">
+      Save Website Content
+    </button>
+
+  </div>
+  `;
+}
+
+function saveWebsiteContent(){
+
+  db.website={
+    hero:document.getElementById("webHero").value,
+    desc:document.getElementById("webDesc").value,
+    about:document.getElementById("webAbout").value,
+    contact:document.getElementById("webContact").value,
+    faq:document.getElementById("webFaq").value
+  };
+
+  saveDB();
+  logAction("Updated Website Content","Website","CONTENT");
+
+  alert("Website content saved.");
+}
+
+function appContentPage(){
+
+  return `
+  <div class="page-title">
+    <h2>📱 App Content</h2>
+  </div>
+
+  <div class="panel">
+
+    <div class="form-grid">
+
+      <div class="form-group full">
+        <label>App Home Message</label>
+        <textarea id="appHome">${esc(db.appcontent.home||"")}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label>App Version</label>
+        <input id="appVersion"
+          value="${esc(db.appcontent.version||"1.0.0")}">
+      </div>
+
+      <div class="form-group">
+        <label>
+          <input id="appMaintenance"
+            type="checkbox"
+            ${db.appcontent.maintenance?"checked":""}>
+          Maintenance Mode
+        </label>
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveAppContent()">
+      Save App Content
+    </button>
+
+  </div>
+  `;
+}
+
+function saveAppContent(){
+
+  db.appcontent={
+    home:document.getElementById("appHome").value,
+    version:document.getElementById("appVersion").value,
+    maintenance:document.getElementById("appMaintenance").checked
+  };
+
+  saveDB();
+  logAction("Updated App Content","App Content","CONTENT");
+
+  alert("App content saved.");
+}
+
+
+/* =========================================================
+   DYNAMIC FEATURES
+========================================================= */
+
+function featuresPage(){
+
+  return `
+  <div class="page-title">
+    <div>
+      <h2>🧩 Feature Management</h2>
+      <small>Future Customer/App feature configuration</small>
+    </div>
+
+    <button class="btn" onclick="featureForm()">＋ Add Feature</button>
+  </div>
+
+  ${simpleTable(
+    ["Name","Type","Position","Visibility","Permission","Version","Status","Action"],
+    db.features.map(f=>[
+      f.name,
+      f.type,
+      f.position,
+      f.visibility,
+      f.permission,
+      f.version,
+      badge(f.active?"Active":"Inactive"),
+      `<button class="btn small"
+        onclick="featureForm('${f.id}')">Edit</button>`
+    ])
+  )}
+  `;
+}
+
+function featureForm(id=null){
+
+  const f=id
+    ? db.features.find(x=>x.id===id)
+    : {
+      name:"",
+      type:"Card",
+      position:"Home",
+      visibility:"Customer",
+      permission:"Public",
+      version:"1.0",
+      active:true
+    };
+
+  openModal(
+    id?"Edit Feature":"Create Feature",
+    `
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Feature Name</label>
+        <input id="ftName" value="${esc(f.name)}">
+      </div>
+
+      <div class="form-group">
+        <label>Icon</label>
+        <input id="ftIcon" value="${esc(f.icon||"🧩")}">
+      </div>
+
+      <div class="form-group">
+        <label>Feature Type</label>
+        <select id="ftType">
+          <option>Card</option>
+          <option>Banner</option>
+          <option>Section</option>
+          <option>Button</option>
+          <option>Page</option>
+          <option>Widget</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Where</label>
+        <input id="ftPosition" value="${esc(f.position)}">
+      </div>
+
+      <div class="form-group">
+        <label>Visibility</label>
+        <select id="ftVisibility">
+          <option>Customer</option>
+          <option>Rider</option>
+          <option>Staff</option>
+          <option>Customer + Rider</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Permission</label>
+        <input id="ftPermission" value="${esc(f.permission)}">
+      </div>
+
+      <div class="form-group">
+        <label>Version</label>
+        <input id="ftVersion" value="${esc(f.version)}">
+      </div>
+
+      <div class="form-group">
+        <label>
+          <input id="ftActive" type="checkbox" ${f.active?"checked":""}>
+          Active
+        </label>
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveFeature('${id||""}')">
+      Save Feature
+    </button>
+    `
+  );
+}
+
+function saveFeature(id){
+
+  const f={
+    id:id||uid("FEATURE"),
+    name:document.getElementById("ftName").value,
+    icon:document.getElementById("ftIcon").value,
+    type:document.getElementById("ftType").value,
+    position:document.getElementById("ftPosition").value,
+    visibility:document.getElementById("ftVisibility").value,
+    permission:document.getElementById("ftPermission").value,
+    version:document.getElementById("ftVersion").value,
+    active:document.getElementById("ftActive").checked
+  };
+
+  if(id){
+    db.features[db.features.findIndex(x=>x.id===id)]=f;
+  }else{
+    db.features.push(f);
+  }
+
+  saveDB();
+  logAction("Updated Feature","Feature Management",f.id);
+
+  closeModal();
+  showPage("features");
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+function settingsPage(){
+
+  const s=db.settings;
+
+  return `
+  <div class="page-title">
+    <h2>⚙️ Settings</h2>
+  </div>
+
+  <div class="panel">
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Business Name</label>
+        <input id="setName" value="${esc(s.businessName)}">
+      </div>
+
+      <div class="form-group">
+        <label>Logo URL</label>
+        <input id="setLogo" value="${esc(s.logo)}">
+      </div>
+
+      <div class="form-group">
+        <label>Contact</label>
+        <input id="setContact" value="${esc(s.contact)}">
+      </div>
+
+      <div class="form-group">
+        <label>bKash Number</label>
+        <input id="setBkash" value="${esc(s.bkash)}">
+      </div>
+
+      <div class="form-group">
+        <label>Nagad Number</label>
+        <input id="setNagad" value="${esc(s.nagad)}">
+      </div>
+
+      <div class="form-group">
+        <label>Delivery Charge</label>
+        <input id="setDelivery" type="number"
+          value="${s.deliveryCharge}">
+      </div>
+
+      <div class="form-group">
+        <label>Free Delivery Minimum</label>
+        <input id="setFree" type="number"
+          value="${s.freeDeliveryMinimum}">
+      </div>
+
+      <div class="form-group">
+        <label>Platform Charge</label>
+        <input id="setPlatform" type="number"
+          value="${s.platformCharge}">
+      </div>
+
+      <div class="form-group">
+        <label>Minimum Order</label>
+        <input id="setMinimum" type="number"
+          value="${s.minimumOrder}">
+      </div>
+
+      <div class="form-group full">
+        <label>Business Address</label>
+        <textarea id="setAddress">${esc(s.address)}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <input id="setMaintenance"
+            type="checkbox"
+            ${s.maintenance?"checked":""}>
+          Maintenance Mode
+        </label>
+      </div>
+
+    </div>
+
+    <button class="btn" onclick="saveSettings()">
+      Save Settings
+    </button>
+
+  </div>
+  `;
+}
+
+function saveSettings(){
+
+  db.settings={
+    businessName:document.getElementById("setName").value,
+    logo:document.getElementById("setLogo").value,
+    contact:document.getElementById("setContact").value,
+    bkash:document.getElementById("setBkash").value,
+    nagad:document.getElementById("setNagad").value,
+    deliveryCharge:Number(document.getElementById("setDelivery").value||0),
+    freeDeliveryMinimum:Number(document.getElementById("setFree").value||0),
+    platformCharge:Number(document.getElementById("setPlatform").value||0),
+    minimumOrder:Number(document.getElementById("setMinimum").value||0),
+    address:document.getElementById("setAddress").value,
+    maintenance:document.getElementById("setMaintenance").checked
+  };
+
+  saveDB();
+
+  logAction("Updated Business Settings","Settings","GLOBAL");
+
+  alert("Settings saved.");
+}
+
+
+/* =========================================================
+   AUDIT
+========================================================= */
+
+function auditPage(){
+
+  return `
+  <div class="page-title">
+    <h2>📜 Audit Logs</h2>
+  </div>
+
+  ${simpleTable(
+    ["User","Role","Action","Module","Target ID","Time","Result"],
+    db.audit.map(a=>[
+      a.user,
+      a.role,
+      a.action,
+      a.module,
+      a.targetId,
+      new Date(a.time).toLocaleString(),
+      badge(a.result)
+    ])
+  )}
+  `;
+}
+
+
+/* =========================================================
+   GENERIC HELPERS
+========================================================= */
+
+function simpleTable(headers,rows){
+
+  return `
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          ${headers.map(h=>`<th>${h}</th>`).join("")}
+        </tr>
+      </thead>
+
+      <tbody>
+
+        ${rows.length
+          ? rows.map(r=>`
+              <tr>
+                ${r.map(c=>`<td>${c}</td>`).join("")}
+              </tr>
+            `).join("")
+          : `<tr>
+              <td colspan="${headers.length}">
+                No records yet.
+              </td>
+             </tr>`
+        }
+
+      </tbody>
+    </table>
+  </div>
+  `;
+}
+
+function openModal(title,body){
+
+  document.getElementById("modalTitle").textContent=title;
+  document.getElementById("modalBody").innerHTML=body;
+  document.getElementById("modal").classList.add("show");
+}
+
+function closeModal(){
+  document.getElementById("modal").classList.remove("show");
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+init();
+
 </script>
 </body>
 </html>
