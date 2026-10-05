@@ -1,1 +1,7876 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
+<title>Nature bite — Production Admin Panel</title>
+
+<style>
+:root{
+ --g:#2E7D32;
+ --s:#A5C18E;
+ --c:#F5F2E8;
+ --b:#5D4037;
+ --line:#dfe6dc;
+ --danger:#b42318;
+ --muted:#607D8B
+}
+
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;
+ background:#f7f9f5;
+ color:#263238
+}
+
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+
+.login{
+ min-height:100vh;
+ display:grid;
+ place-items:center;
+ background:linear-gradient(135deg,var(--c),#e9f1e5)
+}
+
+.loginbox{
+ width:min(420px,92vw);
+ background:#fff;
+ border:1px solid var(--line);
+ border-radius:20px;
+ padding:26px;
+ box-shadow:0 12px 40px #0001
+}
+
+.brand{
+ font-size:26px;
+ font-weight:900;
+ color:var(--g)
+}
+
+.muted{color:var(--muted)}
+.app{display:none}
+
+.side{
+ position:fixed;
+ inset:0 auto 0 0;
+ width:245px;
+ background:#183d1b;
+ color:#fff;
+ overflow:auto;
+ padding:16px
+}
+
+.side h2{margin:0 0 16px}
+
+.nav button{
+ display:block;
+ width:100%;
+ border:0;
+ background:transparent;
+ color:#eaf4e8;
+ text-align:left;
+ padding:10px 12px;
+ border-radius:9px;
+ margin:2px 0
+}
+
+.nav button:hover,
+.nav button.active{
+ background:#ffffff18
+}
+
+.main{margin-left:245px}
+
+.top{
+ position:sticky;
+ top:0;
+ z-index:4;
+ background:#fff;
+ border-bottom:1px solid var(--line);
+ padding:12px 18px;
+ display:flex;
+ align-items:center;
+ gap:10px
+}
+
+.top strong{flex:1}
+
+.content{
+ padding:18px;
+ max-width:1500px;
+ margin:auto
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:12px
+}
+
+.grid2{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:14px
+}
+
+.grid3{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:12px
+}
+
+.card,.panel{
+ background:#fff;
+ border:1px solid var(--line);
+ border-radius:14px;
+ padding:16px
+}
+
+.metric b{
+ font-size:25px;
+ display:block;
+ margin-top:6px
+}
+
+.pagehead{
+ display:flex;
+ gap:12px;
+ align-items:center;
+ justify-content:space-between;
+ margin-bottom:14px
+}
+
+.pagehead h2{margin:0}
+
+.btn{
+ border:0;
+ border-radius:9px;
+ background:var(--g);
+ color:#fff;
+ padding:9px 13px;
+ font-weight:700
+}
+
+.btn.gray{background:#607d8b}
+.btn.red{background:var(--danger)}
+
+.btn.light{
+ background:#eaf3e7;
+ color:#245c28
+}
+
+.btn.small{
+ padding:6px 9px;
+ font-size:13px
+}
+
+.formgrid{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px
+}
+
+.field label{
+ display:block;
+ font-weight:700;
+ font-size:13px;
+ margin-bottom:5px
+}
+
+.field input,
+.field select,
+.field textarea,
+.search{
+ width:100%;
+ padding:9px;
+ border:1px solid #cfd8cf;
+ border-radius:8px;
+ background:#fff
+}
+
+.field textarea{min-height:90px}
+
+.full{grid-column:1/-1}
+
+.actions{
+ display:flex;
+ gap:6px;
+ flex-wrap:wrap
+}
+
+.tablewrap{overflow:auto}
+
+.table{
+ width:100%;
+ border-collapse:collapse
+}
+
+.table th,
+.table td{
+ padding:9px;
+ border-bottom:1px solid #e7ece5;
+ text-align:left;
+ vertical-align:top;
+ font-size:13px
+}
+
+.table th{background:#f4f7f2}
+
+.badge{
+ display:inline-block;
+ border-radius:99px;
+ padding:4px 8px;
+ background:#e8f1e8;
+ color:#25602a;
+ font-size:12px;
+ font-weight:800
+}
+
+.badge.red{
+ background:#fee4e2;
+ color:#9b1c13
+}
+
+.badge.gray{
+ background:#edf1f2;
+ color:#455a64
+}
+
+.tabs{
+ display:flex;
+ gap:6px;
+ flex-wrap:wrap;
+ margin-bottom:12px
+}
+
+.tabs button{
+ border:1px solid var(--line);
+ background:#fff;
+ border-radius:8px;
+ padding:7px 10px
+}
+
+.tabs button.active{
+ background:var(--g);
+ color:#fff
+}
+
+.switch{
+ display:flex;
+ gap:8px;
+ align-items:center;
+ padding:9px 0
+}
+
+.alert{
+ padding:10px;
+ border-radius:9px;
+ background:#eef6ed;
+ margin:10px 0
+}
+
+.modal{
+ position:fixed;
+ inset:0;
+ background:#0008;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:15px;
+ z-index:20
+}
+
+.modalbox{
+ background:#fff;
+ width:min(850px,96vw);
+ max-height:92vh;
+ overflow:auto;
+ border-radius:16px;
+ padding:18px
+}
+
+.loginpass{
+ display:flex;
+ gap:6px;
+ align-items:center
+}
+
+.loginpass input{flex:1}
+
+.loginpass button{
+ border:1px solid #cfd8cf;
+ background:#fff;
+ border-radius:8px;
+ padding:9px 11px
+}
+
+.remember{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ margin-top:10px;
+ font-size:13px
+}
+
+.forgot{
+ border:0;
+ background:none;
+ color:var(--g);
+ font-weight:700;
+ padding:8px 0;
+ text-decoration:underline
+}
+
+.loginloading{
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ gap:8px
+}
+
+.spinner{
+ width:16px;
+ height:16px;
+ border:2px solid #ffffff66;
+ border-top-color:#fff;
+ border-radius:50%;
+ animation:spin .8s linear infinite
+}
+
+@keyframes spin{
+ to{transform:rotate(360deg)}
+}
+
+.toast{
+ position:fixed;
+ right:18px;
+ bottom:18px;
+ background:#183d1b;
+ color:#fff;
+ padding:11px 14px;
+ border-radius:10px;
+ z-index:30
+}
+
+.label{
+ width:3in;
+ min-height:5in;
+ border:1px solid #222;
+ background:#fff;
+ padding:.12in;
+ font-size:10px;
+ color:#111
+}
+
+.label h2{
+ font-size:16px;
+ margin:0 0 5px
+}
+
+.label .row{margin:3px 0}
+
+.label .line{
+ border-top:1px solid #aaa;
+ margin:5px 0
+}
+
+.printOnly{display:none}
+
+@media(max-width:900px){
+
+ .side{
+  position:static;
+  width:auto;
+  max-height:260px
+ }
+
+ .main{margin:0}
+
+ .grid,
+ .grid2,
+ .grid3,
+ .formgrid{
+  grid-template-columns:1fr
+ }
+
+ .top{position:static}
+}
+
+@media print{
+
+ body{background:#fff}
+
+ .side,
+ .top,
+ .content>.no-print,
+ .modal,
+ .toast{
+  display:none!important
+ }
+
+ .main{margin:0}
+
+ .printOnly{display:block}
+}
+</style>
+
+<script type="module">
+
+import {
+ initializeApp
+} from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js';
+
+import {
+ getAuth,
+ onAuthStateChanged,
+ signInWithEmailAndPassword,
+ signOut,
+ sendPasswordResetEmail,
+ setPersistence,
+ browserLocalPersistence,
+ browserSessionPersistence
+} from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js';
+
+import {
+ getFirestore,
+ collection,
+ doc,
+ getDoc,
+ getDocs,
+ setDoc,
+ addDoc,
+ updateDoc,
+ deleteDoc,
+ query,
+ orderBy,
+ onSnapshot,
+ serverTimestamp,
+ limit
+} from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js';
+
+
+/* =========================================================
+   FIREBASE CONFIG
+   Replace these values with your Firebase Web App config
+========================================================= */
+
+const firebaseConfig={
+
+ apiKey: "AIzaSyAHkf-TowBU4Lw-PJCxMKzdTbknRLLpPds",
+
+ authDomain:'nature-bite.firebaseapp.com',
+
+ projectId:'nature-bite',
+
+ storageBucket:'nature-bite.firebasestorage.app',
+
+ messagingSenderId:'651000838958',
+
+ appId:'1:651000838958:web:1d59655ce567cd873758bf'
+
+};
+
+
+const app=initializeApp(firebaseConfig);
+
+const auth=getAuth(app);
+
+const db=getFirestore(app);
+
+
+window.FB={
+ app,
+ auth,
+ db,
+ collection,
+ doc,
+ getDoc,
+ getDocs,
+ setDoc,
+ addDoc,
+ updateDoc,
+ deleteDoc,
+ query,
+ orderBy,
+ onSnapshot,
+ serverTimestamp,
+ limit,
+ signInWithEmailAndPassword,
+ signOut,
+ sendPasswordResetEmail,
+ setPersistence,
+ browserLocalPersistence,
+ browserSessionPersistence
+};
+
+window.firebaseReady=true;
+
+window.dispatchEvent(
+ new Event('firebase-ready')
+);
+
+</script>
+</head>
+
+<body>
+
+
+<!-- =====================================================
+     LOGIN
+===================================================== -->
+
+<div id="login" class="login">
+
+ <div class="loginbox">
+
+  <div class="brand">
+   🌿 Nature bite
+  </div>
+
+  <p class="muted">
+   Main Admin / Staff secure panel
+  </p>
+
+
+  <div class="field">
+
+   <label>Email</label>
+
+   <input
+    id="email"
+    type="email"
+    autocomplete="username"
+    inputmode="email"
+   >
+
+  </div>
+
+
+  <div
+   class="field"
+   style="margin-top:10px"
+  >
+
+   <label>Password</label>
+
+   <div class="loginpass">
+
+    <input
+     id="password"
+     type="password"
+     autocomplete="current-password"
+    >
+
+    <button
+     id="togglePassword"
+     type="button"
+     aria-label="Show password"
+    >
+     Show
+    </button>
+
+   </div>
+
+  </div>
+
+
+  <label class="remember">
+
+   <input
+    id="rememberLogin"
+    type="checkbox"
+    checked
+   >
+
+   এই ডিভাইসে Login মনে রাখুন
+
+  </label>
+
+
+  <button
+   id="forgotBtn"
+   class="forgot"
+   type="button"
+  >
+   Forgot Password?
+  </button>
+
+
+  <button
+   id="loginBtn"
+   class="btn"
+   type="button"
+   style="width:100%;margin-top:4px"
+  >
+   Login
+  </button>
+
+
+  <div
+   id="loginMsg"
+   class="alert"
+   style="display:none"
+  ></div>
+
+ </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     APPLICATION
+===================================================== -->
+
+<div id="app" class="app">
+
+ <aside class="side">
+
+  <h2>
+   🌿 Nature bite
+  </h2>
+
+  <div
+   id="userMini"
+   class="muted"
+   style="color:#d9ead5;margin-bottom:12px"
+  ></div>
+
+  <div
+   id="nav"
+   class="nav"
+  ></div>
+
+ </aside>
+
+
+ <main class="main">
+
+  <header class="top">
+
+   <strong id="title">
+    Dashboard
+   </strong>
+
+   <span
+    id="sync"
+    class="badge gray"
+   >
+    Connecting…
+   </span>
+
+   <button
+    class="btn gray small"
+    id="logout"
+   >
+    Logout
+   </button>
+
+  </header>
+
+
+  <section
+   id="content"
+   class="content"
+  ></section>
+
+ </main>
+
+</div>
+
+
+
+<!-- =====================================================
+     MODAL
+===================================================== -->
+
+<div
+ id="modal"
+ class="modal"
+>
+
+ <div class="modalbox">
+
+  <div class="pagehead">
+
+   <h3 id="modalTitle">
+    Form
+   </h3>
+
+   <button
+    class="btn gray small"
+    onclick="closeModal()"
+   >
+    Close
+   </button>
+
+  </div>
+
+  <div id="modalBody"></div>
+
+ </div>
+
+</div>
+
+
+<div
+ id="toast"
+ class="toast"
+ style="display:none"
+></div>
+
+
+
+<script type="module">
+
+const $=id=>document.getElementById(id);
+
+const esc=x=>
+ String(x??'')
+ .replace(
+  /[&<>"']/g,
+  m=>({
+   '&':'&amp;',
+   '<':'&lt;',
+   '>':'&gt;',
+   '"':'&quot;',
+   "'":'&#39;'
+  }[m])
+ );
+
+const money=n=>
+ '৳'+Number(n||0)
+ .toLocaleString(
+  'en-BD',
+  {maximumFractionDigits:2}
+ );
+
+const uid=p=>
+ p+
+ Date.now().toString(36)+
+ Math.random().toString(36).slice(2,7);
+
+const toast=x=>{
+ const t=$('toast');
+
+ t.textContent=x;
+
+ t.style.display='block';
+
+ setTimeout(
+  ()=>t.style.display='none',
+  2200
+ );
+};
+
+
+let currentUser=null;
+
+let userProfile=null;
+
+let activePage='dashboard';
+
+let unsub=[];
+
+
+/* =====================================================
+   LOGIN SECURITY STATE
+===================================================== */
+
+let loginFails=
+ Number(
+  sessionStorage.getItem('nb_login_fails')||0
+ );
+
+let loginLockUntil=
+ Number(
+  sessionStorage.getItem('nb_login_lock_until')||0
+ );
+
+let loginTimer=null;
+
+
+
+/* =====================================================
+   MODULES
+===================================================== */
+
+const modules={
+
+ dashboard:'Dashboard',
+
+ orders:'Orders',
+
+ products:'Products',
+
+ inventory:'Inventory',
+
+ categories:'Categories',
+
+ customers:'Customers',
+
+ riders:'Riders',
+
+ partners:'Delivery Partners',
+
+ payments:'Payments',
+
+ refunds:'Refunds',
+
+ cancellations:'Cancellations',
+
+ offers:'Offers & Coupons',
+
+ lucky:'Lucky Wheel / Draw',
+
+ reviews:'Reviews',
+
+ support:'Support Tickets',
+
+ finance:'Finance & Expenses',
+
+ analytics:'Business Analytics',
+
+ chalan:'Chalan',
+
+ staff:'Staff & Permissions',
+
+ notifications:'Notifications',
+
+ content:'Customer Panel Settings',
+
+ features:'Feature Management',
+
+ audit:'Audit Logs',
+
+ reports:'Monthly Reports',
+
+ settings:'System Settings'
+
+};
+
+
+const allPermissions=[
+
+ 'dashboard',
+ 'orders',
+ 'products',
+ 'inventory',
+ 'categories',
+ 'customers',
+ 'riders',
+ 'partners',
+ 'payments',
+ 'refunds',
+ 'cancellations',
+ 'offers',
+ 'lucky',
+ 'reviews',
+ 'support',
+ 'finance',
+ 'analytics',
+ 'chalan',
+ 'staff',
+ 'notifications',
+ 'content',
+ 'features',
+ 'audit',
+ 'reports',
+ 'settings'
+
+];
+
+
+const statuses=[
+
+ 'Pending',
+ 'Confirmed',
+ 'Preparing',
+ 'Ready',
+ 'Rider Assigned',
+ 'Picked Up',
+ 'On the Way',
+ 'Delivered',
+ 'Delivery Confirmed',
+ 'Cancelled'
+
+];
+
+
+const deliveryLevels=[
+
+ 'Level 1',
+ 'Level 2',
+ 'Level 3'
+
+];
+
+
+
+/* =====================================================
+   DEFAULT SETTINGS
+===================================================== */
+
+const defaultSettings={
+
+ businessName:'Nature bite',
+
+ contact:'',
+
+ address:'Chattogram, Bangladesh',
+
+ logo:'🌿',
+
+ deliveryCharge:60,
+
+ freeDeliveryMinimum:1000,
+
+ platformCharge:10,
+
+ minimumOrder:100,
+
+ deliveryAdvance:true,
+
+ platformChargeEnabled:true,
+
+ fullPaymentEnabled:true,
+
+ paymentMethods:{
+  bkash:true,
+  nagad:true,
+  cod:true
+ },
+
+ bkash:'',
+
+ nagad:'',
+
+ maintenance:false,
+
+ label:{
+  showQR:true,
+  showBarcode:true
+ },
+
+ customer:{
+  showWishlist:true,
+  showLuckyWheel:true,
+  showLuckyDraw:true,
+  showReviews:true,
+  showOffers:true
+ }
+
+};
+
+
+
+/* =====================================================
+   ROLES
+===================================================== */
+
+const roles={
+
+ SuperAdmin:'*',
+
+ Admin:allPermissions,
+
+ Manager:[
+  'dashboard',
+  'orders',
+  'products',
+  'inventory',
+  'customers',
+  'riders',
+  'partners',
+  'payments',
+  'refunds',
+  'offers',
+  'lucky',
+  'reviews',
+  'support',
+  'reports',
+  'analytics',
+  'chalan',
+  'notifications'
+ ],
+
+ Staff:[
+  'dashboard',
+  'orders',
+  'customers',
+  'payments',
+  'support',
+  'notifications'
+ ],
+
+ Rider:[
+  'dashboard',
+  'orders'
+ ]
+
+};
+
+
+
+function has(p){
+
+ return(
+  userProfile?.role==='SuperAdmin' ||
+  roles[userProfile?.role]==='*' ||
+  (roles[userProfile?.role]||[]).includes(p)
+ );
+
+}
+
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function showPage(p){
+
+ if(!has(p)){
+
+  toast(
+   'আপনার এই module-এর permission নেই'
+  );
+
+  return;
+
+ }
+
+ activePage=p;
+
+ $('title').textContent=
+  modules[p];
+
+ document
+  .querySelectorAll('.nav button')
+  .forEach(
+   b=>
+   b.classList.toggle(
+    'active',
+    b.dataset.p===p
+   )
+  );
+
+ render();
+
+}
+
+
+function nav(){
+
+ $('nav').innerHTML=
+ Object
+  .entries(modules)
+  .filter(
+   ([p])=>has(p)
+  )
+  .map(
+   ([p,n])=>
+   `<button
+     data-p="${p}"
+     onclick="showPage('${p}')"
+   >
+     ${icon(p)} ${n}
+   </button>`
+  )
+  .join('');
+
+}
+
+
+function icon(p){
+
+ return({
+
+  dashboard:'📊',
+
+  orders:'🛒',
+
+  products:'📦',
+
+  inventory:'📋',
+
+  categories:'🗂️',
+
+  customers:'👥',
+
+  riders:'🚴',
+
+  partners:'🚚',
+
+  payments:'💳',
+
+  refunds:'↩️',
+
+  cancellations:'❌',
+
+  offers:'🏷️',
+
+  lucky:'🎯',
+
+  reviews:'⭐',
+
+  support:'🎧',
+
+  finance:'💰',
+
+  analytics:'📈',
+
+  chalan:'🧾',
+
+  staff:'👨‍💼',
+
+  notifications:'🔔',
+
+  content:'⚙️',
+
+  features:'🧩',
+
+  audit:'🛡️',
+
+  reports:'🗓️',
+
+  settings:'🔧'
+
+ })[p]||'•';
+
+}
+
+
+
+/* =====================================================
+   FIRESTORE HELPERS
+===================================================== */
+
+async function col(name){
+
+ const s=
+  await FB.getDocs(
+   FB.collection(FB.db,name)
+  );
+
+ return s.docs.map(
+  x=>({
+   id:x.id,
+   ...x.data()
+  })
+ );
+
+}
+
+
+async function one(name,id){
+
+ const s=
+  await FB.getDoc(
+   FB.doc(FB.db,name,id)
+  );
+
+ return s.exists()
+  ? {
+     id:s.id,
+     ...s.data()
+    }
+  : null;
+
+}
+
+
+async function put(name,id,data){
+
+ await FB.setDoc(
+  FB.doc(FB.db,name,id),
+  data,
+  {merge:true}
+ );
+
+}
+
+
+async function add(name,data){
+
+ const r=
+  await FB.addDoc(
+   FB.collection(FB.db,name),
+   data
+  );
+
+ return r.id;
+
+}
+
+
+async function remove(name,id){
+
+ await FB.deleteDoc(
+  FB.doc(FB.db,name,id)
+ );
+
+}
+
+
+async function log(
+ action,
+ module,
+ target=''
+){
+
+ try{
+
+  await add(
+   'audit',
+   {
+    action,
+    module,
+    target,
+    by:currentUser.email,
+    at:FB.serverTimestamp()
+   }
+  );
+
+ }catch(e){
+
+  console.warn(e);
+
+ }
+
+}
+
+
+
+async function setting(){
+
+ const x=
+  await one(
+   'settings',
+   'main'
+  );
+
+ return{
+
+  ...defaultSettings,
+
+  ...x,
+
+  customer:{
+   ...defaultSettings.customer,
+   ...(x?.customer||{})
+  },
+
+  paymentMethods:{
+   ...defaultSettings.paymentMethods,
+   ...(x?.paymentMethods||{})
+  },
+
+  label:{
+   ...defaultSettings.label,
+   ...(x?.label||{})
+  }
+
+ };
+
+}
+
+
+
+async function dataCounts(){
+
+ const names=[
+
+  'orders',
+  'products',
+  'customers',
+  'riders',
+  'payments',
+  'support',
+  'staff',
+  'expenses'
+
+ ];
+
+ const out={};
+
+ for(
+  const n of names
+ ){
+
+  try{
+
+   out[n]=
+    (
+     await col(n)
+    ).length;
+
+  }catch{
+
+   out[n]=0;
+
+  }
+
+ }
+
+ return out;
+
+}
+
+
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+function table(
+ headers,
+ rows
+){
+
+ return`
+
+ <div class="tablewrap">
+
+ <table class="table">
+
+ <thead>
+
+ <tr>
+
+ ${headers
+  .map(
+   h=>`<th>${h}</th>`
+  )
+  .join('')}
+
+ </tr>
+
+ </thead>
+
+ <tbody>
+
+ ${
+  rows.length
+
+  ?
+
+  rows
+   .map(
+    r=>
+    `<tr>
+      ${r.map(
+       c=>`<td>${c??''}</td>`
+      ).join('')}
+     </tr>`
+   )
+   .join('')
+
+  :
+
+  `<tr>
+    <td
+     colspan="${headers.length}"
+     class="muted"
+    >
+     No data
+    </td>
+   </tr>`
+
+ }
+
+ </tbody>
+
+ </table>
+
+ </div>
+
+ `;
+
+}
+
+
+function badge(x){
+
+ const red=[
+  'Cancelled',
+  'Rejected',
+  'Inactive',
+  'Failed'
+ ].includes(x);
+
+ const gray=[
+  'Pending',
+  'Processing'
+ ].includes(x);
+
+ return`
+
+ <span
+  class="badge
+   ${red?'red':gray?'gray':''}"
+ >
+  ${esc(x)}
+ </span>
+
+ `;
+
+}
+
+
+
+/* =====================================================
+   RENDER
+===================================================== */
+
+async function render(){
+
+ const c=$('content');
+
+ c.innerHTML=
+  '<div class="panel">Loading…</div>';
+
+ try{
+
+  c.innerHTML=
+   await pages[activePage]();
+
+ }catch(e){
+
+  console.error(e);
+
+  c.innerHTML=`
+
+   <div class="panel">
+
+    <h3>Module Error</h3>
+
+    <p>${esc(e.message)}</p>
+
+    <p class="muted">
+     Check Firebase configuration
+     and Security Rules.
+    </p>
+
+   </div>
+
+  `;
+
+ }
+
+}
+
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+const pages={
+
+ dashboard:async()=>{
+
+  const[
+   c,
+   o,
+   p,
+   r,
+   st,
+   ex
+  ]=await Promise.all([
+
+   dataCounts(),
+
+   col('orders'),
+
+   col('products'),
+
+   col('riders'),
+
+   col('staff'),
+
+   col('expenses')
+
+  ]);
+
+
+  const delivered=
+   o.filter(
+    x=>
+    [
+     'Delivered',
+     'Delivery Confirmed'
+    ].includes(x.status)
+   );
+
+
+  const pending=
+   o.filter(
+    x=>x.status==='Pending'
+   ).length;
+
+
+  const cancelled=
+   o.filter(
+    x=>x.status==='Cancelled'
+   ).length;
+
+
+  const sales=
+   delivered.reduce(
+    (a,x)=>a+orderTotal(x),
+    0
+   );
+
+
+  const expenses=
+   ex.reduce(
+    (a,x)=>a+Number(x.amount||0),
+    0
+   );
+
+
+  const low=
+   p.reduce(
+    (a,x)=>
+    a+
+    (x.variants||[])
+     .filter(
+      v=>
+      Number(v.stock||0)
+      <=
+      Number(v.threshold||0)
+     ).length,
+    0
+   );
+
+
+  return`
+
+  <div class="pagehead">
+
+   <div>
+
+    <h2>Dashboard</h2>
+
+    <span class="muted">
+     Real-time business overview • Nature bite
+    </span>
+
+   </div>
+
+  </div>
+
+
+  <div class="grid">
+
+   ${metric(
+    'Total Sales',
+    money(sales)
+   )}
+
+   ${metric(
+    'Total Orders',
+    o.length
+   )}
+
+   ${metric(
+    'Delivered',
+    delivered.length
+   )}
+
+   ${metric(
+    'Pending',
+    pending
+   )}
+
+   ${metric(
+    'Cancelled',
+    cancelled
+   )}
+
+   ${metric(
+    'Net Profit',
+    money(sales-expenses)
+   )}
+
+   ${metric(
+    'Low Stock',
+    low
+   )}
+
+   ${metric(
+    'Staff',
+    c.staff
+   )}
+
+  </div>
+
+
+  <div
+   class="grid2"
+   style="margin-top:14px"
+  >
+
+   <div class="panel">
+
+    <h3>Order Status</h3>
+
+    ${table(
+
+     ['Status','Count'],
+
+     statuses.map(
+      s=>[
+       s,
+       o.filter(
+        x=>x.status===s
+       ).length
+      ]
+     )
+
+    )}
+
+   </div>
+
+
+   <div class="panel">
+
+    <h3>Quick Actions</h3>
+
+    <div class="actions">
+
+     ${
+      has('orders')
+      ?
+      `
+      <button
+       class="btn"
+       onclick="showPage('orders')"
+      >
+       Manage Orders
+      </button>
+      `
+      :
+      ''
+     }
+
+
+     ${
+      has('payments')
+      ?
+      `
+      <button
+       class="btn"
+       onclick="showPage('payments')"
+      >
+       Payment Review
+      </button>
+      `
+      :
+      ''
+     }
+
+
+     ${
+      has('chalan')
+      ?
+      `
+      <button
+       class="btn"
+       onclick="showPage('chalan')"
+      >
+       Create Chalan
+      </button>
+      `
+      :
+      ''
+     }
+
+
+     ${
+      has('reports')
+      ?
+      `
+      <button
+       class="btn"
+       onclick="showPage('reports')"
+      >
+       Monthly Report
+      </button>
+      `
+      :
+      ''
+     }
+
+    </div>
+
+   </div>
+
+  </div>
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    ORDERS
+ ===================================================== */
+
+ orders:async()=>{
+
+  const os=
+   await col('orders');
+
+  return`
+
+  <div class="pagehead">
+
+   <div>
+
+    <h2>Orders</h2>
+
+    <span class="muted">
+     Customer contact, payment,
+     rider and delivery control
+    </span>
+
+   </div>
+
+
+   <input
+    class="search"
+    style="max-width:300px"
+    placeholder="Search Order ID / mobile / name"
+    oninput="filterTable(this.value)"
+   >
+
+  </div>
+
+
+  <div id="orderTable">
+
+   ${orderTable(os)}
+
+  </div>
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    PRODUCTS
+ ===================================================== */
+
+ products:async()=>{
+
+  const ps=
+   await col('products');
+
+  return`
+
+  <div class="pagehead">
+
+   <div>
+    <h2>Products</h2>
+   </div>
+
+   <button
+    class="btn"
+    onclick="productForm()"
+   >
+    ＋ Add Product
+   </button>
+
+  </div>
+
+
+  ${table(
+
+   [
+    'Product',
+    'Category',
+    'Variants',
+    'Status',
+    'Actions'
+   ],
+
+   ps.map(
+    p=>[
+
+     esc(p.name),
+
+     esc(p.category),
+
+     p.variants?.length||0,
+
+     badge(
+      p.active===false
+       ? 'Inactive'
+       : 'Active'
+     ),
+
+     `
+     <button
+      class="btn small"
+      onclick="productForm('${p.id}')"
+     >
+      Edit
+     </button>
+
+     <button
+      class="btn small red"
+      onclick="delItem('products','${p.id}')"
+     >
+      Delete
+     </button>
+     `
+
+    ]
+   )
+
+  )}
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    INVENTORY
+ ===================================================== */
+
+ inventory:async()=>{
+
+  const ps=
+   await col('products');
+
+  let rows=[];
+
+
+  ps.forEach(
+   p=>
+   (p.variants||[])
+   .forEach(
+    v=>
+    rows.push([
+
+     esc(p.name),
+
+     esc(
+      v.weight||
+      v.variant||
+      ''
+     ),
+
+     v.stock||0,
+
+     v.threshold||0,
+
+     (v.stock||0)
+      <=
+      (v.threshold||0)
+
+      ?
+
+      badge('Low Stock')
+
+      :
+
+      badge('OK')
+
+    ])
+   )
+  );
+
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>Inventory</h2>
+
+  </div>
+
+
+  ${table(
+
+   [
+    'Product',
+    'Variant',
+    'Stock',
+    'Threshold',
+    'Status'
+   ],
+
+   rows
+
+  )}
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    CATEGORIES
+ ===================================================== */
+
+ categories:async()=>{
+
+  const cs=
+   await col('categories');
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>Categories</h2>
+
+   <button
+    class="btn"
+    onclick="categoryForm()"
+   >
+    ＋ Add Category
+   </button>
+
+  </div>
+
+
+  ${table(
+
+   [
+    'Name',
+    'Status',
+    'Actions'
+   ],
+
+   cs.map(
+    c=>[
+
+     esc(c.name),
+
+     badge(
+      c.active===false
+       ? 'Inactive'
+       : 'Active'
+     ),
+
+     `
+     <button
+      class="btn small"
+      onclick="categoryForm('${c.id}')"
+     >
+      Edit
+     </button>
+     `
+
+    ]
+   )
+
+  )}
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    CUSTOMERS
+ ===================================================== */
+
+ customers:async()=>{
+
+  const cs=
+   await col('customers');
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>Customers</h2>
+
+  </div>
+
+
+  ${table(
+
+   [
+    'Customer',
+    'Mobile',
+    'Address',
+    'Orders',
+    'Status'
+   ],
+
+   cs.map(
+    c=>[
+
+     esc(c.name),
+
+     esc(c.mobile),
+
+     esc(c.address),
+
+     c.orders||0,
+
+     badge(
+      c.status||'Active'
+     )
+
+    ]
+   )
+
+  )}
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    RIDERS
+ ===================================================== */
+
+ riders:async()=>{
+
+  const rs=
+   await col('riders');
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>Riders</h2>
+
+   <button
+    class="btn"
+    onclick="riderForm()"
+   >
+    ＋ Add Rider
+   </button>
+
+  </div>
+
+
+  ${table(
+
+   [
+    'Rider',
+    'Mobile',
+    'Zone',
+    'Level',
+    'Availability',
+    'Status',
+    'Actions'
+   ],
+
+   rs.map(
+    r=>[
+
+     esc(r.name),
+
+     esc(r.mobile),
+
+     esc(r.zone),
+
+     esc(
+      r.deliveryLevel||
+      'Level 1'
+     ),
+
+     badge(
+      r.availability||
+      'Available'
+     ),
+
+     badge(
+      r.active===false
+       ? 'Inactive'
+       : 'Active'
+     ),
+
+     `
+     <button
+      class="btn small"
+      onclick="riderForm('${r.id}')"
+     >
+      Edit
+     </button>
+     `
+
+    ]
+   )
+
+  )}
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    DELIVERY PARTNERS
+ ===================================================== */
+
+ partners:async()=>{
+
+  const ps=
+   await col('partners');
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>Delivery Partners</h2>
+
+   <button
+    class="btn"
+    onclick="partnerForm()"
+   >
+    ＋ Add Partner
+   </button>
+
+  </div>
+
+
+  ${table(
+
+   [
+    'Partner',
+    'Status',
+    'Actions'
+   ],
+
+   ps.map(
+    p=>[
+
+     esc(p.name),
+
+     badge(
+      p.active===false
+       ? 'Inactive'
+       : 'Active'
+     ),
+
+     `
+     <button
+      class="btn small"
+      onclick="toggleActive(
+       'partners',
+       '${p.id}',
+       ${p.active!==false}
+      )"
+     >
+      ${
+       p.active===false
+        ? 'Activate'
+        : 'Deactivate'
+      }
+     </button>
+     `
+
+    ]
+   )
+
+  )}
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    PAYMENTS
+ ===================================================== */
+
+ payments:async()=>{
+
+  const s=
+   await setting();
+
+  const os=
+   await col('orders');
+
+  const pending=
+   os.filter(
+    o=>
+    o.transactionId &&
+    o.paymentStatus==='Pending'
+   );
+
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>Payments</h2>
+
+  </div>
+
+
+  <div class="grid3">
+
+   ${metric(
+    'Delivery Advance',
+    s.deliveryAdvance
+     ? 'ON'
+     : 'OFF'
+   )}
+
+   ${metric(
+    'Platform Charge',
+    s.platformChargeEnabled
+     ? money(s.platformCharge)
+     : 'OFF'
+   )}
+
+   ${metric(
+    'Full Payment',
+    s.fullPaymentEnabled
+     ? 'ON'
+     : 'OFF'
+   )}
+
+  </div>
+
+
+  <div
+   class="panel"
+   style="margin-top:14px"
+  >
+
+   <h3>
+    Customer Checkout Controls
+   </h3>
+
+
+   <div class="formgrid">
+
+    <label class="switch">
+
+     <input
+      type="checkbox"
+      ${
+       s.deliveryAdvance
+       ? 'checked'
+       : ''
+      }
+      onchange="
+       quickSetting(
+        'deliveryAdvance',
+        this.checked
+       )
+      "
+     >
+
+     Delivery Charge Advance
+
+    </label>
+
+
+    <label class="switch">
+
+     <input
+      type="checkbox"
+      ${
+       s.platformChargeEnabled
+       ? 'checked'
+       : ''
+      }
+      onchange="
+       quickSetting(
+        'platformChargeEnabled',
+        this.checked
+       )
+      "
+     >
+
+     Platform Charge
+
+    </label>
+
+
+    <label class="switch">
+
+     <input
+      type="checkbox"
+      ${
+       s.fullPaymentEnabled
+       ? 'checked'
+       : ''
+      }
+      onchange="
+       quickSetting(
+        'fullPaymentEnabled',
+        this.checked
+       )
+      "
+     >
+
+     Full Payment
+
+    </label>
+
+   </div>
+
+  </div>
+
+
+  <div
+   class="panel"
+   style="margin-top:14px"
+  >
+
+   <h3>
+    Pending Payment Transactions
+   </h3>
+
+
+   ${table(
+
+    [
+     'Order',
+     'Customer',
+     'Amount',
+     'Method',
+     'Transaction',
+     'Action'
+    ],
+
+    pending.map(
+     o=>[
+
+      esc(o.id),
+
+      esc(
+       o.customer||
+       o.customerName||
+       ''
+      ),
+
+      money(
+       o.paidAmount||
+       o.transactionAmount||
+       0
+      ),
+
+      esc(
+       o.paymentMethod||
+       ''
+      ),
+
+      esc(
+       o.transactionId||
+       ''
+      ),
+
+      `
+      <button
+       class="btn small"
+       onclick="
+        verifyPayment(
+         '${o.id}',
+         true
+        )
+       "
+      >
+       Approve
+      </button>
+
+      <button
+       class="btn small red"
+       onclick="
+        verifyPayment(
+         '${o.id}',
+         false
+        )
+       "
+      >
+       Reject
+      </button>
+      `
+
+     ]
+    )
+
+   )}
+
+  </div>
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    REFUNDS
+ ===================================================== */
+
+ refunds:async()=>{
+
+  const rs=
+   await col('refunds');
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>Refunds</h2>
+
+  </div>
+
+
+  ${table(
+
+   [
+    'Order',
+    'Customer',
+    'Amount',
+    'Status',
+    'Date'
+   ],
+
+   rs.map(
+    r=>[
+
+     esc(r.orderId),
+
+     esc(r.customer),
+
+     money(r.amount),
+
+     badge(
+      r.status||
+      'Pending'
+     ),
+
+     esc(r.date||'')
+
+    ]
+   )
+
+  )}
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    CANCELLATIONS
+ ===================================================== */
+
+ cancellations:async()=>{
+
+  const cs=
+   await col('cancellations');
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>Cancellations</h2>
+
+  </div>
+
+
+  ${table(
+
+   [
+    'Order',
+    'Reason',
+    'By',
+    'Status',
+    'Date'
+   ],
+
+   cs.map(
+    c=>[
+
+     esc(c.orderId),
+
+     esc(c.reason),
+
+     esc(c.by),
+
+     badge(
+      c.status||
+      'Pending'
+     ),
+
+     esc(c.date||'')
+
+    ]
+   )
+
+  )}
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    OFFERS
+ ===================================================== */
+
+ offers:async()=>{
+
+  const os=
+   await col('offers');
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>
+    Offers & Coupons
+   </h2>
+
+   <button
+    class="btn"
+    onclick="offerForm()"
+   >
+    ＋ Add Offer
+   </button>
+
+  </div>
+
+
+  ${table(
+
+   [
+    'Code',
+    'Type',
+    'Value',
+    'Status'
+   ],
+
+   os.map(
+    o=>[
+
+     esc(o.code),
+
+     esc(o.type),
+
+     o.value,
+
+     badge(
+      o.active===false
+       ? 'Inactive'
+       : 'Active'
+     )
+
+    ]
+   )
+
+  )}
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    LUCKY
+ ===================================================== */
+
+ lucky:async()=>{
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>
+    Lucky Wheel / Lucky Draw
+   </h2>
+
+  </div>
+
+
+  <div class="grid2">
+
+   <div class="panel">
+
+    <h3>Lucky Wheel</h3>
+
+    <p>
+     Customer Lucky Wheel
+     feature control can be
+     managed from Feature Management.
+    </p>
+
+    <button
+     class="btn"
+     onclick="showPage('features')"
+    >
+     Manage Feature
+    </button>
+
+   </div>
+
+
+   <div class="panel">
+
+    <h3>Lucky Draw</h3>
+
+    <p>
+     Draw campaign configuration
+     and winner records.
+    </p>
+
+    <button
+     class="btn"
+     onclick="showPage('features')"
+    >
+     Manage Feature
+    </button>
+
+   </div>
+
+  </div>
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    REVIEWS
+ ===================================================== */
+
+ reviews:async()=>{
+
+  const rs=
+   await col('reviews');
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>Reviews</h2>
+
+  </div>
+
+
+  ${table(
+
+   [
+    'Customer',
+    'Product',
+    'Rating',
+    'Review',
+    'Status'
+   ],
+
+   rs.map(
+    r=>[
+
+     esc(r.customer),
+
+     esc(r.product),
+
+     r.rating,
+
+     esc(r.review),
+
+     badge(
+      r.status||
+      'Published'
+     )
+
+    ]
+   )
+
+  )}
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    SUPPORT
+ ===================================================== */
+
+ support:async()=>{
+
+  const ss=
+   await col('support');
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>Support Tickets</h2>
+
+  </div>
+
+
+  ${table(
+
+   [
+    'Ticket',
+    'Customer',
+    'Subject',
+    'Priority',
+    'Status'
+   ],
+
+   ss.map(
+    s=>[
+
+     esc(s.ticketId||s.id),
+
+     esc(s.customer),
+
+     esc(s.subject),
+
+     badge(
+      s.priority||
+      'Normal'
+     ),
+
+     badge(
+      s.status||
+      'Open'
+     )
+
+    ]
+   )
+
+  )}
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    FINANCE
+ ===================================================== */
+
+ finance:async()=>{
+
+  const ex=
+   await col('expenses');
+
+  const os=
+   await col('orders');
+
+  const revenue=
+   os.reduce(
+    (a,o)=>
+    a+orderTotal(o),
+    0
+   );
+
+  const expense=
+   ex.reduce(
+    (a,e)=>
+    a+Number(e.amount||0),
+    0
+   );
+
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>
+    Finance & Expenses
+   </h2>
+
+   <button
+    class="btn"
+    onclick="expenseForm()"
+   >
+    ＋ Add Expense
+   </button>
+
+  </div>
+
+
+  <div class="grid3">
+
+   ${metric(
+    'Revenue',
+    money(revenue)
+   )}
+
+   ${metric(
+    'Expenses',
+    money(expense)
+   )}
+
+   ${metric(
+    'Net Profit',
+    money(revenue-expense)
+   )}
+
+  </div>
+
+
+  <div
+   class="panel"
+   style="margin-top:14px"
+  >
+
+   <h3>Expense Records</h3>
+
+   ${table(
+
+    [
+     'Date',
+     'Category',
+     'Description',
+     'Amount'
+    ],
+
+    ex.map(
+     e=>[
+
+      esc(e.date),
+
+      esc(e.category),
+
+      esc(e.description),
+
+      money(e.amount)
+
+     ]
+    )
+
+   )}
+
+  </div>
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    ANALYTICS
+ ===================================================== */
+
+ analytics:async()=>{
+
+  const metrics=[
+
+   'ROI',
+   'Cash Flow',
+   'CAC & LTV',
+   'Break-even Point',
+   'Value Your Time',
+   'ARR/MRR',
+   'AOV',
+   'ARPU',
+   'NPS',
+   'Funnel',
+   'North Star Metric',
+   'KPIs',
+   'OKRs',
+   'Pivot',
+   'Iteration'
+
+  ];
+
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>
+    Business Analytics
+   </h2>
+
+  </div>
+
+
+  <div class="tabs">
+
+   ${
+    metrics
+     .map(
+      x=>
+      `
+      <button
+       onclick="
+        analyticsTab(
+         '${x}'
+        )
+       "
+      >
+       ${x}
+      </button>
+      `
+     )
+     .join('')
+   }
+
+  </div>
+
+
+  <div
+   id="analyticsBox"
+   class="panel"
+  >
+
+   <h3>
+    Select a metric
+   </h3>
+
+   <p class="muted">
+    Choose one of the business
+    performance metrics above.
+   </p>
+
+  </div>
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    CHALAN
+ ===================================================== */
+
+ chalan:async()=>{
+
+  const cs=
+   await col('chalans');
+
+  return`
+
+  <div class="pagehead">
+
+   <div>
+
+    <h2>Chalan</h2>
+
+    <span class="muted">
+     Create → Approval → Print
+    </span>
+
+   </div>
+
+
+   <button
+    class="btn"
+    onclick="chalanForm()"
+   >
+    ＋ Create Chalan
+   </button>
+
+  </div>
+
+
+  ${table(
+
+   [
+    'Chalan',
+    'Party',
+    'Product',
+    'Qty',
+    'Total',
+    'Status',
+    'Action'
+   ],
+
+   cs.map(
+    c=>[
+
+     esc(c.number),
+
+     esc(c.party),
+
+     esc(c.product),
+
+     c.quantity,
+
+     money(c.total),
+
+     badge(
+      c.status
+     ),
+
+     `
+     <button
+      class="btn small"
+      onclick="
+       chalanAction(
+        '${c.id}'
+       )
+      "
+     >
+      Manage
+     </button>
+     `
+
+    ]
+   )
+
+  )}
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    STAFF
+ ===================================================== */
+
+ staff:async()=>{
+
+  const ss=
+   await col('staff');
+
+  return`
+
+  <div class="pagehead">
+
+   <div>
+
+    <h2>
+     Staff & Permissions
+    </h2>
+
+    <span class="muted">
+     Auth account + Firestore role
+    </span>
+
+   </div>
+
+
+   <button
+    class="btn"
+    onclick="staffForm()"
+   >
+    ＋ Add Staff
+   </button>
+
+  </div>
+
+
+  ${table(
+
+   [
+    'Name',
+    'Email',
+    'Role',
+    'Status',
+    'Actions'
+   ],
+
+   ss.map(
+    s=>[
+
+     esc(s.name),
+
+     esc(s.email),
+
+     badge(s.role),
+
+     badge(
+      s.active===false
+       ? 'Inactive'
+       : 'Active'
+     ),
+
+     `
+     <button
+      class="btn small"
+      onclick="
+       staffForm(
+        '${s.id}'
+       )
+      "
+     >
+      Edit
+     </button>
+
+     <button
+      class="btn small ${
+       s.active===false
+        ? ''
+        : 'red'
+      }"
+      onclick="
+       toggleActive(
+        'staff',
+        '${s.id}',
+        ${s.active!==false}
+       )
+      "
+     >
+      ${
+       s.active===false
+        ? 'Activate'
+        : 'Deactivate'
+      }
+     </button>
+
+     `
+
+    ]
+   )
+
+  )}
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    NOTIFICATIONS
+ ===================================================== */
+
+ notifications:async()=>{
+
+  const ns=
+   await col('notifications');
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>Notifications</h2>
+
+   <button
+    class="btn"
+    onclick="notificationForm()"
+   >
+    ＋ New Notification
+   </button>
+
+  </div>
+
+
+  ${table(
+
+   [
+    'Title',
+    'Audience',
+    'Message',
+    'Status'
+   ],
+
+   ns.map(
+    n=>[
+
+     esc(n.title),
+
+     esc(n.audience),
+
+     esc(n.message),
+
+     badge(
+      n.status||
+      'Draft'
+     )
+
+    ]
+   )
+
+  )}
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    CUSTOMER PANEL SETTINGS
+ ===================================================== */
+
+ content:async()=>{
+
+  const s=
+   await setting();
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>
+    Customer Panel Settings
+   </h2>
+
+  </div>
+
+
+  <div class="panel">
+
+   <div class="formgrid">
+
+    <div class="field">
+
+     <label>
+      Business Name
+     </label>
+
+     <input
+      id="setBusinessName"
+      value="${esc(s.businessName)}"
+     >
+
+    </div>
+
+
+    <div class="field">
+
+     <label>
+      Contact
+     </label>
+
+     <input
+      id="setContact"
+      value="${esc(s.contact)}"
+     >
+
+    </div>
+
+
+    <div class="field full">
+
+     <label>
+      Address
+     </label>
+
+     <textarea
+      id="setAddress"
+     >${esc(s.address)}</textarea>
+
+    </div>
+
+
+    <div class="field">
+
+     <label>
+      Delivery Charge
+     </label>
+
+     <input
+      id="setDelivery"
+      type="number"
+      value="${s.deliveryCharge}"
+     >
+
+    </div>
+
+
+    <div class="field">
+
+     <label>
+      Platform Charge
+     </label>
+
+     <input
+      id="setPlatform"
+      type="number"
+      value="${s.platformCharge}"
+     >
+
+    </div>
+
+
+    <div class="field">
+
+     <label>
+      Minimum Order
+     </label>
+
+     <input
+      id="setMinimum"
+      type="number"
+      value="${s.minimumOrder}"
+     >
+
+    </div>
+
+
+    <div class="field">
+
+     <label>
+      Free Delivery Minimum
+     </label>
+
+     <input
+      id="setFreeDelivery"
+      type="number"
+      value="${s.freeDeliveryMinimum}"
+     >
+
+    </div>
+
+   </div>
+
+
+   <button
+    class="btn"
+    onclick="quickCustomer()"
+   >
+    Save Customer Settings
+   </button>
+
+  </div>
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    FEATURE MANAGEMENT
+ ===================================================== */
+
+ features:async()=>{
+
+  const fs=
+   await col('features');
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>
+    Feature Management
+   </h2>
+
+  </div>
+
+
+  ${table(
+
+   [
+    'Feature',
+    'Status',
+    'Actions'
+   ],
+
+   fs.map(
+    f=>[
+
+     esc(f.name),
+
+     badge(
+      f.active===false
+       ? 'OFF'
+       : 'ON'
+     ),
+
+     `
+     <button
+      class="btn small"
+      onclick="
+       toggleFeature(
+        '${f.id}',
+        'active'
+       )
+      "
+     >
+      Toggle
+     </button>
+     `
+
+    ]
+   )
+
+  )}
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    AUDIT
+ ===================================================== */
+
+ audit:async()=>{
+
+  const as=
+   await col('audit');
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>
+    Audit Logs
+   </h2>
+
+  </div>
+
+
+  ${table(
+
+   [
+    'Action',
+    'Module',
+    'Target',
+    'User'
+   ],
+
+   as.map(
+    a=>[
+
+     esc(a.action),
+
+     esc(a.module),
+
+     esc(a.target),
+
+     esc(a.by)
+
+    ]
+   )
+
+  )}
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    REPORTS
+ ===================================================== */
+
+ reports:async()=>{
+
+  const os=
+   await col('orders');
+
+  const ex=
+   await col('expenses');
+
+
+  const revenue=
+   os.reduce(
+    (a,o)=>
+    a+orderTotal(o),
+    0
+   );
+
+
+  const expense=
+   ex.reduce(
+    (a,e)=>
+    a+Number(e.amount||0),
+    0
+   );
+
+
+  const ym=
+   new Date()
+    .toISOString()
+    .slice(0,7);
+
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>
+    Monthly Reports
+   </h2>
+
+   <button
+    class="btn"
+    onclick="
+     printMonthlyReport(
+      '${ym}',
+      ${revenue},
+      ${expense},
+      ${os.length}
+     )
+    "
+   >
+    🖨 Print Monthly Report
+   </button>
+
+  </div>
+
+
+  <div class="grid3">
+
+   ${metric(
+    'Orders',
+    os.length
+   )}
+
+   ${metric(
+    'Revenue',
+    money(revenue)
+   )}
+
+   ${metric(
+    'Expenses',
+    money(expense)
+   )}
+
+  </div>
+
+
+  <div
+   class="panel"
+   style="margin-top:14px"
+  >
+
+   <h3>
+    Net Profit
+   </h3>
+
+   <b
+    style="font-size:30px"
+   >
+    ${money(
+     revenue-expense
+    )}
+   </b>
+
+  </div>
+
+  `;
+
+ },
+
+
+
+ /* =====================================================
+    SYSTEM SETTINGS
+ ===================================================== */
+
+ settings:async()=>{
+
+  const s=
+   await setting();
+
+  return`
+
+  <div class="pagehead">
+
+   <h2>
+    System Settings
+   </h2>
+
+  </div>
+
+
+  <div class="panel">
+
+   <h3>
+    Payment Accounts
+   </h3>
+
+
+   <div class="formgrid">
+
+    <div class="field">
+
+     <label>
+      bKash Business Number
+     </label>
+
+     <input
+      id="sysBkash"
+      value="${esc(s.bkash)}"
+     >
+
+    </div>
+
+
+    <div class="field">
+
+     <label>
+      Nagad Business Number
+     </label>
+
+     <input
+      id="sysNagad"
+      value="${esc(s.nagad)}"
+     >
+
+    </div>
+
+
+    <label class="switch">
+
+     <input
+      id="sysBkashActive"
+      type="checkbox"
+      ${
+       s.paymentMethods.bkash
+       ? 'checked'
+       : ''
+      }
+     >
+
+     bKash Active
+
+    </label>
+
+
+    <label class="switch">
+
+     <input
+      id="sysNagadActive"
+      type="checkbox"
+      ${
+       s.paymentMethods.nagad
+       ? 'checked'
+       : ''
+      }
+     >
+
+     Nagad Active
+
+    </label>
+
+
+    <label class="switch">
+
+     <input
+      id="sysCodActive"
+      type="checkbox"
+      ${
+       s.paymentMethods.cod
+       ? 'checked'
+       : ''
+      }
+     >
+
+     COD Active
+
+    </label>
+
+   </div>
+
+
+   <button
+    class="btn"
+    onclick="savePaymentSettings()"
+   >
+    Save Payment Settings
+   </button>
+
+  </div>
+
+  `;
+
+ }
+
+};
+
+
+
+/* =====================================================
+   METRIC
+===================================================== */
+
+function metric(
+ title,
+ value
+){
+
+ return`
+
+ <div class="card metric">
+
+  <span class="muted">
+   ${esc(title)}
+  </span>
+
+  <b>
+   ${esc(value)}
+  </b>
+
+ </div>
+
+ `;
+
+}
+
+
+
+/* =====================================================
+   ORDER TOTAL
+===================================================== */
+
+function orderTotal(o){
+
+ const productTotal=
+  (o.products||[])
+   .reduce(
+    (a,p)=>
+    a+
+    Number(p.qty||0)*
+    Number(p.price||0),
+    0
+   );
+
+ return Math.max(
+  0,
+  productTotal+
+  Number(o.deliveryCharge||0)+
+  Number(o.platformCharge||0)-
+  Number(o.discount||0)
+ );
+
+}
+
+
+
+/* =====================================================
+   ORDER TABLE
+===================================================== */
+
+function orderTable(os){
+
+ return table(
+
+  [
+   'Order',
+   'Customer',
+   'Mobile',
+   'Amount',
+   'Status',
+   'Payment',
+   'Rider',
+   'Delivery',
+   'Action'
+  ],
+
+  os.map(
+   o=>[
+
+    esc(o.id),
+
+    esc(
+     o.customer||
+     o.customerName||
+     ''
+    ),
+
+    esc(o.mobile||''),
+
+    money(
+     orderTotal(o)
+    ),
+
+    badge(
+     o.status||
+     'Pending'
+    ),
+
+    badge(
+     o.paymentStatus||
+     'Pending'
+    ),
+
+    esc(
+     o.riderName||
+     o.rider||
+     ''
+    ),
+
+    esc(
+     o.deliveryLevel||
+     'Level 1'
+    ),
+
+    `
+    <div class="actions">
+
+     <button
+      class="btn small"
+      onclick="
+       orderForm(
+        '${o.id}'
+       )
+      "
+     >
+      Manage
+     </button>
+
+
+     <button
+      class="btn small gray"
+      onclick="
+       printLabel(
+        '${o.id}'
+       )
+      "
+     >
+      Label
+     </button>
+
+    </div>
+    `
+
+   ]
+  )
+
+ );
+
+}
+
+
+
+/* =====================================================
+   ORDER FORM
+===================================================== */
+
+async function orderForm(id){
+
+ const o=
+  await one(
+   'orders',
+   id
+  );
+
+ if(!o)return;
+
+
+ openModal(
+
+  'Manage Order',
+
+  `
+
+  <div class="grid2">
+
+   <div class="card">
+
+    <h3>
+     Customer
+    </h3>
+
+    <p>
+     <b>Name:</b>
+     ${esc(
+      o.customer||
+      o.customerName||
+      ''
+     )}
+    </p>
+
+    <p>
+     <b>Mobile:</b>
+     ${esc(o.mobile||'')}
+    </p>
+
+    <p>
+     <b>Address:</b>
+     ${esc(
+      o.address||
+      o.deliveryAddress||
+      ''
+     )}
+    </p>
+
+    <p>
+     <b>Note:</b>
+     ${esc(o.note||'')}
+    </p>
+
+   </div>
+
+
+   <div class="card">
+
+    <h3>
+     Payment
+    </h3>
+
+    <p>
+     Method:
+     ${esc(
+      o.paymentMethod||
+      ''
+     )}
+    </p>
+
+    <p>
+     Status:
+     ${badge(
+      o.paymentStatus||
+      'Pending'
+     )}
+    </p>
+
+    <p>
+     Transaction:
+     ${esc(
+      o.transactionId||
+      ''
+     )}
+    </p>
+
+    <p>
+     Sender:
+     ${esc(
+      o.senderNumber||
+      ''
+     )}
+    </p>
+
+   </div>
+
+  </div>
+
+
+  <div class="formgrid">
+
+   <div class="field">
+
+    <label>
+     Order Status
+    </label>
+
+    <select id="orderStatus">
+
+     ${
+      statuses
+       .map(
+        s=>
+        `<option
+          ${
+           o.status===s
+            ? 'selected'
+            : ''
+          }
+        >
+         ${s}
+        </option>`
+       )
+       .join('')
+     }
+
+    </select>
+
+   </div>
+
+
+   <div class="field">
+
+    <label>
+     Delivery Level
+    </label>
+
+    <select id="deliveryLevel">
+
+     ${
+      deliveryLevels
+       .map(
+        s=>
+        `<option
+          ${
+           o.deliveryLevel===s
+            ? 'selected'
+            : ''
+          }
+        >
+         ${s}
+        </option>`
+       )
+       .join('')
+     }
+
+    </select>
+
+   </div>
+
+
+   <div class="field">
+
+    <label>
+     Rider Name
+    </label>
+
+    <input
+     id="orderRider"
+     value="${esc(
+      o.riderName||
+      o.rider||
+      ''
+     )}"
+    >
+
+   </div>
+
+
+   <div class="field">
+
+    <label>
+     Rider Mobile
+    </label>
+
+    <input
+     id="orderRiderMobile"
+     value="${esc(
+      o.riderMobile||
+      ''
+     )}"
+    >
+
+   </div>
+
+
+   <div class="field">
+
+    <label>
+     Rider Zone
+    </label>
+
+    <input
+     id="orderRiderZone"
+     value="${esc(
+      o.riderZone||
+      ''
+     )}"
+    >
+
+   </div>
+
+
+   <div class="field">
+
+    <label>
+     Delivery Instruction
+    </label>
+
+    <input
+     id="deliveryInstruction"
+     value="${esc(
+      o.deliveryInstruction||
+      ''
+     )}"
+    >
+
+   </div>
+
+
+   <div class="field full">
+
+    <label>
+     Customer Note
+    </label>
+
+    <textarea id="orderNote">${esc(
+     o.note||
+     ''
+    )}</textarea>
+
+   </div>
+
+
+   <label class="switch">
+
+    <input
+     id="deliveryConfirmed"
+     type="checkbox"
+     ${
+      o.deliveryLevelConfirmed
+      ? 'checked'
+      : ''
+     }
+    >
+
+    Confirm Delivery Level
+
+   </label>
+
+  </div>
+
+
+  <button
+   class="btn"
+   onclick="
+    saveOrder(
+     '${id}'
+    )
+   "
+  >
+   Save Order
+  </button>
+
+  `
+
+ );
+
+}
+
+
+
+async function saveOrder(id){
+
+ await put(
+
+  'orders',
+
+  id,
+
+  {
+
+   status:
+    $('orderStatus').value,
+
+   deliveryLevel:
+    $('deliveryLevel').value,
+
+   riderName:
+    $('orderRider').value,
+
+   riderMobile:
+    $('orderRiderMobile').value,
+
+   riderZone:
+    $('orderRiderZone').value,
+
+   deliveryInstruction:
+    $('deliveryInstruction').value,
+
+   note:
+    $('orderNote').value,
+
+   deliveryLevelConfirmed:
+    $('deliveryConfirmed').checked,
+
+   updatedAt:
+    FB.serverTimestamp()
+
+  }
+
+ );
+
+ await log(
+  'Updated order',
+  'Orders',
+  id
+ );
+
+ closeModal();
+
+ toast(
+  'Order updated'
+ );
+
+ render();
+
+}
+
+
+
+/* =====================================================
+   PAYMENT VERIFY
+===================================================== */
+
+async function verifyPayment(
+ id,
+ approved
+){
+
+ await put(
+
+  'orders',
+
+  id,
+
+  {
+
+   paymentStatus:
+    approved
+     ? 'Approved'
+     : 'Rejected',
+
+   paymentApprovedBy:
+    currentUser.email,
+
+   paymentApprovedAt:
+    FB.serverTimestamp()
+
+  }
+
+ );
+
+ await log(
+
+  approved
+   ? 'Payment approved'
+   : 'Payment rejected',
+
+  'Payments',
+
+  id
+
+ );
+
+ toast(
+  approved
+   ? 'Payment approved'
+   : 'Payment rejected'
+ );
+
+ render();
+
+}
+
+
+
+/* =====================================================
+   QUICK PAYMENT
+===================================================== */
+
+async function quickPay(){
+
+ const s=
+  await setting();
+
+ await put(
+  'settings',
+  'main',
+  s
+ );
+
+ toast(
+  'Payment settings updated'
+ );
+
+}
+
+
+
+/* =====================================================
+   QUICK SETTINGS
+===================================================== */
+
+async function quickSetting(
+ key,
+ value
+){
+
+ await put(
+  'settings',
+  'main',
+  {
+   [key]:value
+  }
+ );
+
+ toast(
+  'Setting updated'
+ );
+
+}
+
+
+
+/* =====================================================
+   QUICK CUSTOMER SETTINGS
+===================================================== */
+
+async function quickCustomer(){
+
+ await put(
+
+  'settings',
+
+  'main',
+
+  {
+
+   businessName:
+    $('setBusinessName').value,
+
+   contact:
+    $('setContact').value,
+
+   address:
+    $('setAddress').value,
+
+   deliveryCharge:
+    Number(
+     $('setDelivery').value
+    ),
+
+   platformCharge:
+    Number(
+     $('setPlatform').value
+    ),
+
+   minimumOrder:
+    Number(
+     $('setMinimum').value
+    ),
+
+   freeDeliveryMinimum:
+    Number(
+     $('setFreeDelivery').value
+    )
+
+  }
+
+ );
+
+ await log(
+  'Updated customer settings',
+  'Customer Panel Settings'
+ );
+
+ toast(
+  'Customer settings saved'
+ );
+
+}
+
+
+
+/* =====================================================
+   PAYMENT SETTINGS FORM
+===================================================== */
+
+async function paymentSettingsForm(){
+
+ const s=
+  await setting();
+
+ openModal(
+
+  'Payment Settings',
+
+  `
+
+  <div class="formgrid">
+
+   <div class="field">
+
+    <label>
+     bKash
+    </label>
+
+    <input
+     id="payBkash"
+     value="${esc(s.bkash)}"
+    >
+
+   </div>
+
+
+   <div class="field">
+
+    <label>
+     Nagad
+    </label>
+
+    <input
+     id="payNagad"
+     value="${esc(s.nagad)}"
+    >
+
+   </div>
+
+
+   <div class="field">
+
+    <label>
+     Platform Charge
+    </label>
+
+    <input
+     id="payPlatform"
+     type="number"
+     value="${s.platformCharge}"
+    >
+
+   </div>
+
+
+   <label class="switch">
+
+    <input
+     id="payDeliveryAdvance"
+     type="checkbox"
+     ${
+      s.deliveryAdvance
+      ? 'checked'
+      : ''
+     }
+    >
+
+    Delivery Advance
+
+   </label>
+
+
+   <label class="switch">
+
+    <input
+     id="payPlatformActive"
+     type="checkbox"
+     ${
+      s.platformChargeEnabled
+      ? 'checked'
+      : ''
+     }
+    >
+
+    Platform Charge
+
+   </label>
+
+
+   <label class="switch">
+
+    <input
+     id="payFull"
+     type="checkbox"
+     ${
+      s.fullPaymentEnabled
+      ? 'checked'
+      : ''
+     }
+    >
+
+    Full Payment
+
+   </label>
+
+  </div>
+
+
+  <button
+   class="btn"
+   onclick="savePaymentSettings()"
+  >
+   Save
+  </button>
+
+  `
+
+ );
+
+}
+
+
+
+async function savePaymentSettings(){
+
+ const s=
+  await setting();
+
+ await put(
+
+  'settings',
+
+  'main',
+
+  {
+
+   bkash:
+    $('payBkash').value,
+
+   nagad:
+    $('payNagad').value,
+
+   platformCharge:
+    Number(
+     $('payPlatform').value
+    ),
+
+   deliveryAdvance:
+    $('payDeliveryAdvance')
+     .checked,
+
+   platformChargeEnabled:
+    $('payPlatformActive')
+     .checked,
+
+   fullPaymentEnabled:
+    $('payFull')
+     .checked,
+
+   paymentMethods:
+    s.paymentMethods
+
+  }
+
+ );
+
+ closeModal();
+
+ toast(
+  'Payment settings saved'
+ );
+
+ render();
+
+}
+
+
+
+/* =====================================================
+   PRODUCT FORM
+===================================================== */
+
+async function productForm(id){
+
+ const p=
+  id
+   ? await one(
+      'products',
+      id
+     )
+   : {
+
+      name:'',
+      category:'',
+      active:true,
+      variants:[
+       {
+        weight:'500g',
+        price:0,
+        stock:0,
+        threshold:5
+       }
+      ]
+
+     };
+
+
+ openModal(
+
+  id
+   ? 'Edit Product'
+   : 'Add Product',
+
+  `
+
+  <div class="formgrid">
+
+   <div class="field">
+
+    <label>
+     Product Name
+    </label>
+
+    <input
+     id="pn"
+     value="${esc(p.name)}"
+    >
+
+   </div>
+
+
+   <div class="field">
+
+    <label>
+     Category
+    </label>
+
+    <input
+     id="pc"
+     value="${esc(p.category)}"
+    >
+
+   </div>
+
+
+   <div class="field full">
+
+    <label>
+     Variants JSON
+    </label>
+
+    <textarea
+     id="pv"
+    >${esc(
+     JSON.stringify(
+      p.variants||[],
+      null,
+      2
+     )
+    )}</textarea>
+
+   </div>
+
+
+   <label class="switch">
+
+    <input
+     id="pa"
+     type="checkbox"
+     ${
+      p.active!==false
+       ? 'checked'
+       : ''
+     }
+    >
+
+    Active
+
+   </label>
+
+  </div>
+
+
+  <button
+   class="btn"
+   onclick="
+    saveProduct(
+     '${id||''}'
+    )
+   "
+  >
+   Save Product
+  </button>
+
+  `
+
+ );
+
+}
+
+
+
+async function saveProduct(id){
+
+ let variants=[];
+
+ try{
+
+  variants=
+   JSON.parse(
+    $('pv').value
+   );
+
+ }catch{
+
+  toast(
+   'Variants JSON সঠিক নয়'
+  );
+
+  return;
+
+ }
+
+
+ const d={
+
+  name:
+   $('pn').value.trim(),
+
+  category:
+   $('pc').value.trim(),
+
+  variants,
+
+  active:
+   $('pa').checked,
+
+  updatedAt:
+   FB.serverTimestamp()
+
+ };
+
+
+ await put(
+  'products',
+  id||uid('P'),
+  d
+ );
+
+
+ await log(
+  'Saved product',
+  'Products',
+  id||'new'
+ );
+
+
+ closeModal();
+
+ render();
+
+}
+
+
+
+/* =====================================================
+   CATEGORY
+===================================================== */
+
+async function categoryForm(id){
+
+ const c=
+  id
+   ? await one(
+      'categories',
+      id
+     )
+   : {
+      name:'',
+      active:true
+     };
+
+
+ openModal(
+
+  id
+   ? 'Edit Category'
+   : 'Add Category',
+
+  `
+
+  <div class="formgrid">
+
+   <div class="field">
+
+    <label>
+     Name
+    </label>
+
+    <input
+     id="cn"
+     value="${esc(c.name)}"
+    >
+
+   </div>
+
+
+   <label class="switch">
+
+    <input
+     id="ca"
+     type="checkbox"
+     ${
+      c.active!==false
+       ? 'checked'
+       : ''
+     }
+    >
+
+    Active
+
+   </label>
+
+  </div>
+
+
+  <button
+   class="btn"
+   onclick="
+    saveCategory(
+     '${id||''}'
+    )
+   "
+  >
+   Save
+  </button>
+
+  `
+
+ );
+
+}
+
+
+
+async function saveCategory(id){
+
+ const d={
+
+  name:
+   $('cn').value.trim(),
+
+  active:
+   $('ca').checked
+
+ };
+
+
+ if(!d.name)return;
+
+
+ await put(
+  'categories',
+  id||uid('C'),
+  d
+ );
+
+
+ await log(
+  'Saved category',
+  'Categories',
+  id||'new'
+ );
+
+
+ closeModal();
+
+ render();
+
+}
+
+
+
+/* =====================================================
+   RIDER
+===================================================== */
+
+async function riderForm(id){
+
+ const r=
+  id
+   ? await one(
+      'riders',
+      id
+     )
+   : {
+
+      name:'',
+      mobile:'',
+      zone:'',
+      deliveryLevel:'Level 1',
+      availability:'Available',
+      active:true
+
+     };
+
+
+ openModal(
+
+  id
+   ? 'Edit Rider'
+   : 'Add Rider',
+
+  `
+
+  <div class="formgrid">
+
+   <div class="field">
+
+    <label>Name</label>
+
+    <input
+     id="rn"
+     value="${esc(r.name)}"
+    >
+
+   </div>
+
+
+   <div class="field">
+
+    <label>Mobile</label>
+
+    <input
+     id="rm"
+     value="${esc(r.mobile)}"
+    >
+
+   </div>
+
+
+   <div class="field">
+
+    <label>Zone</label>
+
+    <input
+     id="rz"
+     value="${esc(r.zone)}"
+    >
+
+   </div>
+
+
+   <div class="field">
+
+    <label>
+     Delivery Level
+    </label>
+
+    <select id="rl">
+
+     ${
+      deliveryLevels
+       .map(
+        x=>
+        `<option
+         ${
+          r.deliveryLevel===x
+           ? 'selected'
+           : ''
+         }
+        >
+         ${x}
+        </option>`
+       )
+       .join('')
+     }
+
+    </select>
+
+   </div>
+
+
+   <div class="field">
+
+    <label>
+     Availability
+    </label>
+
+    <select id="ra">
+
+     <option
+      ${
+       r.availability==='Available'
+        ? 'selected'
+        : ''
+      }
+     >
+      Available
+     </option>
+
+     <option
+      ${
+       r.availability==='Busy'
+        ? 'selected'
+        : ''
+      }
+     >
+      Busy
+     </option>
+
+     <option
+      ${
+       r.availability==='Offline'
+        ? 'selected'
+        : ''
+      }
+     >
+      Offline
+     </option>
+
+    </select>
+
+   </div>
+
+
+   <label class="switch">
+
+    <input
+     id="ractive"
+     type="checkbox"
+     ${
+      r.active!==false
+       ? 'checked'
+       : ''
+     }
+    >
+
+    Active
+
+   </label>
+
+  </div>
+
+
+  <button
+   class="btn"
+   onclick="
+    saveRider(
+     '${id||''}'
+    )
+   "
+  >
+   Save
+  </button>
+
+  `
+
+ );
+
+}
+
+
+
+async function saveRider(id){
+
+ const d={
+
+  name:
+   $('rn').value,
+
+  mobile:
+   $('rm').value,
+
+  zone:
+   $('rz').value,
+
+  deliveryLevel:
+   $('rl').value,
+
+  availability:
+   $('ra').value,
+
+  active:
+   $('ractive').checked
+
+ };
+
+
+ await put(
+  'riders',
+  id||uid('R'),
+  d
+ );
+
+
+ await log(
+  'Saved rider',
+  'Riders',
+  id||'new'
+ );
+
+
+ closeModal();
+
+ render();
+
+}
+
+
+
+/* =====================================================
+   DELIVERY PARTNER
+===================================================== */
+
+async function partnerForm(){
+
+ openModal(
+
+  'Add Delivery Partner',
+
+  `
+
+  <div class="field">
+
+   <label>
+    Name
+   </label>
+
+   <input id="dname">
+
+  </div>
+
+
+  <label class="switch">
+
+   <input
+    id="dactive"
+    type="checkbox"
+    checked
+   >
+
+   Active
+
+  </label>
+
+
+  <button
+   class="btn"
+   onclick="
+    put(
+     'partners',
+     uid('DP'),
+     {
+      name:$('dname').value,
+      active:$('dactive').checked
+     }
+    );
+    closeModal();
+    render();
+   "
+  >
+   Save
+  </button>
+
+  `
+
+ );
+
+}
+
+
+
+/* =====================================================
+   OFFER
+===================================================== */
+
+async function offerForm(){
+
+ openModal(
+
+  'Add Offer',
+
+  `
+
+  <div class="formgrid">
+
+   <div class="field">
+
+    <label>Code</label>
+
+    <input id="ocode">
+
+   </div>
+
+
+   <div class="field">
+
+    <label>Type</label>
+
+    <select id="otype">
+
+     <option>
+      Percent
+     </option>
+
+     <option>
+      Fixed
+     </option>
+
+    </select>
+
+   </div>
+
+
+   <div class="field">
+
+    <label>Value</label>
+
+    <input
+     id="oval"
+     type="number"
+    >
+
+   </div>
+
+
+   <label class="switch">
+
+    <input
+     id="oactive"
+     type="checkbox"
+     checked
+    >
+
+    Active
+
+   </label>
+
+  </div>
+
+
+  <button
+   class="btn"
+   onclick="
+    put(
+     'offers',
+     uid('OF'),
+     {
+      code:$('ocode').value,
+      type:$('otype').value,
+      value:Number(
+       $('oval').value
+      ),
+      active:$('oactive').checked
+     }
+    );
+    closeModal();
+    render();
+   "
+  >
+   Save
+  </button>
+
+  `
+
+ );
+
+}
+
+
+
+/* =====================================================
+   EXPENSE
+===================================================== */
+
+async function expenseForm(){
+
+ openModal(
+
+  'Add Expense',
+
+  `
+
+  <div class="formgrid">
+
+   <div class="field">
+
+    <label>Date</label>
+
+    <input
+     id="edate"
+     type="date"
+    >
+
+   </div>
+
+
+   <div class="field">
+
+    <label>Category</label>
+
+    <input id="ecat">
+
+   </div>
+
+
+   <div class="field full">
+
+    <label>
+     Description
+    </label>
+
+    <input id="edesc">
+
+   </div>
+
+
+   <div class="field">
+
+    <label>Amount</label>
+
+    <input
+     id="eamt"
+     type="number"
+    >
+
+   </div>
+
+  </div>
+
+
+  <button
+   class="btn"
+   onclick="
+    put(
+     'expenses',
+     uid('EX'),
+     {
+      date:$('edate').value,
+      category:$('ecat').value,
+      description:$('edesc').value,
+      amount:Number(
+       $('eamt').value
+      )
+     }
+    );
+    closeModal();
+    render();
+   "
+  >
+   Save
+  </button>
+
+  `
+
+ );
+
+}
+
+
+
+/* =====================================================
+   STAFF
+===================================================== */
+
+async function staffForm(id){
+
+ const s=
+  id
+   ? await one(
+      'staff',
+      id
+     )
+   : {
+
+      name:'',
+      email:'',
+      role:'Staff',
+      active:true
+
+     };
+
+
+ openModal(
+
+  id
+   ? 'Edit Staff'
+   : 'Add Staff',
+
+  `
+
+  <div class="formgrid">
+
+   <div class="field">
+
+    <label>Name</label>
+
+    <input
+     id="stn"
+     value="${esc(s.name)}"
+    >
+
+   </div>
+
+
+   <div class="field">
+
+    <label>Email</label>
+
+    <input
+     id="ste"
+     type="email"
+     value="${esc(s.email)}"
+    >
+
+   </div>
+
+
+   <div class="field">
+
+    <label>Role</label>
+
+    <select id="str">
+
+     ${
+      Object
+       .keys(roles)
+       .map(
+        x=>
+        `<option
+         ${
+          s.role===x
+           ? 'selected'
+           : ''
+         }
+        >
+         ${x}
+        </option>`
+       )
+       .join('')
+     }
+
+    </select>
+
+   </div>
+
+
+   <label class="switch">
+
+    <input
+     id="sta"
+     type="checkbox"
+     ${
+      s.active!==false
+       ? 'checked'
+       : ''
+     }
+    >
+
+    Active
+
+   </label>
+
+  </div>
+
+
+  <div class="alert">
+
+   New staff Auth account must be
+   created through Firebase Authentication.
+
+   This Firestore record controls
+   application role mapping.
+
+  </div>
+
+
+  <button
+   class="btn"
+   onclick="
+    saveStaff(
+     '${id||''}'
+    )
+   "
+  >
+   Save Role
+  </button>
+
+  `
+
+ );
+
+}
+
+
+
+async function saveStaff(id){
+
+ const d={
+
+  name:
+   $('stn').value,
+
+  email:
+   $('ste').value,
+
+  role:
+   $('str').value,
+
+  active:
+   $('sta').checked,
+
+  updatedAt:
+   FB.serverTimestamp()
+
+ };
+
+
+ await put(
+  'staff',
+  id||uid('ST'),
+  d
+ );
+
+
+ await log(
+  'Saved staff role',
+  'Staff',
+  id||d.email
+ );
+
+
+ closeModal();
+
+ render();
+
+}
+
+
+
+/* =====================================================
+   NOTIFICATION
+===================================================== */
+
+async function notificationForm(){
+
+ openModal(
+
+  'New Notification',
+
+  `
+
+  <div class="formgrid">
+
+   <div class="field">
+
+    <label>Title</label>
+
+    <input id="nt">
+
+   </div>
+
+
+   <div class="field">
+
+    <label>Audience</label>
+
+    <select id="na">
+
+     <option>
+      All Customers
+     </option>
+
+     <option>
+      Selected Customers
+     </option>
+
+     <option>
+      Riders
+     </option>
+
+    </select>
+
+   </div>
+
+
+   <div class="field full">
+
+    <label>Message</label>
+
+    <textarea id="nm"></textarea>
+
+   </div>
+
+  </div>
+
+
+  <button
+   class="btn"
+   onclick="
+    put(
+     'notifications',
+     uid('N'),
+     {
+      title:$('nt').value,
+      audience:$('na').value,
+      message:$('nm').value,
+      status:'Draft',
+      createdAt:
+       FB.serverTimestamp()
+     }
+    );
+    closeModal();
+    render();
+   "
+  >
+   Save Draft
+  </button>
+
+  `
+
+ );
+
+}
+
+
+
+/* =====================================================
+   CHALAN
+===================================================== */
+
+async function chalanForm(){
+
+ openModal(
+
+  'Create Chalan',
+
+  `
+
+  <div class="formgrid">
+
+   <div class="field">
+
+    <label>
+     Chalan Number
+    </label>
+
+    <input
+     id="chno"
+     value="CH-${new Date()
+      .toISOString()
+      .slice(0,10)
+      .replaceAll('-','')
+     }-${Math.floor(
+       Math.random()*9999
+      )}"
+    >
+
+   </div>
+
+
+   <div class="field">
+
+    <label>
+     Supplier / Customer
+    </label>
+
+    <input id="chparty">
+
+   </div>
+
+
+   <div class="field">
+
+    <label>Product</label>
+
+    <input id="chproduct">
+
+   </div>
+
+
+   <div class="field">
+
+    <label>
+     Variant / Weight
+    </label>
+
+    <input id="chvar">
+
+   </div>
+
+
+   <div class="field">
+
+    <label>Quantity</label>
+
+    <input
+     id="chqty"
+     type="number"
+    >
+
+   </div>
+
+
+   <div class="field">
+
+    <label>
+     Unit Price
+    </label>
+
+    <input
+     id="chprice"
+     type="number"
+    >
+
+   </div>
+
+
+   <div class="field full">
+
+    <label>
+     Transport / Delivery Info
+    </label>
+
+    <input id="chtransport">
+
+   </div>
+
+
+   <div class="field full">
+
+    <label>Note</label>
+
+    <textarea id="chnote"></textarea>
+
+   </div>
+
+  </div>
+
+
+  <button
+   class="btn"
+   onclick="saveChalan()"
+  >
+   Submit for Approval
+  </button>
+
+  `
+
+ );
+
+}
+
+
+
+async function saveChalan(){
+
+ const q=
+  Number(
+   $('chqty').value
+  );
+
+ const price=
+  Number(
+   $('chprice').value
+  );
+
+
+ const id=
+  await add(
+
+   'chalans',
+
+   {
+
+    number:
+     $('chno').value,
+
+    party:
+     $('chparty').value,
+
+    product:
+     $('chproduct').value,
+
+    variant:
+     $('chvar').value,
+
+    quantity:q,
+
+    unitPrice:price,
+
+    total:
+     q*price,
+
+    transport:
+     $('chtransport').value,
+
+    note:
+     $('chnote').value,
+
+    status:
+     'Pending Approval',
+
+    createdBy:
+     currentUser.email,
+
+    createdAt:
+     FB.serverTimestamp(),
+
+    history:[]
+
+   }
+
+  );
+
+
+ await log(
+  'Created Chalan',
+  'Chalan',
+  id
+ );
+
+
+ closeModal();
+
+ toast(
+  'Chalan submitted for approval'
+ );
+
+ render();
+
+}
+
+
+
+/* =====================================================
+   CHALAN ACTION
+===================================================== */
+
+async function chalanAction(id){
+
+ const c=
+  await one(
+   'chalans',
+   id
+  );
+
+ if(!c)return;
+
+
+ openModal(
+
+  'Chalan Approval',
+
+  `
+
+  <div class="alert">
+
+   <b>
+    ${esc(c.number)}
+   </b>
+
+   <br>
+
+   ${esc(c.party)}
+
+   <br>
+
+   ${esc(c.product)}
+   ${esc(c.variant)}
+   × ${c.quantity}
+
+   <br>
+
+   Total:
+   ${money(c.total)}
+
+  </div>
+
+
+  <p>
+   Status:
+   ${badge(c.status)}
+  </p>
+
+
+  <div class="actions">
+
+   ${
+    c.status==='Pending Approval'
+
+    ?
+
+    `
+
+    <button
+     class="btn"
+     onclick="
+      approveChalan(
+       '${id}',
+       true
+      )
+     "
+    >
+     Approve
+    </button>
+
+
+    <button
+     class="btn red"
+     onclick="
+      approveChalan(
+       '${id}',
+       false
+      )
+     "
+    >
+     Reject
+    </button>
+
+    `
+
+    :
+
+    ''
+   }
+
+
+   ${
+    c.status==='Approved'
+
+    ?
+
+    `
+    <button
+     class="btn"
+     onclick="
+      printChalan(
+       '${id}'
+      )
+     "
+    >
+     Print Chalan
+    </button>
+    `
+
+    :
+
+    ''
+   }
+
+  </div>
+
+  `
+
+ );
+
+}
+
+
+
+/* =====================================================
+   CHALAN APPROVE
+===================================================== */
+
+async function approveChalan(
+ id,
+ ok
+){
+
+ await put(
+
+  'chalans',
+
+  id,
+
+  {
+
+   status:
+    ok
+     ? 'Approved'
+     : 'Rejected',
+
+   approvedBy:
+    currentUser.email,
+
+   approvedAt:
+    FB.serverTimestamp()
+
+  }
+
+ );
+
+
+ await log(
+
+  ok
+   ? 'Approved Chalan'
+   : 'Rejected Chalan',
+
+  'Chalan',
+
+  id
+
+ );
+
+
+ closeModal();
+
+ render();
+
+}
+
+
+
+/* =====================================================
+   CHALAN PRINT
+===================================================== */
+
+async function printChalan(id){
+
+ const c=
+  await one(
+   'chalans',
+   id
+  );
+
+
+ if(c?.status!=='Approved'){
+
+  toast(
+   'Only Approved Chalan can be printed'
+  );
+
+  return;
+
+ }
+
+
+ const w=
+  window.open(
+   '',
+   '_blank'
+  );
+
+
+ w.document.write(`
+
+ <html>
+
+ <head>
+
+  <title>
+   Chalan ${esc(c.number)}
+  </title>
+
+  <style>
+
+   body{
+    font-family:Arial;
+    padding:25px
+   }
+
+   table{
+    border-collapse:collapse;
+    width:100%
+   }
+
+   td,th{
+    border:1px solid #333;
+    padding:8px
+   }
+
+  </style>
+
+ </head>
+
+ <body>
+
+  <h2>
+   🌿 Nature bite
+  </h2>
+
+  <h3>
+   Delivery / Stock Chalan
+  </h3>
+
+  <p>
+
+   Chalan No:
+   <b>${esc(c.number)}</b>
+
+   <br>
+
+   Date:
+   ${new Date().toLocaleString()}
+
+   <br>
+
+   Created By:
+   ${esc(c.createdBy)}
+
+   <br>
+
+   Approved By:
+   ${esc(c.approvedBy)}
+
+  </p>
+
+
+  <table>
+
+   <tr>
+
+    <th>Party</th>
+    <th>Product</th>
+    <th>Variant</th>
+    <th>Qty</th>
+    <th>Unit</th>
+    <th>Total</th>
+
+   </tr>
+
+
+   <tr>
+
+    <td>
+     ${esc(c.party)}
+    </td>
+
+    <td>
+     ${esc(c.product)}
+    </td>
+
+    <td>
+     ${esc(c.variant)}
+    </td>
+
+    <td>
+     ${c.quantity}
+    </td>
+
+    <td>
+     ${money(c.unitPrice)}
+    </td>
+
+    <td>
+     ${money(c.total)}
+    </td>
+
+   </tr>
+
+  </table>
+
+
+  <h3 style="text-align:right">
+
+   Grand Total:
+   ${money(c.total)}
+
+  </h3>
+
+
+  <p>
+   ${esc(c.note||'')}
+  </p>
+
+
+  <p style="text-align:center">
+
+   <b>APPROVED</b>
+
+  </p>
+
+
+  <script>
+   window.print()
+  <\/script>
+
+ </body>
+
+ </html>
+
+ `);
+
+ w.document.close();
+
+ await log(
+  'Printed Chalan',
+  'Chalan',
+  id
+ );
+
+}
+
+
+
+/* =====================================================
+   DELIVERY LABEL
+===================================================== */
+
+async function printLabel(id){
+
+ const o=
+  await one(
+   'orders',
+   id
+  );
+
+ if(!o)return;
+
+
+ const s=
+  await setting();
+
+
+ const products=
+  (o.products||[])
+   .map(
+    p=>
+    `${esc(p.name)}
+     ${esc(p.variant||'')}
+     ×${p.qty}
+     — ${money(
+      p.price*p.qty
+     )}`
+   )
+   .join('<br>');
+
+
+ const html=`
+
+ <div class="label">
+
+  <h2>
+   ${esc(s.logo)}
+   Nature bite
+  </h2>
+
+
+  <div class="row">
+
+   <b>Order:</b>
+   ${esc(o.id)}
+
+  </div>
+
+
+  <div class="row">
+
+   <b>Date:</b>
+   ${esc(o.date||'')}
+
+  </div>
+
+
+  <div class="line"></div>
+
+
+  <div class="row">
+
+   <b>Customer:</b>
+   ${esc(
+    o.customer||
+    o.customerName
+   )}
+
+  </div>
+
+
+  <div class="row">
+
+   <b>Mobile:</b>
+   ${esc(o.mobile)}
+
+  </div>
+
+
+  <div class="row">
+
+   <b>Address:</b>
+   ${esc(
+    o.address||
+    o.deliveryAddress
+   )}
+
+  </div>
+
+
+  <div class="line"></div>
+
+
+  <div class="row">
+
+   <b>Products:</b>
+
+   <br>
+
+   ${products}
+
+  </div>
+
+
+  <div class="line"></div>
+
+
+  <div class="row">
+
+   Product:
+   ${money(
+    (o.products||[])
+     .reduce(
+      (a,p)=>
+      a+
+      p.qty*p.price,
+      0
+     )
+   )}
+
+  </div>
+
+
+  <div class="row">
+
+   Delivery:
+   ${money(
+    o.deliveryCharge
+   )}
+
+  </div>
+
+
+  <div class="row">
+
+   Platform:
+   ${money(
+    o.platformCharge
+   )}
+
+  </div>
+
+
+  <div class="row">
+
+   Discount:
+   -${money(
+    o.discount
+   )}
+
+  </div>
+
+
+  <div class="row">
+
+   <b>Total:</b>
+   ${money(
+    orderTotal(o)
+   )}
+
+  </div>
+
+
+  <div class="row">
+
+   <b>Payment:</b>
+   ${esc(
+    o.paymentMethod||
+    ''
+   )}
+   /
+   ${esc(
+    o.paymentStatus||
+    ''
+   )}
+
+  </div>
+
+
+  <div class="row">
+
+   Sender:
+   ${esc(
+    o.senderNumber||
+    ''
+   )}
+
+  </div>
+
+
+  <div class="row">
+
+   Txn ID:
+   ${esc(
+    o.transactionId||
+    ''
+   )}
+
+  </div>
+
+
+  <div class="row">
+
+   <b>COD Collection:</b>
+   ${money(
+    o.collectedAmount||0
+   )}
+
+  </div>
+
+
+  <div class="line"></div>
+
+
+  <div class="row">
+
+   <b>Rider:</b>
+   ${esc(
+    o.riderName||
+    o.rider||
+    ''
+   )}
+
+  </div>
+
+
+  <div class="row">
+
+   <b>Rider Mobile:</b>
+   ${esc(
+    o.riderMobile||
+    ''
+   )}
+
+  </div>
+
+
+  <div class="row">
+
+   <b>Zone:</b>
+   ${esc(
+    o.riderZone||
+    ''
+   )}
+
+  </div>
+
+
+  <div class="row">
+
+   <b>Level:</b>
+   ${esc(
+    o.deliveryLevel||
+    'Level 1'
+   )}
+
+   —
+
+   ${
+    o.deliveryLevelConfirmed
+     ? 'Confirmed'
+     : 'Not Confirmed'
+   }
+
+  </div>
+
+
+  <div class="row">
+
+   <b>Instruction:</b>
+   ${esc(
+    o.deliveryInstruction||
+    ''
+   )}
+
+  </div>
+
+
+  <div class="row">
+
+   <b>Customer Note:</b>
+   ${esc(
+    o.note||
+    ''
+   )}
+
+  </div>
+
+
+  <div class="line"></div>
+
+
+  <div
+   style="
+    text-align:center;
+    font-size:11px
+   "
+  >
+
+   QR:
+   ${esc(o.id)}
+
+   <br>
+
+   BARCODE:
+   *${esc(o.id)}*
+
+  </div>
+
+ </div>
+
+ `;
+
+
+ const w=
+  window.open(
+   '',
+   '_blank'
+  );
+
+
+ w.document.write(`
+
+ <html>
+
+ <head>
+
+  <title>
+   Delivery Label
+   ${esc(o.id)}
+  </title>
+
+  <style>
+
+   body{
+    margin:0;
+    padding:8px;
+    font-family:Arial
+   }
+
+   .label{
+    width:3in;
+    min-height:5in;
+    border:1px solid #111;
+    padding:.12in;
+    font-size:10px
+   }
+
+   .label h2{
+    font-size:16px;
+    margin:0 0 5px
+   }
+
+   .row{
+    margin:3px 0
+   }
+
+   .line{
+    border-top:1px solid #aaa;
+    margin:5px 0
+   }
+
+   @page{
+    size:3in 5in;
+    margin:0
+   }
+
+  </style>
+
+ </head>
+
+ <body>
+
+  ${html}
+
+  <script>
+   window.print()
+  <\/script>
+
+ </body>
+
+ </html>
+
+ `);
+
+ w.document.close();
+
+}
+
+
+
+/* =====================================================
+   ANALYTICS
+===================================================== */
+
+async function roi(){
+
+ const os=
+  await col('orders');
+
+ const ex=
+  await col('expenses');
+
+
+ const rev=
+  os.reduce(
+   (a,o)=>
+   a+orderTotal(o),
+   0
+  );
+
+
+ const cost=
+  ex.reduce(
+   (a,x)=>
+   a+Number(x.amount||0),
+   0
+  );
+
+
+ return cost
+  ?
+  (
+   (rev-cost)/
+   cost*
+   100
+  ).toFixed(1)+'%'
+  :
+  'N/A';
+
+}
+
+
+async function cashFlow(){
+
+ const os=
+  await col('orders');
+
+ const ex=
+  await col('expenses');
+
+
+ return
+
+ os.reduce(
+  (a,o)=>
+  a+orderTotal(o),
+  0
+ )
+
+ -
+
+ ex.reduce(
+  (a,x)=>
+  a+Number(x.amount||0),
+  0
+ );
+
+}
+
+
+
+async function analyticsTab(name){
+
+ const os=
+  await col('orders');
+
+ const cs=
+  await col('customers');
+
+ const ex=
+  await col('expenses');
+
+
+ const rev=
+  os.reduce(
+   (a,o)=>
+   a+orderTotal(o),
+   0
+  );
+
+
+ const cost=
+  ex.reduce(
+   (a,x)=>
+   a+Number(x.amount||0),
+   0
+  );
+
+
+ const aov=
+  os.length
+   ?
+   rev/os.length
+   :
+   0;
+
+
+ let v=
+  'Data-driven view';
+
+
+ if(name==='ROI')
+  v=await roi();
+
+
+ if(name==='Cash Flow')
+  v=money(
+   await cashFlow()
+  );
+
+
+ if(name==='AOV')
+  v=money(aov);
+
+
+ if(name==='ARPU')
+  v=money(
+   cs.length
+    ?
+    rev/cs.length
+    :
+    0
+  );
+
+
+ if(name==='Break-even Point')
+  v=
+   cost+
+   ' / contribution margin';
+
+
+ if(name==='CAC & LTV')
+  v=
+   'Enter marketing spend and repeat-customer data in Finance';
+
+
+ if(name==='NPS')
+  v=
+   'Customer survey score';
+
+
+ if(name==='Funnel')
+  v=
+   `Orders:
+    ${os.length}
+    →
+    Delivered:
+    ${
+     os.filter(
+      o=>
+      [
+       'Delivered',
+       'Delivery Confirmed'
+      ].includes(o.status)
+     ).length
+    }`;
+
+
+ if(name==='North Star Metric')
+  v=
+   'Completed customer orders';
+
+
+ if(name==='ARR/MRR')
+  v=
+   'Monthly recurring revenue model';
+
+
+ $('analyticsBox').innerHTML=`
+
+  <h3>
+   ${esc(name)}
+  </h3>
+
+  <div class="card">
+
+   <b style="font-size:28px">
+
+    ${esc(
+     String(v)
+    )}
+
+   </b>
+
+  </div>
+
+
+  <p class="muted">
+
+   This metric is isolated
+   as a separate
+   business-performance tab.
+
+  </p>
+
+ `;
+
+}
+
+
+
+/* =====================================================
+   STATUS / ACTIVE / DELETE
+===================================================== */
+
+async function setStatus(
+ c,
+ id,
+ status
+){
+
+ await put(
+  c,
+  id,
+  {
+   status,
+   updatedAt:
+    FB.serverTimestamp()
+  }
+ );
+
+ await log(
+  'Status changed to '+status,
+  c,
+  id
+ );
+
+ toast(
+  'Updated'
+ );
+
+ render();
+
+}
+
+
+async function toggleActive(
+ c,
+ id,
+ current
+){
+
+ await put(
+  c,
+  id,
+  {
+   active:!current
+  }
+ );
+
+ toast(
+  'Updated'
+ );
+
+ render();
+
+}
+
+
+async function toggleFeature(
+ id,
+ k
+){
+
+ const x=
+  await one(
+   'features',
+   id
+  );
+
+ await put(
+  'features',
+  id,
+  {
+   [k]:!x[k]
+  }
+ );
+
+ render();
+
+}
+
+
+async function delItem(
+ c,
+ id
+){
+
+ if(
+  !confirm(
+   'Delete this item?'
+  )
+ )
+  return;
+
+
+ await remove(
+  c,
+  id
+ );
+
+
+ await log(
+  'Deleted item',
+  c,
+  id
+ );
+
+
+ render();
+
+}
+
+
+
+/* =====================================================
+   MONTHLY REPORT
+===================================================== */
+
+function printMonthlyReport(
+ ym,
+ rev,
+ expense,
+ orders
+){
+
+ const w=
+  window.open(
+   '',
+   '_blank'
+  );
+
+
+ w.document.write(`
+
+ <html>
+
+ <body
+  style="
+   font-family:Arial;
+   padding:30px
+  "
+ >
+
+  <h2>
+   🌿 Nature bite —
+   Monthly Report
+  </h2>
+
+  <p>
+   Month:
+   ${esc(ym)}
+  </p>
+
+
+  <table
+   border="1"
+   cellpadding="8"
+   cellspacing="0"
+  >
+
+   <tr>
+
+    <th>Orders</th>
+    <th>Revenue</th>
+    <th>Expenses</th>
+    <th>Net</th>
+
+   </tr>
+
+
+   <tr>
+
+    <td>
+     ${orders}
+    </td>
+
+    <td>
+     ${money(rev)}
+    </td>
+
+    <td>
+     ${money(expense)}
+    </td>
+
+    <td>
+     ${money(
+      rev-expense
+     )}
+    </td>
+
+   </tr>
+
+  </table>
+
+
+  <script>
+   window.print()
+  <\/script>
+
+ </body>
+
+ </html>
+
+ `);
+
+ w.document.close();
+
+}
+
+
+
+/* =====================================================
+   FILTER
+===================================================== */
+
+async function filterTable(
+ value
+){
+
+ const os=
+  await col('orders');
+
+ const q=
+  value
+   .trim()
+   .toLowerCase();
+
+
+ const filtered=
+  !q
+
+   ?
+
+   os
+
+   :
+
+   os.filter(
+    o=>
+    JSON.stringify(o)
+     .toLowerCase()
+     .includes(q)
+   );
+
+
+ $('orderTable').innerHTML=
+  orderTable(filtered);
+
+}
+
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+function openModal(
+ title,
+ body
+){
+
+ $('modalTitle').textContent=
+  title;
+
+ $('modalBody').innerHTML=
+  body;
+
+ $('modal').style.display=
+  'flex';
+
+}
+
+
+function closeModal(){
+
+ $('modal').style.display=
+  'none';
+
+}
+
+
+
+/* =====================================================
+   LOGIN MESSAGES
+===================================================== */
+
+function showLoginMessage(
+ msg,
+ type='error'
+){
+
+ const el=
+  $('loginMsg');
+
+ el.textContent=
+  msg;
+
+ el.style.display=
+  'block';
+
+ el.style.background=
+  type==='ok'
+   ? '#e8f5e9'
+   : '#fee4e2';
+
+ el.style.color=
+  type==='ok'
+   ? '#25602a'
+   : '#9b1c13';
+
+}
+
+
+function clearLoginMessage(){
+
+ const el=
+  $('loginMsg');
+
+ el.textContent='';
+
+ el.style.display=
+  'none';
+
+}
+
+
+
+/* =====================================================
+   LOGIN LOADING
+===================================================== */
+
+function setLoginLoading(on){
+
+ const b=
+  $('loginBtn');
+
+
+ if(on){
+
+  b.disabled=true;
+
+  b.classList.add(
+   'loginloading'
+  );
+
+  b.innerHTML=
+   '<span class="spinner"></span> লগইন হচ্ছে…';
+
+ }else{
+
+  b.disabled=false;
+
+  b.classList.remove(
+   'loginloading'
+  );
+
+  b.textContent=
+   'Login';
+
+  applyLoginLock();
+
+ }
+
+}
+
+
+
+/* =====================================================
+   LOGIN LOCK
+===================================================== */
+
+function applyLoginLock(){
+
+ const now=
+  Date.now();
+
+ const b=
+  $('loginBtn');
+
+
+ if(
+  loginLockUntil>
+  now
+ ){
+
+  b.disabled=true;
+
+
+  const sec=
+   Math.ceil(
+    (
+     loginLockUntil-
+     now
+    )/1000
+   );
+
+
+  b.textContent=
+   `লকড (${sec}s)`;
+
+
+  showLoginMessage(
+
+   `নিরাপত্তার জন্য Login সাময়িকভাবে লক করা হয়েছে। ${sec} সেকেন্ড পরে আবার চেষ্টা করুন।`
+
+  );
+
+
+  clearTimeout(
+   loginTimer
+  );
+
+
+  loginTimer=
+   setTimeout(
+    applyLoginLock,
+    500
+   );
+
+
+  return;
+
+ }
+
+
+ if(loginLockUntil){
+
+  loginLockUntil=0;
+
+  sessionStorage.removeItem(
+   'nb_login_lock_until'
+  );
+
+  loginFails=0;
+
+  sessionStorage.removeItem(
+   'nb_login_fails'
+  );
+
+ }
+
+
+ b.disabled=false;
+
+
+ if(
+  b.textContent
+   .startsWith('লকড')
+ ){
+
+  b.textContent=
+   'Login';
+
+ }
+
+}
+
+
+
+/* =====================================================
+   LOGIN FAILURE
+===================================================== */
+
+function registerLoginFailure(){
+
+ loginFails++;
+
+
+ sessionStorage.setItem(
+  'nb_login_fails',
+  loginFails
+ );
+
+
+ if(loginFails>=5){
+
+  loginLockUntil=
+   Date.now()+60000;
+
+
+  sessionStorage.setItem(
+   'nb_login_lock_until',
+   loginLockUntil
+  );
+
+
+  applyLoginLock();
+
+ }
+
+}
+
+
+
+/* =====================================================
+   CLEAR LOGIN FAILURES
+===================================================== */
+
+function clearLoginFailures(){
+
+ loginFails=0;
+
+ loginLockUntil=0;
+
+ sessionStorage.removeItem(
+  'nb_login_fails'
+ );
+
+ sessionStorage.removeItem(
+  'nb_login_lock_until'
+ );
+
+ clearTimeout(
+  loginTimer
+ );
+
+}
+
+
+
+/* =====================================================
+   FIREBASE ERROR BANGLA
+===================================================== */
+
+function firebaseErrorBn(e){
+
+ const c=
+  e?.code||'';
+
+
+ const map={
+
+  'auth/invalid-email':
+   'ইমেইল ঠিকানাটি সঠিক নয়।',
+
+  'auth/user-not-found':
+   'এই ইমেইল দিয়ে কোনো Admin/Staff account পাওয়া যায়নি।',
+
+  'auth/wrong-password':
+   'পাসওয়ার্ড সঠিক নয়।',
+
+  'auth/invalid-credential':
+   'ইমেইল বা পাসওয়ার্ড সঠিক নয়।',
+
+  'auth/user-disabled':
+   'এই Firebase account নিষ্ক্রিয়/লক করা হয়েছে। Super Admin-এর সাথে যোগাযোগ করুন।',
+
+  'auth/too-many-requests':
+   'অনেকবার ভুল চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।',
+
+  'auth/network-request-failed':
+   'ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।',
+
+  'auth/operation-not-allowed':
+   'Firebase Authentication-এ Email/Password Login চালু করা হয়নি।',
+
+  'auth/internal-error':
+   'Firebase-এর অভ্যন্তরীণ সমস্যা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।',
+
+  'auth/invalid-api-key':
+   'Firebase API Key সঠিক নয়।',
+
+  'auth/app-not-authorized':
+   'এই ডোমেইন Firebase Authentication-এ অনুমোদিত নয়।',
+
+  'auth/requires-recent-login':
+   'নিরাপত্তার জন্য আবার Login করতে হবে।'
+
+ };
+
+
+ return(
+  map[c]||
+  (
+   'Firebase error: '+
+   (
+    e?.message||
+    'অজানা সমস্যা'
+   )
+  )
+ );
+
+}
+
+
+
+/* =====================================================
+   USER BOOT
+===================================================== */
+
+async function bootUser(user){
+
+ currentUser=user;
+
+
+ try{
+
+  const p=
+   await one(
+    'staff',
+    user.uid
+   );
+
+
+  if(!p){
+
+   await FB.signOut(
+    FB.auth
+   );
+
+
+   showLoginMessage(
+    'এই account-এর Staff profile পাওয়া যায়নি। Firebase Firestore-এর staff/{User UID} document তৈরি করুন। এটি Admin/Staff authorization-এর জন্য প্রয়োজন।'
+   );
+
+
+   return;
+
+  }
+
+
+  userProfile=p;
+
+
+  if(
+   userProfile.active===false ||
+   userProfile.locked===true
+  ){
+
+   await FB.signOut(
+    FB.auth
+   );
+
+
+   showLoginMessage(
+
+    userProfile.locked===true
+
+     ?
+
+     'আপনার Admin/Staff account বর্তমানে LOCKED। Super Admin account থেকে Unlock করতে হবে।'
+
+     :
+
+     'আপনার Admin/Staff account বর্তমানে INACTIVE। Super Admin account থেকে Active না করা পর্যন্ত Login করা যাবে না।'
+
+   );
+
+
+   return;
+
+  }
+
+
+  $('login').style.display=
+   'none';
+
+  $('app').style.display=
+   'block';
+
+
+  $('userMini').textContent=
+   `${
+    userProfile.name||
+    user.email
+   } • ${
+    userProfile.role
+   }`;
+
+
+  nav();
+
+  showPage(
+   'dashboard'
+  );
+
+
+  $('sync').textContent=
+   'Firebase connected';
+
+  $('sync').className=
+   'badge';
+
+
+ }catch(e){
+
+  await FB
+   .signOut(FB.auth)
+   .catch(
+    ()=>{}
+   );
+
+
+  showLoginMessage(
+   firebaseErrorBn(e)
+  );
+
+ }
+
+}
+
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+async function doLogin(){
+
+ clearLoginMessage();
+
+
+ if(
+  loginLockUntil>
+  Date.now()
+ ){
+
+  applyLoginLock();
+
+  return;
+
+ }
+
+
+ const email=
+  $('email')
+   .value
+   .trim();
+
+ const password=
+  $('password')
+   .value;
+
+
+ if(!email){
+
+  showLoginMessage(
+   'আপনার Email দিন।'
+  );
+
+  $('email').focus();
+
+  return;
+
+ }
+
+
+ if(!password){
+
+  showLoginMessage(
+   'আপনার Password দিন।'
+  );
+
+  $('password').focus();
+
+  return;
+
+ }
+
+
+ setLoginLoading(true);
+
+
+ try{
+
+  const remember=
+   $('rememberLogin')
+    .checked;
+
+
+  await FB.setPersistence(
+
+   FB.auth,
+
+   remember
+
+    ?
+
+    FB.browserLocalPersistence
+
+    :
+
+    FB.browserSessionPersistence
+
+  );
+
+
+  await FB
+   .signInWithEmailAndPassword(
+    FB.auth,
+    email,
+    password
+   );
+
+
+  clearLoginFailures();
+
+
+ }catch(e){
+
+  registerLoginFailure();
+
+  showLoginMessage(
+   firebaseErrorBn(e)
+  );
+
+  setLoginLoading(false);
+
+ }
+
+}
+
+
+
+/* =====================================================
+   FORGOT PASSWORD
+===================================================== */
+
+async function doForgotPassword(){
+
+ clearLoginMessage();
+
+
+ const email=
+  $('email')
+   .value
+   .trim();
+
+
+ if(!email){
+
+  showLoginMessage(
+   'Password reset link পেতে আগে আপনার Email লিখুন।'
+  );
+
+  $('email').focus();
+
+  return;
+
+ }
+
+
+ const b=
+  $('forgotBtn');
+
+
+ b.disabled=true;
+
+ b.textContent=
+  'পাঠানো হচ্ছে…';
+
+
+ try{
+
+  await FB
+   .sendPasswordResetEmail(
+    FB.auth,
+    email
+   );
+
+
+  showLoginMessage(
+
+   'Password reset link আপনার Email-এ পাঠানো হয়েছে। Inbox/Spam folder দেখুন।',
+
+   'ok'
+
+  );
+
+
+ }catch(e){
+
+  showLoginMessage(
+   firebaseErrorBn(e)
+  );
+
+
+ }finally{
+
+  b.disabled=false;
+
+  b.textContent=
+   'Forgot Password?';
+
+ }
+
+}
+
+
+
+/* =====================================================
+   AUTH UI
+===================================================== */
+
+function initAuthUI(){
+
+ const login=
+  $('loginBtn');
+
+
+ if(!login)return;
+
+
+ applyLoginLock();
+
+
+ login.onclick=
+  doLogin;
+
+
+ $('forgotBtn').onclick=
+  doForgotPassword;
+
+
+ $('togglePassword').onclick=
+  ()=>{
+
+   const p=
+    $('password');
+
+   const b=
+    $('togglePassword');
+
+
+   p.type=
+    p.type==='password'
+     ? 'text'
+     : 'password';
+
+
+   b.textContent=
+    p.type==='password'
+     ? 'Show'
+     : 'Hide';
+
+  };
+
+
+ $('password')
+  .addEventListener(
+   'keydown',
+   e=>{
+
+    if(
+     e.key==='Enter'
+    )
+     doLogin();
+
+   }
+  );
+
+
+ $('email')
+  .addEventListener(
+   'keydown',
+   e=>{
+
+    if(
+     e.key==='Enter'
+    )
+     $('password').focus();
+
+   }
+  );
+
+
+ $('logout').onclick=
+  async()=>{
+
+   await FB.signOut(
+    FB.auth
+   );
+
+
+   $('app').style.display=
+    'none';
+
+
+   $('login').style.display=
+    'grid';
+
+
+   $('password').value='';
+
+
+   clearLoginMessage();
+
+
+   setLoginLoading(
+    false
+   );
+
+  };
+
+
+ onAuthStateChanged(
+  FB.auth,
+  u=>
+   u
+    ? bootUser(u)
+    : null
+ );
+
+}
+
+
+if(
+ window.firebaseReady
+)
+ initAuthUI();
+else
+ window.addEventListener(
+  'firebase-ready',
+  initAuthUI,
+  {once:true}
+);
+
+
+/* =====================================================
+   EXPORT FUNCTIONS FOR HTML BUTTONS
+===================================================== */
+
+window.showPage=showPage;
+
+window.closeModal=closeModal;
+
+window.openModal=openModal;
+
+window.orderForm=orderForm;
+
+window.saveOrder=saveOrder;
+
+window.verifyPayment=verifyPayment;
+
+window.quickSetting=quickSetting;
+
+window.quickPay=quickPay;
+
+window.quickCustomer=quickCustomer;
+
+window.paymentSettingsForm=
+ paymentSettingsForm;
+
+window.savePaymentSettings=
+ savePaymentSettings;
+
+window.productForm=productForm;
+
+window.saveProduct=saveProduct;
+
+window.categoryForm=categoryForm;
+
+window.saveCategory=saveCategory;
+
+window.riderForm=riderForm;
+
+window.saveRider=saveRider;
+
+window.partnerForm=partnerForm;
+
+window.offerForm=offerForm;
+
+window.expenseForm=expenseForm;
+
+window.staffForm=staffForm;
+
+window.saveStaff=saveStaff;
+
+window.notificationForm=
+ notificationForm;
+
+window.chalanForm=chalanForm;
+
+window.saveChalan=saveChalan;
+
+window.chalanAction=chalanAction;
+
+window.approveChalan=approveChalan;
+
+window.printChalan=printChalan;
+
+window.printLabel=printLabel;
+
+window.analyticsTab=
+ analyticsTab;
+
+window.setStatus=setStatus;
+
+window.toggleActive=
+ toggleActive;
+
+window.toggleFeature=
+ toggleFeature;
+
+window.delItem=delItem;
+
+window.printMonthlyReport=
+ printMonthlyReport;
+
+window.filterTable=
+ filterTable;
+
+</script>
+
+</body>
+</html>
